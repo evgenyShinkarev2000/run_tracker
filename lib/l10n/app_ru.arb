@@ -1,0 +1,53 @@
+{
+  "@@locale": "ru",
+  "menuActivities": "активности",
+  "menuSettings": "настройки",
+  "menuMap": "карта",
+  "menuHistory": "история",
+  "menuSettingsLanguage": "язык",
+  "menuPulse": "пульс",
+  "dashSpeed": "скорость",
+  "dashPace": "темп",
+  "dashTime": "время",
+  "dashDistance": "дистанция",
+  "runCardCoverName": "название",
+  "runCardCoverSpeed": "скорость",
+  "runCardCoverBeginDateTime": "начало",
+  "runCardCoverDuration": "длительность",
+  "runCardCoverDistance": "дистанция",
+  "runCardCoverPace": "темп",
+  "runcardCoverPulse": "пульс",
+  "stopRecordingDialogQuestion": "остановить запись?",
+  "stopRecordingDialogConfirm": "подтвердить",
+  "stopRecordingDialogCancel": "отмена",
+  "saveRecordDialogSave": "сохранить",
+  "saveRecordDialogTitleValidatorMessage": "Название должно быть длинее {length}",
+  "@saveRecordDialogTitleValidatorMessage": {
+    "placeholders":{
+      "length": {
+        "type": "int"
+      }
+    }
+  },
+  "unitShortKm": "км",
+  "unitShortM": "м",
+  "unitShortSecond": "с",
+  "unitShortMinute": "мин",
+  "unitShortHour": "ч",
+  "unitShortKmPerHour": "км/ч",
+  "unitShortMinPerKm": "мин/км",
+  "unitShortBPM" : "уд/мин",
+  "nounDistance": "дистанция",
+  "nounTime": "время",
+  "nounInterval": "интервал",
+  "nounSpeed": "скорость",
+  "nounPace": "темп",
+  "nounUnits": "единицы измерения",
+  "nounPulse": "пульс",
+  "runRecordBarIntervalType": "тип интервала",
+  "pulseMeasureTabMetronome": "метроном",
+  "pulseMeasureTabCamera": "камера",
+  "pulseMeasureTabTimer": "таймер",
+  "pulseMeasureTabManual": "вручную",
+  "pulseMeasureMetronomIntructionClickAtDrum": "нажимайте барабан на каждый удар сердца"
+}

@@ -1,0 +1,4 @@
+enum IntervalType {
+  time,
+  distance,
+}

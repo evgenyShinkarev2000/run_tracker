@@ -1,0 +1,53 @@
+{
+  "@@locale": "en",
+  "menuActivities": "activities",
+  "menuSettings": "settings",
+  "menuMap": "map",
+  "menuHistory": "history",
+  "menuSettingsLanguage": "language",
+  "menuPulse": "pulse",
+  "dashSpeed": "speed",
+  "dashPace": "pace",
+  "dashTime": "time",
+  "dashDistance": "distance",
+  "runCardCoverName": "name",
+  "runCardCoverSpeed": "speed",
+  "runCardCoverBeginDateTime": "begin",
+  "runCardCoverDuration": "duration",
+  "runCardCoverDistance": "distance",
+  "runCardCoverPace": "pace",
+  "runcardCoverPulse": "pulse",
+  "stopRecordingDialogQuestion": "stop recording?",
+  "stopRecordingDialogConfirm": "confirm",
+  "stopRecordingDialogCancel": "cancel",
+  "saveRecordDialogSave": "save",
+  "saveRecordDialogTitleValidatorMessage": "title length must be longer {length}",
+  "@saveRecordDialogTitleValidatorMessage": {
+    "placeholders":{
+      "length": {
+        "type": "int"
+      }
+    }
+  },
+  "unitShortKm": "km",
+  "unitShortM": "m",
+  "unitShortSecond": "s",
+  "unitShortMinute": "min",
+  "unitShortHour": "h",
+  "unitShortKmPerHour": "km/h",
+  "unitShortMinPerKm": "min/km",
+  "unitShortBPM" : "bpm",
+  "nounDistance": "distance",
+  "nounTime": "time",
+  "nounInterval": "interval",
+  "nounSpeed": "speed",
+  "nounPace": "pace",
+  "nounUnits": "units",
+  "nounPulse": "pulse",
+  "runRecordBarIntervalType": "interval type",
+  "pulseMeasureTabMetronome": "metronome",
+  "pulseMeasureTabCamera": "camera",
+  "pulseMeasureTabTimer": "timer",
+  "pulseMeasureTabManual": "manual",
+  "pulseMeasureMetronomIntructionClickAtDrum": "touch the drum for every heartbeat"
+}
