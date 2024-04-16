@@ -4,8 +4,7 @@ import 'package:run_tracker/data/models/RunPointsData.dart';
 class RunPointsRepository {
   final LazyBox<RunPointsData> _recordsLazyBox;
 
-  RunPointsRepository.RunPointsRepository(
-      {required LazyBox<RunPointsData> recordsLazyBox})
+  RunPointsRepository.RunPointsRepository({required LazyBox<RunPointsData> recordsLazyBox})
       : _recordsLazyBox = recordsLazyBox;
 
   Future<RunPointsData> add(RunPointsData runRecordData) async {
@@ -23,14 +22,12 @@ class RunPointsRepositoryFactory {
   static const String runPointsBoxName = "RunPoints";
   Future<RunPointsRepository> create() async {
     if (Hive.isBoxOpen(runPointsBoxName)) {
-      return RunPointsRepository.RunPointsRepository(
-          recordsLazyBox: Hive.lazyBox(runPointsBoxName));
+      return RunPointsRepository.RunPointsRepository(recordsLazyBox: Hive.lazyBox(runPointsBoxName));
     }
     try {
-      final runsLazyBox =
-          await Hive.openLazyBox<RunPointsData>(runPointsBoxName);
-      return RunPointsRepository.RunPointsRepository(
-          recordsLazyBox: runsLazyBox);
+      final runsLazyBox = await Hive.openLazyBox<RunPointsData>(runPointsBoxName);
+
+      return RunPointsRepository.RunPointsRepository(recordsLazyBox: runsLazyBox);
     } catch (ex) {
       rethrow;
     }

@@ -1,46 +1,62 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:run_tracker/bloc/cubits/GeolocationProviderCubit.dart';
 import 'package:run_tracker/components/drawer/AppMainDrawer.dart';
-import 'package:run_tracker/helpers/AppLanguage.dart';
+import 'package:run_tracker/helpers/AppLanguageCode.dart';
+import 'package:run_tracker/helpers/AppTheme.dart';
 import 'package:run_tracker/helpers/extensions/BuildContextExtension.dart';
-import 'package:run_tracker/helpers/LanguageCode.dart';
-import 'package:run_tracker/pages/SettingPage/ChooseGeolocationProviderDialog.dart';
-import 'package:run_tracker/pages/SettingPage/ChooseLanguageDialog.dart';
+import 'package:run_tracker/helpers/extensions/SettingExtension.dart';
+import 'package:run_tracker/pages/SettingPage/ChooseSettingVariant.dart';
+import 'package:run_tracker/pages/SettingPage/ChooseSettingVariantDialog.dart';
+import 'package:run_tracker/services/settings/SettingsProvider.dart';
 
-final supportedLanguages = <AppLanguage>[
-  AppLanguage(LanguageCode.ru, "русский"),
-  AppLanguage(LanguageCode.en, "english"),
-];
-
-final supportedGeolocationProviders = GeolocationProviderKind.values;
+import '../../helpers/GeolocationProviderKind.dart';
+import 'SettingVariantView.dart';
 
 class SettingPageState extends State<SettingPage> {
+  final supportedLanguages = [
+    SettingVariantView(title: "english", variant: AppLanguageCode.en),
+    SettingVariantView(title: "русский", variant: AppLanguageCode.ru),
+  ];
+
+  final supportedGeolocationProviders =
+      GeolocationProviderKind.values.map((e) => SettingVariantView(title: e.name, variant: e)).toList();
+
   @override
   Widget build(BuildContext context) {
-    final locale = Localizations.localeOf(context);
-    final currentLanguage = supportedLanguages.where((l) => l.codeString == locale.languageCode).first;
-    final language = context.appLocalization.menuSettingsLanguage;
-    final textStyle = Theme.of(context).textTheme.bodyMedium;
+    final appSettings = context.watch<SettingsProvider>().appSettings;
+
     showChooseLanguageDialog() => showDialog(
           context: context,
-          builder: (_) => ChooseLanguageDialog(
-            supportedLanguages: supportedLanguages,
-            currentLanguage: currentLanguage,
+          builder: (_) => ChooseSettingVariantDialog<AppLanguageCode>(
+            variants: supportedLanguages,
+            onSelect: (variant) => appSettings.locale.setVariant(variant),
+            selected: appSettings.locale.variantOrDefault,
+          ),
+        );
+    showChooseGeolocationProviderDialog() => showDialog(
+          context: context,
+          builder: (_) => ChooseSettingVariantDialog(
+            variants: supportedGeolocationProviders,
+            onSelect: (variant) => appSettings.geolocation.ProviderKind.setValue(variant),
+            selected: appSettings.geolocation.ProviderKind.valueOrDefault,
+            defaultVariant: appSettings.geolocation.ProviderKind.defaultValue,
           ),
         );
 
-    final geolocationProviderCubit = context.watch<GeolocationProviderCubit>();
-    showChooseGeolocationProviderDialog() => {
-          showDialog(
-              context: context,
-              builder: (_) => ChooseGeolocationProviderDialog(
-                  supportedGeolocationProviders: supportedGeolocationProviders.map((p) => p.name).toList(),
-                  currentGeolocationProvider: geolocationProviderCubit.state.name,
-                  onSet: (name) => geolocationProviderCubit
-                      .set(supportedGeolocationProviders.firstWhere((element) => element.name == name))))
-        };
+    final supportedThemes = [
+      SettingVariantView(title: context.appLocalization.settingVariantThemeLigth, variant: AppTheme.light),
+      SettingVariantView(title: context.appLocalization.settingVariantThemeDark, variant: AppTheme.dark),
+    ];
+    showChooseThemeDialog() => showDialog(
+          context: context,
+          builder: (_) => ChooseSettingVariantDialog<AppTheme>(
+            variants: supportedThemes,
+            onSelect: (variant) => appSettings.theme.setVariant(variant),
+            selected: appSettings.theme.variantOrDefault,
+            defaultVariant: appSettings.theme.defaultVariant,
+          ),
+        );
 
     return Scaffold(
       appBar: AppBar(),
@@ -48,33 +64,24 @@ class SettingPageState extends State<SettingPage> {
       body: Center(
         child: ListView(
           children: [
-            ListTile(
+            ChooseSettingVariant(
+              name: context.appLocalization.settingsLanguage,
+              variantTitle: supportedLanguages.getSelectedOrDefaultTitle(appSettings.locale),
               onTap: showChooseLanguageDialog,
-              leadingAndTrailingTextStyle: textStyle,
-              leading: Icon(CupertinoIcons.globe),
-              title: Text(language),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(currentLanguage.nativeName),
-                  Icon(CupertinoIcons.forward),
-                ],
-              ),
+              icon: CupertinoIcons.globe,
             ),
-            ListTile(
+            ChooseSettingVariant(
+              name: context.appLocalization.settingsTheme,
+              onTap: showChooseThemeDialog,
+              variantTitle: supportedThemes.getSelectedOrDefaultTitle(appSettings.theme),
+              icon: Icons.palette_outlined,
+            ),
+            ChooseSettingVariant(
+              name: "Geolocation Provider",
               onTap: showChooseGeolocationProviderDialog,
-              leadingAndTrailingTextStyle: textStyle,
-              leading: Icon(Icons.place),
-              title: Text("GeolocationProvider"),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(geolocationProviderCubit.state.name),
-                  Icon(CupertinoIcons.forward),
-                ],
-              ),
+              variantTitle: appSettings.geolocation.ProviderKind.value?.name ??
+                  appSettings.geolocation.ProviderKind.defaultValue?.name,
+              icon: CupertinoIcons.placemark,
             ),
           ],
         ),

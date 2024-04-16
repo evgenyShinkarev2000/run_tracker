@@ -1,4 +1,0 @@
-enum LanguageCode {
-  ru,
-  en,
-}

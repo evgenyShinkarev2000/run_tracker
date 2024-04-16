@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class MultiFutureBuilderLoader extends StatefulWidget {
   final Function(BuildContext context, List<FutureInfo> futureInfos) loader;
-  final Function(BuildContext context, MultiFutureBuilderLoaderHelperGet store)
-      builder;
+  final Function(BuildContext context, MultiFutureBuilderLoaderHelperGet store) builder;
   final Function(MultiFutureBuilderLoaderHelperRegister storage) register;
 
-  const MultiFutureBuilderLoader({super.key, 
+  const MultiFutureBuilderLoader({
+    super.key,
     required this.loader,
     required this.builder,
     required this.register,
@@ -60,9 +60,7 @@ abstract class MultiFutureBuilderLoaderHelperRegister {
 }
 
 class MultiFutureBuilderLoaderHelper
-    implements
-        MultiFutureBuilderLoaderHelperGet,
-        MultiFutureBuilderLoaderHelperRegister {
+    implements MultiFutureBuilderLoaderHelperGet, MultiFutureBuilderLoaderHelperRegister {
   final Map<Type, dynamic> _typeToInstance = {};
   final List<FutureInfo> _futureInfos = [];
   final Function() onCompleted;
@@ -70,8 +68,7 @@ class MultiFutureBuilderLoaderHelper
   int index = 0;
   int activeFutureCount = 0;
 
-  MultiFutureBuilderLoaderHelper(
-      {required this.onCompleted, required this.onChange});
+  MultiFutureBuilderLoaderHelper({required this.onCompleted, required this.onChange});
 
   @override
   void register<T>(Future<T> future, [String? name]) {
@@ -83,7 +80,7 @@ class MultiFutureBuilderLoaderHelper
 
     future.then((value) {
       final type = value.runtimeType;
-      if (_typeToInstance.containsKey(type)) {
+      if (null.runtimeType != type && _typeToInstance.containsKey(type)) {
         throw Exception("shouldn't contains equal types");
       }
 
@@ -102,8 +99,7 @@ class MultiFutureBuilderLoaderHelper
   T get<T>() {
     assert(T != dynamic);
     if (activeFutureCount != 0) {
-      throw Exception(
-          "shouldn't call get before all futures aren't compleated");
+      throw Exception("shouldn't call get before all futures aren't compleated");
     }
 
     if (!_typeToInstance.containsKey(T)) {

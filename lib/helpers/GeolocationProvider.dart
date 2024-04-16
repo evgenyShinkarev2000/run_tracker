@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:geolocator/geolocator.dart';
-import 'package:run_tracker/bloc/cubits/GeolocationProviderCubit.dart';
 import 'package:run_tracker/core/AppGeolocation.dart';
 import 'package:run_tracker/helpers/GeolocatorWrapper.dart';
 import 'package:run_tracker/helpers/IDisposable.dart';
+
+import 'GeolocationProviderKind.dart';
 
 abstract class IGeolocationRepository {
   Stream<AppGeolocation> get geolocationStream;

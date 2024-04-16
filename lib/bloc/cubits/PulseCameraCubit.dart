@@ -1,20 +1,21 @@
 import 'dart:async';
+import 'dart:io';
 
-import 'package:camera/camera.dart' as DefaultCamera;
-import 'package:camera_platform_interface/camera_platform_interface.dart' as CPI;
-import 'package:camera_android_camerax/camera_android_camerax.dart';
-import 'package:flutter/foundation.dart';
+import 'package:camera_platform_interface/camera_platform_interface.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:run_tracker/core/LumyMeasuring.dart';
+import 'package:path_provider/path_provider.dart' as pp;
+import 'package:run_tracker/core/DataWithDateTime.dart';
 import 'package:run_tracker/core/PulseByCamera.dart';
 
 class PulseCameraCubit extends Cubit<PulseCameraCubitState> {
   final PulseByCamera _pulseByCamera = PulseByCamera();
-  final AndroidCameraCameraX androidCamera = AndroidCameraCameraX();
-  // late final StreamSubscription<CPI.CameraImageData> frameSubscription;
+  late final StreamSubscription<CameraImageData> frameSubscription;
+  final CameraPlatform cameraInstance = CameraPlatform.instance;
   late final int cameraIdWithSettings;
   late final Timer _timer;
+  late final File writeFile;
+  int? stringLength;
   DateTime? lastFrameTime;
   int? frameRate;
 
@@ -23,19 +24,23 @@ class PulseCameraCubit extends Cubit<PulseCameraCubitState> {
   }
 
   Future<void> _init() async {
-    final cameraIds = await androidCamera.availableCameras();
-    cameraIdWithSettings = await androidCamera.createCameraWithSettings(cameraIds.first,
-        CPI.MediaSettings(enableAudio: false, fps: 60, resolutionPreset: DefaultCamera.ResolutionPreset.medium));
+    final directoryPath = await pp.getDownloadsDirectory();
+    writeFile = File("${directoryPath!.path}/data");
 
-    await androidCamera.initializeCamera(cameraIdWithSettings);
-    await androidCamera.setFlashMode(cameraIdWithSettings, DefaultCamera.FlashMode.torch);
-    await androidCamera.startVideoCapturing(CPI.VideoCaptureOptions(cameraIdWithSettings, streamCallback: handleFrame));
+    final cameraIds = await cameraInstance.availableCameras();
+    cameraIdWithSettings = await cameraInstance.createCameraWithSettings(
+        cameraIds.first, MediaSettings(enableAudio: false, fps: 30, resolutionPreset: ResolutionPreset.low));
 
-    // frameSubscription = androidCamera.onStreamedFrameAvailable(cameraIdWithSettings).listen(handleFrame);
+    await cameraInstance.initializeCamera(cameraIdWithSettings);
+    await cameraInstance.setFlashMode(cameraIdWithSettings, FlashMode.torch);
+
+    frameSubscription = cameraInstance
+        .onStreamedFrameAvailable(cameraIdWithSettings, options: CameraImageStreamOptions())
+        .listen(handleFrame);
     _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) {
       handleUpdateChart();
     });
-    emit(state.copyWith(cameraPreview: androidCamera.buildPreview(cameraIdWithSettings)));
+    emit(state.copyWith(cameraPreview: cameraInstance.buildPreview(cameraIdWithSettings)));
   }
 
   void handleUpdateChart() {
@@ -43,69 +48,70 @@ class PulseCameraCubit extends Cubit<PulseCameraCubitState> {
       state.frameRate = frameRate!;
     }
     final dateTime = DateTime.now().subtract(Duration(seconds: 5));
-    state.lumies.removeWhere((lm) => lm.timeStamp.isBefore(dateTime));
+    state.lumies.removeWhere((lm) => lm.dateTime.isBefore(dateTime));
+    state.lumiesDerivative.removeWhere((ld) => ld.dateTime.isBefore(dateTime));
     emit(state.copyWith());
   }
 
-  void handleFrame(CPI.CameraImageData cameraImageData) {
+  void handleFrame(CameraImageData cameraImageData) {
+    if (stringLength == null) {
+      stringLength = cameraImageData.planes[0].bytes.length;
+      writeFile.writeAsString("stringLength: ${stringLength!}\n", mode: FileMode.writeOnly);
+    }
+    writeFile.writeAsBytes(cameraImageData.planes[0].bytes, mode: FileMode.writeOnlyAppend);
+
     final dateTime = DateTime.now();
     if (lastFrameTime != null) {
       frameRate = (1e6 / (dateTime.microsecondsSinceEpoch - lastFrameTime!.microsecondsSinceEpoch)).round();
     }
     lastFrameTime = dateTime;
-    final lumy =
-        _pulseByCamera.findAverageLumy(cameraImageData.planes[0].bytes, cameraImageData.width, cameraImageData.height);
-    state.lumies.add(LumyMeasuring(dateTime, lumy));
+    final lumy = _pulseByCamera.findAverageFilteredLumy(
+        dateTime, cameraImageData.planes[0].bytes, cameraImageData.width, cameraImageData.height);
+    state.lumies.add(DataWithDateTime(dateTime, lumy));
+
+    final lumyDerivative = _pulseByCamera.findAverageFilteredLumyDerivative(dateTime, lumy);
+    if (lumyDerivative != null) {
+      state.lumiesDerivative.add(DataWithDateTime(dateTime, lumyDerivative));
+      state.pulse = _pulseByCamera.findPulseByDerivative(dateTime, lumyDerivative)?.data ?? state.pulse;
+    }
   }
 
   @override
   Future<void> close() async {
     _timer.cancel();
-    // await frameSubscription.cancel();
-    await androidCamera.stopVideoRecording(cameraIdWithSettings);
-    await androidCamera.dispose(cameraIdWithSettings);
+    await frameSubscription.cancel();
+    await cameraInstance.setFlashMode(cameraIdWithSettings, FlashMode.off);
+    await cameraInstance.dispose(cameraIdWithSettings);
 
     await super.close();
   }
 }
 
-Uint8List lumaToRGBA(Uint8List lumies) {
-  final buffer = WriteBuffer(startCapacity: lumies.length * 4);
-  for (var luma in lumies) {
-    buffer.putUint8(luma);
-    buffer.putUint8(luma);
-    buffer.putUint8(luma);
-    buffer.putUint8(255);
-  }
-
-  return buffer.done().buffer.asUint8List();
-}
-
-Uint8List mockedPixels() {
-  final buffer = WriteBuffer(startCapacity: 1600);
-  for (var _ in Iterable.generate(1600)) {
-    buffer.putUint32(0xff0000ff);
-  }
-
-  return buffer.done().buffer.asUint8List();
-}
-
 class PulseCameraCubitState {
   Widget? cameraPreview;
-  List<LumyMeasuring> lumies = [];
+  List<DataWithDateTime<double>> lumies = [];
+  List<DataWithDateTime<double>> lumiesDerivative = [];
   int frameRate;
+  int? pulse;
 
-  PulseCameraCubitState({this.cameraPreview, List<LumyMeasuring>? lumies, this.frameRate = 0}) {
+  PulseCameraCubitState({this.cameraPreview, List<DataWithDateTime<double>>? lumies, this.frameRate = 0}) {
     if (lumies != null) {
       this.lumies = lumies;
     }
   }
 
-  PulseCameraCubitState copyWith({Widget? cameraPreview, List<LumyMeasuring>? lumies, int? frameRate}) {
+  PulseCameraCubitState copyWith(
+      {Widget? cameraPreview,
+      List<DataWithDateTime<double>>? lumies,
+      int? frameRate,
+      List<DataWithDateTime<double>>? lumiesDerivative,
+      int? pulse}) {
     final copy = PulseCameraCubitState();
     copy.cameraPreview = cameraPreview ?? this.cameraPreview;
     copy.lumies = lumies ?? this.lumies;
     copy.frameRate = frameRate ?? this.frameRate;
+    copy.lumiesDerivative = lumiesDerivative ?? this.lumiesDerivative;
+    copy.pulse = pulse ?? this.pulse;
 
     return copy;
   }

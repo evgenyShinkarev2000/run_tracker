@@ -1,0 +1,4 @@
+enum AppLanguageCode {
+  ru,
+  en,
+}

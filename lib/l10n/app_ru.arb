@@ -4,7 +4,6 @@
   "menuSettings": "настройки",
   "menuMap": "карта",
   "menuHistory": "история",
-  "menuSettingsLanguage": "язык",
   "menuPulse": "пульс",
   "dashSpeed": "скорость",
   "dashPace": "темп",
@@ -44,10 +43,16 @@
   "nounPace": "темп",
   "nounUnits": "единицы измерения",
   "nounPulse": "пульс",
+  "nounCancel": "отмена",
   "runRecordBarIntervalType": "тип интервала",
   "pulseMeasureTabMetronome": "метроном",
   "pulseMeasureTabCamera": "камера",
   "pulseMeasureTabTimer": "таймер",
   "pulseMeasureTabManual": "вручную",
-  "pulseMeasureMetronomIntructionClickAtDrum": "нажимайте барабан на каждый удар сердца"
+  "pulseMeasureMetronomIntructionClickAtDrum": "нажимайте барабан на каждый удар сердца",
+  "settingsLanguage": "язык",
+  "settingsTheme": "тема",
+  "settingVariantDialogButtonDefault": "по умолчанию",
+  "settingVariantThemeLigth": "светлая",
+  "settingVariantThemeDark": "темная"
 }

@@ -1,8 +1,7 @@
-
-import 'package:run_tracker/helpers/LanguageCode.dart';
+import 'package:run_tracker/helpers/AppLanguageCode.dart';
 
 class AppLanguage {
-  final LanguageCode codeEnum;
+  final AppLanguageCode codeEnum;
   final String nativeName;
   late final String codeString;
 

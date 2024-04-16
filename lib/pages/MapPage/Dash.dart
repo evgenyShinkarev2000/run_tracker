@@ -17,6 +17,8 @@ class Dash extends StatelessWidget {
           Text(
             label,
             style: textTheme.labelMedium,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

@@ -21,6 +21,7 @@ class AppMainDrawer extends StatelessWidget {
     goMap() => goRouter.go(Routes.mapPage);
     goHistory() => goRouter.go(Routes.historyPage);
     goPulse() => goRouter.go(Routes.pulsePage);
+    goHive() => goRouter.go(Routes.hivePage);
 
     return Drawer(
       child: ListView(
@@ -49,6 +50,11 @@ class AppMainDrawer extends StatelessWidget {
             settings,
             onTap: goSetting,
             isActive: goRouter.currentRouteHas(Routes.settingPage),
+          ),
+          AppDrawerItem(
+            "hive",
+            onTap: goHive,
+            isActive: goRouter.currentRouteHas(Routes.hivePage),
           ),
         ],
       ),

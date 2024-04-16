@@ -3,6 +3,7 @@ import 'package:run_tracker/data/adapters/RunPointGeolocationDataAdapter.dart';
 import 'package:run_tracker/data/adapters/RunPointStartData.dart';
 import 'package:run_tracker/data/adapters/RunPointStopData.dart';
 import 'package:run_tracker/data/adapters/RunPointsDataAdapter.dart';
+import 'package:run_tracker/data/adapters/SettingDataAdpter.dart';
 
 import 'adapters/RunCoverDataAdapter.dart';
 
@@ -13,4 +14,5 @@ Future<void> initAppData() async {
   Hive.registerAdapter(RunPointGeolocationDataAdapter());
   Hive.registerAdapter(RunPointStartDataAdapter());
   Hive.registerAdapter(RunPointStopDataAdapter());
+  Hive.registerAdapter(SettingDataAdapter());
 }

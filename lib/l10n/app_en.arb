@@ -4,7 +4,6 @@
   "menuSettings": "settings",
   "menuMap": "map",
   "menuHistory": "history",
-  "menuSettingsLanguage": "language",
   "menuPulse": "pulse",
   "dashSpeed": "speed",
   "dashPace": "pace",
@@ -44,10 +43,16 @@
   "nounPace": "pace",
   "nounUnits": "units",
   "nounPulse": "pulse",
+  "nounCancel": "cancel",
   "runRecordBarIntervalType": "interval type",
   "pulseMeasureTabMetronome": "metronome",
   "pulseMeasureTabCamera": "camera",
   "pulseMeasureTabTimer": "timer",
   "pulseMeasureTabManual": "manual",
-  "pulseMeasureMetronomIntructionClickAtDrum": "touch the drum for every heartbeat"
+  "pulseMeasureMetronomIntructionClickAtDrum": "touch the drum for every heartbeat",
+  "settingsLanguage": "language",
+  "settingsTheme": "theme",
+  "settingVariantDialogButtonDefault": "by default",
+  "settingVariantThemeLigth": "light",
+  "settingVariantThemeDark": "dark"
 }

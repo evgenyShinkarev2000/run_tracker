@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive_ui/hive_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:run_tracker/bloc/cubits/CounterCubit.dart';
 import 'package:run_tracker/bloc/cubits/DashBoardDurationCubit.dart';
 import 'package:run_tracker/bloc/cubits/DashBoardGeolocationCubit.dart';
-import 'package:run_tracker/bloc/cubits/GeolocationProviderCubit.dart';
 import 'package:run_tracker/bloc/cubits/LocationMarkerPositionCubit.dart';
 import 'package:run_tracker/bloc/cubits/PositionSignificantCubit.dart';
 import 'package:run_tracker/bloc/cubits/RunRecorderCubit.dart';
+import 'package:run_tracker/components/drawer/AppMainDrawer.dart';
 import 'package:run_tracker/components/future_builder_loader/MultiFutureBuilderLoader.dart';
 import 'package:run_tracker/core/RunRecorder.dart';
+import 'package:run_tracker/data/models/SettingData.dart';
 import 'package:run_tracker/data/repositories/RunCoverRepository.dart';
 import 'package:run_tracker/data/repositories/RunPointsRepository.dart';
+import 'package:run_tracker/data/repositories/SettingRepository.dart';
 import 'package:run_tracker/helpers/GeolocationProvider.dart';
 import 'package:run_tracker/helpers/GeolocatorWrapper.dart';
+import 'package:run_tracker/helpers/extensions/SettingExtension.dart';
 import 'package:run_tracker/pages/ActivityPage.dart';
 import 'package:run_tracker/pages/HistoryPage/HistoryPage.dart';
 import 'package:run_tracker/pages/MapPage/MapPage.dart';
@@ -22,6 +26,7 @@ import 'package:run_tracker/pages/PulsePage/PulsePage.dart';
 import 'package:run_tracker/pages/RunRecordPage/RunRecordPage.dart';
 import 'package:run_tracker/pages/SettingPage/SettingPage.dart';
 import 'package:run_tracker/services/RunRecordService.dart';
+import 'package:run_tracker/services/settings/SettingsProvider.dart';
 
 class Routes {
   static const activityPage = "/ActivityPage";
@@ -30,6 +35,7 @@ class Routes {
   static const historyPage = "/HistoryPage";
   static const runRecordPage = "/RunRecordPage";
   static const pulsePage = "/PulsePage";
+  static const hivePage = "/HivePage";
 }
 
 final AppRouterConfig = GoRouter(routes: [
@@ -39,7 +45,17 @@ final AppRouterConfig = GoRouter(routes: [
   ),
   GoRoute(
     path: Routes.settingPage,
-    builder: (c, grs) => SettingPage(),
+    builder: (context, grs) => MultiFutureBuilderLoader(
+      register: (storage) {
+        final appSettings = context.read<SettingsProvider>().appSettings;
+
+        storage.register(appSettings.init());
+        storage.register(appSettings.geolocation.init());
+        storage.register(appSettings.pulseByCamera.init());
+      },
+      loader: (_, __) => Container(),
+      builder: (context, store) => SettingPage(),
+    ),
   ),
   GoRoute(
     path: Routes.activityPage,
@@ -52,10 +68,11 @@ final AppRouterConfig = GoRouter(routes: [
   ),
   GoRoute(
     path: Routes.mapPage,
-    builder: (c, grs) => MultiFutureBuilderLoader(
-      register: (helper) {
-        helper.register(RunCoverRepositoryFactory().create());
-        helper.register(RunPointsRepositoryFactory().create());
+    builder: (context, grs) => MultiFutureBuilderLoader(
+      register: (store) {
+        store.register(context.read<SettingsProvider>().appSettings.geolocation.init());
+        store.register(RunCoverRepositoryFactory().create());
+        store.register(RunPointsRepositoryFactory().create());
       },
       loader: (_, __) => Container(),
       builder: (context, store) {
@@ -66,9 +83,9 @@ final AppRouterConfig = GoRouter(routes: [
             Provider<GeolocatorWrapper>(create: (_) => GeolocatorWrapper()),
             ProxyProvider<GeolocatorWrapper, IGeolocationProvider>(
               update: (context, geoWrapper, _) {
-                final geolocationProviderKind = context.read<GeolocationProviderCubit>().state;
+                final geolocationSettings = context.read<SettingsProvider>().appSettings.geolocation;
 
-                return GeolocationProviderFactory(geoWrapper).create(geolocationProviderKind);
+                return GeolocationProviderFactory(geoWrapper).create(geolocationSettings.ProviderKind.valueOrDefault!);
               },
               dispose: (context, geoRepo) => geoRepo.dispose(),
             ),
@@ -168,5 +185,24 @@ final AppRouterConfig = GoRouter(routes: [
   GoRoute(
     path: Routes.pulsePage,
     builder: (context, state) => PulsePage(),
+  ),
+  GoRoute(
+    path: Routes.hivePage,
+    builder: (context, state) => MultiFutureBuilderLoader(
+      register: (storage) {
+        storage.register(SettingRepositoryFactory().create());
+      },
+      loader: (_, __) => Container(),
+      builder: (context, store) => Scaffold(
+        appBar: AppBar(),
+        drawer: AppMainDrawer(),
+        body: HiveBoxesView(
+          hiveBoxes: {
+            store.get<SettingRepository>().settingBox: (json) => SettingData.fromJson(json),
+          },
+          onError: (e) {},
+        ),
+      ),
+    ),
   ),
 ]);

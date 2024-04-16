@@ -10,43 +10,32 @@ const black = Colors.black;
 final brightGreen = Color.fromARGB(255, 68, 248, 74);
 final brightRed = Color.fromARGB(255, 255, 62, 62);
 
-final AppThemeLight = ThemeData(
-    textTheme: TextTheme(
-      labelMedium: TextStyle(fontSize: 16),
-      labelLarge: TextStyle(fontSize: 20),
-    ),
-    colorScheme: ColorScheme.light(primary: blue),
-    appBarTheme: AppBarTheme(
-      backgroundColor: grey200,
-      toolbarHeight: 40,
-    ),
-    dialogTheme: DialogTheme(surfaceTintColor: grey200),
-    iconButtonTheme: IconButtonThemeData(
-      style: ButtonStyle(
-        iconSize: MaterialStatePropertyAll<double>(40),
+ThemeData _applyThemeChanges(ThemeData themeData) {
+  return themeData.copyWith(
+      iconButtonTheme: IconButtonThemeData(
+        style: themeData.iconButtonTheme.style?.copyWith(iconSize: MaterialStatePropertyAll<double>(40)),
       ),
-    ),
-    useMaterial3: true,
-    extensions: [
-      CustomColors(),
-      DashBoardTheme(
-        backgroundColor: grey100,
-        outerBorderColor: black,
-        innerBorderColor: blue,
-      ),
-      MapPainterFullTheme(
-        startMarkerColor: brightGreen,
-        stopMarkerColor: brightRed,
-      ),
-    ]);
+      extensions: [
+        CustomColors(),
+        DashBoardTheme(
+          backgroundColor: themeData.colorScheme.background,
+          outerBorderColor: black,
+          innerBorderColor: blue,
+        ),
+        MapPainterFullTheme(
+          startMarkerColor: brightGreen,
+          stopMarkerColor: brightRed,
+        ),
+      ]);
+}
 
-final AppThemeDark = ThemeData();
+final AppThemeLight = _applyThemeChanges(ThemeData.from(colorScheme: ColorScheme.light(primary: blue)));
+final AppThemeDark = _applyThemeChanges(ThemeData.dark());
 
 extension ThemeDataExtension on ThemeData {
   CustomColors get customColors => extension<CustomColors>()!;
   DashBoardTheme get dashBoardTheme => extension<DashBoardTheme>()!;
-  MapPainterFullTheme get mapPainterFullTheme =>
-      extension<MapPainterFullTheme>()!;
+  MapPainterFullTheme get mapPainterFullTheme => extension<MapPainterFullTheme>()!;
 }
 
 class CustomColors extends ThemeExtension<CustomColors> {
@@ -56,8 +45,7 @@ class CustomColors extends ThemeExtension<CustomColors> {
   }
 
   @override
-  ThemeExtension<CustomColors> lerp(
-      covariant ThemeExtension<CustomColors>? other, double t) {
+  ThemeExtension<CustomColors> lerp(covariant ThemeExtension<CustomColors>? other, double t) {
     return this;
   }
 }

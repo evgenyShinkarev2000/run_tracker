@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:run_tracker/bloc/cubits/CounterCubit.dart';
-import 'package:run_tracker/bloc/cubits/LocalizationCubit.dart';
 import 'package:run_tracker/components/drawer/AppMainDrawer.dart';
 
 class ActivityPage extends StatelessWidget {
@@ -11,15 +10,6 @@ class ActivityPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     increment() => context.read<CounterCubit>().increment();
-    changeLanguage(){
-      final localizationCubit = context.read<LocalizationCubit>();
-      if (Localizations.localeOf(context).languageCode == "ru"){
-        localizationCubit.setEng();
-      }
-      else{
-        localizationCubit.setRus();
-      }
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -39,7 +29,6 @@ class ActivityPage extends StatelessWidget {
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             ),
-            TextButton(onPressed: changeLanguage, child: Text("changeLanguage"))
           ],
         ),
       ),
