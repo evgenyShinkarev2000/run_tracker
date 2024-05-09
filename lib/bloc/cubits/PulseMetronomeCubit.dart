@@ -16,7 +16,7 @@ class PulseMetronomeCubit extends Cubit<PulseMetronomeCubitState> {
 
 class PulseMetronomeCubitState {
   /// beats pre minute
-  final int pulseBPM;
+  final double? pulseBPM;
 
   PulseMetronomeCubitState(this.pulseBPM);
 }

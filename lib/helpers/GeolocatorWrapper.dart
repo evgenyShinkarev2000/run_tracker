@@ -8,13 +8,7 @@ class GeolocatorWrapper {
   GeolocatorWrapper();
 
   Future<Position> determinePosition() async {
-    try {
-      await checkPermission();
-
-      return await Geolocator.getCurrentPosition();
-    } catch (ex) {
-      rethrow;
-    }
+    return await Geolocator.getCurrentPosition();
   }
 
   Stream<Position> getPositionStream(Duration? updateInterval) {
@@ -26,14 +20,10 @@ class GeolocatorWrapper {
   }
 
   Future<Position?> getLastPosition() async {
-    try {
-      return await Geolocator.getLastKnownPosition();
-    } catch (ex) {
-      rethrow;
-    }
+    return await Geolocator.getLastKnownPosition();
   }
 
-  Future checkPermission() async {
+  static Future checkPermission() async {
     final serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       return throw LocationServiceDisabledException();

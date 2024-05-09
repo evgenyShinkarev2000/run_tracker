@@ -1,4 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:run_tracker/data/adapters/PulseMeasurementDataAdapter.dart';
 import 'package:run_tracker/data/adapters/RunPointGeolocationDataAdapter.dart';
 import 'package:run_tracker/data/adapters/RunPointStartData.dart';
 import 'package:run_tracker/data/adapters/RunPointStopData.dart';
@@ -10,9 +11,10 @@ import 'adapters/RunCoverDataAdapter.dart';
 Future<void> initAppData() async {
   await Hive.initFlutter();
   Hive.registerAdapter(RunCoverDataAdapter());
-  Hive.registerAdapter(RunRecordDataAdapter());
+  Hive.registerAdapter(RunPointsDataAdapter());
   Hive.registerAdapter(RunPointGeolocationDataAdapter());
   Hive.registerAdapter(RunPointStartDataAdapter());
   Hive.registerAdapter(RunPointStopDataAdapter());
   Hive.registerAdapter(SettingDataAdapter());
+  Hive.registerAdapter(PulseMeasurementDataAdapter());
 }

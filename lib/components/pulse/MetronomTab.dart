@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:run_tracker/helpers/extensions/BuildContextExtension.dart';
 import 'package:run_tracker/helpers/extensions/StringExtension.dart';
 
+import 'PulseLabel.dart';
+
 class MetronomTab extends StatefulWidget {
   final void Function() onClick;
   final int pulse;
@@ -27,9 +29,7 @@ class _MetronomTabState extends State<MetronomTab> {
             textAlign: TextAlign.center,
           ),
         ),
-        SizedBox(
-          height: 8,
-        ),
+        SizedBox(height: 8),
         GestureDetector(
           onTapDown: (_) => handlePressed(),
           child: IndexedStack(
@@ -43,19 +43,8 @@ class _MetronomTabState extends State<MetronomTab> {
           ),
         ),
         SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "${context.appLocalization.nounPulse}, ${context.appLocalization.unitShortBPM}:",
-              style: context.themeDate.textTheme.titleMedium,
-            ),
-            SizedBox(width: 8),
-            Text(
-              widget.pulse.toString(),
-              style: context.themeDate.textTheme.headlineSmall,
-            ),
-          ],
+        PulseLabel(
+          pulse: widget.pulse,
         ),
       ],
     );

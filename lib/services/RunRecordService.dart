@@ -4,7 +4,7 @@ import 'package:run_tracker/data/mappers/RunPointGeolocationDataToCore.dart';
 import 'package:run_tracker/data/repositories/RunCoverRepository.dart';
 import 'package:run_tracker/data/repositories/RunPointsRepository.dart';
 import 'package:run_tracker/services/models/RunRecordModel.dart';
-import 'package:run_tracker/services/mappers/RunPointsToData.dart';
+import 'package:run_tracker/services/mappers/RunRecordToData.dart';
 import 'package:run_tracker/services/mappers/RunRecordToCoverData.dart';
 
 class RunRecordService {
@@ -17,7 +17,7 @@ class RunRecordService {
 
   Future<void> saveRecord(RunRecord runRecord) async {
     var runCoverData = RunRecordToCoverData().map(runRecord);
-    var runPointsData = RunPointsToData().map(runRecord.runPoints.toList());
+    var runPointsData = RunRecordToData().map(runRecord);
 
     await Future.wait([_runCoverRepository.add(runCoverData), _runPointsRepository.add(runPointsData)]);
 

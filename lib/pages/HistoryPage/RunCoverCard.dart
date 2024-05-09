@@ -38,12 +38,6 @@ class RunCoverCard extends StatelessWidget {
     final pulseLabel = context.appLocalization.runcardCoverPulse;
 
     return Card(
-      shape: RoundedRectangleBorder(
-        side: BorderSide(width: 1),
-        borderRadius: BorderRadius.all(
-          Radius.circular(8),
-        ),
-      ),
       child: InkWell(
         onTap: onTap,
         child: Padding(

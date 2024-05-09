@@ -100,6 +100,21 @@ class SettingFactory {
     );
   }
 
+  Future<SettingValue<Duration>> initSettingDuration(String name, [Duration? defaultValue]) async {
+    return initSettingValue(name, (value) => value?.inMicroseconds.toString(), (string) {
+      if (string == null) {
+        return null;
+      }
+
+      final microseconds = int.tryParse(string);
+      if (microseconds == null) {
+        return null;
+      }
+
+      return Duration(microseconds: microseconds);
+    }, defaultValue);
+  }
+
   Future<SettingValue<T>> initSettingEnum<T extends Enum>(String name, Iterable<T> enumValues, [T? defaultValue]) {
     return initSettingValue<T>(
       name,

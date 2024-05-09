@@ -1,11 +1,11 @@
 import 'package:hive/hive.dart';
+import 'package:run_tracker/data/models/PulseMeasurementData.dart';
+import 'package:run_tracker/data/models/RunItemGeolocationData.dart';
+import 'package:run_tracker/data/models/RunItemStartData.dart';
+import 'package:run_tracker/data/models/RunItemStopData.dart';
 import 'package:run_tracker/data/models/RunPointsData.dart';
 
-import '../models/RunItemGeolocationData.dart';
-import '../models/RunItemStartData.dart';
-import '../models/RunItemStopData.dart';
-
-class RunRecordDataAdapter extends TypeAdapter<RunPointsData> {
+class RunPointsDataAdapter extends TypeAdapter<RunPointsData> {
   @override
   final int typeId = 2;
 
@@ -19,13 +19,14 @@ class RunRecordDataAdapter extends TypeAdapter<RunPointsData> {
       geolocations: (fields[1] as List).cast<RunPointGeolocationData>(),
       start: fields[2] as RunPointStartData,
       stop: fields[3] as RunPointStopData,
+      pulseMeasurements: (fields[4] as List).cast<PulseMeasurementData>(),
     )..runCoverKey = fields[0] as int?;
   }
 
   @override
   void write(BinaryWriter writer, RunPointsData obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.runCoverKey)
       ..writeByte(1)
@@ -33,7 +34,9 @@ class RunRecordDataAdapter extends TypeAdapter<RunPointsData> {
       ..writeByte(2)
       ..write(obj.start)
       ..writeByte(3)
-      ..write(obj.stop);
+      ..write(obj.stop)
+      ..writeByte(4)
+      ..write(obj.pulseMeasurements);
   }
 
   @override
@@ -42,7 +45,5 @@ class RunRecordDataAdapter extends TypeAdapter<RunPointsData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is RunRecordDataAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+      other is RunPointsDataAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
 }

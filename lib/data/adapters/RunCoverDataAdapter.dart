@@ -14,17 +14,18 @@ class RunCoverDataAdapter extends TypeAdapter<RunCoverData> {
     return RunCoverData(
       title: fields[0] as String,
       startDateTime: fields[1] as DateTime,
-      averageSpeed: fields[2] as double?,
       duration: fields[3] as int,
       distance: fields[5] as double,
       runPointsKey: fields[4] as int?,
+      averageSpeed: fields[2] as double?,
+      averagePulse: fields[6] as double?,
     );
   }
 
   @override
   void write(BinaryWriter writer, RunCoverData obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -36,7 +37,9 @@ class RunCoverDataAdapter extends TypeAdapter<RunCoverData> {
       ..writeByte(4)
       ..write(obj.runPointsKey)
       ..writeByte(5)
-      ..write(obj.distance);
+      ..write(obj.distance)
+      ..writeByte(6)
+      ..write(obj.averagePulse);
   }
 
   @override
@@ -45,7 +48,5 @@ class RunCoverDataAdapter extends TypeAdapter<RunCoverData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is RunCoverDataAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+      other is RunCoverDataAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
 }

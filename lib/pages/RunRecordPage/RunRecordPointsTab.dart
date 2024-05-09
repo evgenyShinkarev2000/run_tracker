@@ -15,16 +15,30 @@ class RunRecordPointsTab extends StatelessWidget {
     final style = context.themeDate.textTheme.bodyLarge;
 
     return ListView(children: [
-      ...points.map((p) => ListTile(
-            leading: Text(
-              toFormatedDateTime(p.dateTime),
-              style: style,
-            ),
-            title: Text(
-              "${p.geolocation.longitude}, ${p.geolocation.latitude}",
-              style: style,
-            ),
-          )),
+      ...points.map(
+        (p) => ListTile(
+          leading: Text(
+            toFormatedDateTime(p.dateTime),
+            style: style,
+          ),
+          title: Text(
+            "${p.geolocation.longitude}, ${p.geolocation.latitude}",
+            style: style,
+          ),
+        ),
+      ),
+      ...runRecordModel.runPointsData.pulseMeasurements.map(
+        (pm) => ListTile(
+          leading: Text(
+            toFormatedDateTime(pm.dateTime),
+            style: style,
+          ),
+          title: Text(
+            "${pm.pulse} bpm",
+            style: style,
+          ),
+        ),
+      ),
     ]);
   }
 

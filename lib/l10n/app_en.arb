@@ -17,9 +17,6 @@
   "runCardCoverPace": "pace",
   "runcardCoverPulse": "pulse",
   "stopRecordingDialogQuestion": "stop recording?",
-  "stopRecordingDialogConfirm": "confirm",
-  "stopRecordingDialogCancel": "cancel",
-  "saveRecordDialogSave": "save",
   "saveRecordDialogTitleValidatorMessage": "title length must be longer {length}",
   "@saveRecordDialogTitleValidatorMessage": {
     "placeholders":{
@@ -44,9 +41,13 @@
   "nounUnits": "units",
   "nounPulse": "pulse",
   "nounCancel": "cancel",
+  "verbCanfirm": "confirm",
+  "verbCancel": "cancel",
+  "verbSave": "save",
   "runRecordBarIntervalType": "interval type",
   "pulseMeasureTabMetronome": "metronome",
   "pulseMeasureTabCamera": "camera",
+  "pulseMeasureCameraInstructionInitial": "press your finger firmly against the camera and flash",
   "pulseMeasureTabTimer": "timer",
   "pulseMeasureTabManual": "manual",
   "pulseMeasureMetronomIntructionClickAtDrum": "touch the drum for every heartbeat",

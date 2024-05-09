@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:run_tracker/bloc/cubits/LocationMarkerPositionCubit.dart';
 import 'package:run_tracker/bloc/cubits/PositionSignificantCubit.dart';
 import 'package:run_tracker/bloc/cubits/RunRecorderCubit.dart';
 import 'package:run_tracker/components/drawer/AppMainDrawer.dart';
+import 'package:run_tracker/helpers/GeolocatorWrapper.dart';
 import 'package:run_tracker/helpers/extensions/AppGeolocationExtension.dart';
+import 'package:run_tracker/helpers/extensions/PositionExtension.dart';
 import 'package:run_tracker/pages/MapPage/DashBoard.dart';
 import 'package:run_tracker/pages/MapPage/MapBottomButtons.dart';
 import 'package:run_tracker/pages/MapPage/MapContribution.dart';
@@ -37,26 +40,40 @@ class _MapPageState extends State<MapPage> {
             listener: (context, state) {
               mapController.move(state.currentGeolocation!.toLatLng(), mapController.camera.zoom);
             },
-            child: FlutterMap(
-              mapController: mapController,
-              options: MapOptions(
-                initialZoom: 10,
-              ),
-              children: [
-                MapTileLayer(),
-                BlocBuilder<LocationMarkerPositionCubit, LocationMarkerPositionState>(
-                  builder: (context, cubit) {
-                    return CurrentLocationLayer(
-                      positionStream: cubit.positionStream,
-                    );
-                  },
-                ),
-                Opacity(
-                  opacity: 0.5,
-                  child: MapContribution(),
-                ),
-              ],
-            ),
+            child: Builder(builder: (context) {
+              final geoWrapper = context.read<GeolocatorWrapper>();
+
+              return FutureBuilder(
+                future: geoWrapper.getLastPosition(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Container();
+                  }
+
+                  return FlutterMap(
+                    mapController: mapController,
+                    options: MapOptions(
+                      initialZoom: 10,
+                      initialCenter: snapshot.data?.toLatLng() ?? LatLng(0, 0),
+                    ),
+                    children: [
+                      MapTileLayer(),
+                      BlocBuilder<LocationMarkerPositionCubit, LocationMarkerPositionState>(
+                        builder: (context, cubit) {
+                          return CurrentLocationLayer(
+                            positionStream: cubit.positionStream,
+                          );
+                        },
+                      ),
+                      Opacity(
+                        opacity: 0.5,
+                        child: MapContribution(),
+                      ),
+                    ],
+                  );
+                },
+              );
+            }),
           ),
           BlocBuilder<RunRecorderCubit, RunRecorderState>(builder: (context, state) {
             return MapBottomButtons();

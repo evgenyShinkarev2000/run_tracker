@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
                 GlobalCupertinoLocalizations.delegate,
                 AppLocalizations.delegate,
               ],
-              locale: appSettings.locale.value ?? WidgetsBinding.instance.platformDispatcher.locale,
+              locale: appSettings.locale.valueOrDefault!,
               supportedLocales: [
                 Locale(AppLanguageCode.en.name),
                 Locale(AppLanguageCode.ru.name),

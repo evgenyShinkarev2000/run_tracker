@@ -10,8 +10,8 @@ class StopRecordingDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final titleLabel = context.appLocalization.stopRecordingDialogQuestion;
-    final confirmLabel = context.appLocalization.stopRecordingDialogConfirm;
-    final cancelLabel = context.appLocalization.stopRecordingDialogCancel;
+    final confirmLabel = context.appLocalization.verbCanfirm;
+    final cancelLabel = context.appLocalization.verbCancel;
 
     return AlertDialog(
       title: Text(titleLabel),

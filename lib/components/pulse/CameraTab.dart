@@ -1,88 +1,35 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:run_tracker/bloc/cubits/PulseCameraCubit.dart';
+import 'package:run_tracker/components/pulse/PulseLabel.dart';
 import 'package:run_tracker/components/pulse/PulsePlot.dart';
-import 'package:run_tracker/helpers/extensions/IterableExtension.dart';
+import 'package:run_tracker/helpers/extensions/BuildContextExtension.dart';
+import 'package:run_tracker/helpers/extensions/StringExtension.dart';
 
 class CameraTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        BlocBuilder<PulseCameraCubit, PulseCameraCubitState>(
-          builder: (context, state) => Text("pulse: ${state.pulse ?? 0} bpm"),
+        Text(
+          context.appLocalization.pulseMeasureCameraInstructionInitial.capitalize(),
+          style: context.themeDate.textTheme.titleMedium,
+          textAlign: TextAlign.center,
         ),
-        BlocBuilder<PulseCameraCubit, PulseCameraCubitState>(
-          builder: (context, state) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("frame rate: ${state.frameRate.toString()}"),
-              ],
+        SizedBox(height: 8),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 8),
+          width: 400,
+          height: 150,
+          child: BlocBuilder<PulseCameraCubit, PulseCameraCubitState>(builder: (context, state) {
+            return PulsePlot(
+              points: state.lumies,
             );
-          },
+          }),
         ),
+        SizedBox(height: 8),
         BlocBuilder<PulseCameraCubit, PulseCameraCubitState>(
-          buildWhen: (previous, current) => previous.cameraPreview != current.cameraPreview,
-          builder: (context, state) => state.cameraPreview == null
-              ? Text("launching camera")
-              : Container(
-                  width: 200,
-                  height: 200,
-                  child: Center(child: state.cameraPreview),
-                ),
-        ),
-        Container(
-          width: 400,
-          height: 200,
-          child: BlocBuilder<PulseCameraCubit, PulseCameraCubitState>(
-            builder: (context, state) => PulsePlot(
-              points: state.lumies
-                  .map((lumy) => FlSpot(lumy.dateTime.microsecondsSinceEpoch.toDouble(), lumy.data))
-                  .toList(),
-            ),
-          ),
-        ),
-        Container(
-          width: 400,
-          height: 200,
-          child: BlocBuilder<PulseCameraCubit, PulseCameraCubitState>(
-            builder: (context, state) => LineChart(
-              LineChartData(
-                lineBarsData: [
-                  LineChartBarData(
-                    dotData: FlDotData(show: false),
-                    spots: state.lumiesDerivative
-                        .map((point) => FlSpot(point.dateTime.microsecondsSinceEpoch.toDouble(), point.data))
-                        .toList(),
-                  ),
-                  state.lumiesDerivative.isNotEmpty
-                      ? LineChartBarData(
-                          dotData: FlDotData(show: false),
-                          spots: [
-                            FlSpot(
-                                state.lumiesDerivative
-                                    .min((p) => p.dateTime)!
-                                    .dateTime
-                                    .microsecondsSinceEpoch
-                                    .toDouble(),
-                                0),
-                            FlSpot(
-                                state.lumiesDerivative
-                                    .max((p) => p.dateTime)!
-                                    .dateTime
-                                    .microsecondsSinceEpoch
-                                    .toDouble(),
-                                0)
-                          ],
-                          color: Colors.red,
-                        )
-                      : null,
-                ].nonNulls.toList(),
-              ),
-            ),
-          ),
+          builder: (context, state) => PulseLabel(pulse: state.pulse?.round() ?? 0),
         ),
       ],
     );

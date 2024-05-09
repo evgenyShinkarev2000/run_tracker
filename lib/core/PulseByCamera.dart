@@ -72,19 +72,14 @@ class PulseByCamera {
       return null;
     }
 
-    // return averageLumyDerivative!.y;
-
     final averageLumyDerivativeFiltered = _lumyDerivativeFilter.filter(DataWithDateTime(
         DateTime.fromMicrosecondsSinceEpoch(averageLumyDerivative.x.toInt()), averageLumyDerivative.y));
-
-    // return averageLumyDerivativeFiltered;
-
     final averageLumyDerivativeFilteredAverage = _lumyDerivativeAverage.add(averageLumyDerivativeFiltered);
 
     return averageLumyDerivativeFilteredAverage;
   }
 
-  DataWithDateTime<int>? findPulseByDerivative(DateTime timeStamp, double averageLumyDerivative) {
+  DataWithDateTime<double>? findPulseByDerivative(DateTime timeStamp, double averageLumyDerivative) {
     _pulseMinExtremumFinder.add(DataWithDateTime(timeStamp, averageLumyDerivative));
     if (_pulseMinExtremumFinder.hasNewExtremum) {
       final extremum = _pulseMinExtremumFinder.seizeExtremum()!;
@@ -101,5 +96,12 @@ class PulseByCamera {
   }
 
   /// beats per minute
-  int? findPulse(DateTime timeStamp, double averageLumy) {}
+  double? findPulse(DateTime timeStamp, double averageLumy) {
+    final lumyDerivative = findAverageFilteredLumyDerivative(timeStamp, averageLumy);
+    if (lumyDerivative == null) {
+      return null;
+    }
+
+    return findPulseByDerivative(timeStamp, lumyDerivative)?.data;
+  }
 }

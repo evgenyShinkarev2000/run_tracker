@@ -9,8 +9,7 @@ import 'package:run_tracker/pages/HistoryPage/RunCoverCard.dart';
 import 'package:run_tracker/services/RunRecordService.dart';
 
 class HistoryPage extends StatelessWidget {
-  static final RunPointGeolocationDataToCore _runPointGeolocationDataToCore =
-      RunPointGeolocationDataToCore();
+  static final RunPointGeolocationDataToCore _runPointGeolocationDataToCore = RunPointGeolocationDataToCore();
 
   const HistoryPage({super.key});
 
@@ -41,8 +40,7 @@ class HistoryPage extends StatelessWidget {
                 runRecordModel.runPointsData.start.geolocation,
                 ...runRecordModel.runPointsData.geolocations,
                 runRecordModel.runPointsData.stop.geolocation
-              ].nonNulls.map((rpgd) =>
-                  _runPointGeolocationDataToCore.map(rpgd).geolocation);
+              ].nonNulls.map((rpgd) => _runPointGeolocationDataToCore.map(rpgd).geolocation);
               final runCover = runRecordModel.runCoverData;
 
               return Builder(builder: (context) {
@@ -53,9 +51,8 @@ class HistoryPage extends StatelessWidget {
                     beginDateTime: runCover.startDateTime,
                     duration: Duration(microseconds: runCover.duration),
                     distance: runCover.distance,
-                    pace: SpeedHelper.speedToPace(runCover.averageSpeed) ??
-                        Duration(),
-                    pulse: 100);
+                    pace: SpeedHelper.speedToPace(runCover.averageSpeed) ?? Duration(),
+                    pulse: runCover.averagePulse?.round() ?? 0);
               });
             },
           );

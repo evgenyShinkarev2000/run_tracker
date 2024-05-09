@@ -6,8 +6,7 @@ abstract class SettingSetBase {
   late final String name;
   SettingSetBase({required String name, String? prefix}) {
     if (prefix != null) {
-      this.name = name;
-      this.name = buildSettingName(prefix);
+      this.name = "$prefix.$name";
     } else {
       this.name = name;
     }
@@ -23,7 +22,7 @@ abstract class SettingSetBase {
     isInitialized = true;
   }
 
-  String buildSettingName(String name) {
-    return "${this.name}.$name";
+  String buildSettingName(String settingName) {
+    return "$name.$settingName";
   }
 }

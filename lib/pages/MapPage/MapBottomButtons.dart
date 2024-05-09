@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:run_tracker/Router.dart';
 import 'package:run_tracker/bloc/cubits/RunRecorderCubit.dart';
+import 'package:run_tracker/components/pulse/PulseDialog.dart';
+import 'package:run_tracker/core/PulseRecorder.dart';
 import 'package:run_tracker/core/RunRecord.dart';
 import 'package:run_tracker/core/RunRecorder.dart';
 import 'package:run_tracker/pages/MapPage/SaveRecordDialog.dart';
@@ -14,8 +16,7 @@ class MapBottomButtons extends StatefulWidget {
   const MapBottomButtons({super.key});
 
   @override
-  State<StatefulWidget> createState() =>
-      _MapBottomButtonsState(goingMode: GoingMode.ready, isLocked: false);
+  State<StatefulWidget> createState() => _MapBottomButtonsState(goingMode: GoingMode.ready, isLocked: false);
 }
 
 class _MapBottomButtonsState extends State<MapBottomButtons> {
@@ -44,9 +45,7 @@ class _MapBottomButtonsState extends State<MapBottomButtons> {
   }
 
   List<Widget> buildIcons(BuildContext context) {
-    final isPlayShow =
-        (goingMode == GoingMode.ready || goingMode == GoingMode.pause) &&
-            !isLocked;
+    final isPlayShow = (goingMode == GoingMode.ready || goingMode == GoingMode.pause) && !isLocked;
     final isPauseShow = goingMode == GoingMode.play && !isLocked;
     final isLockedShow = goingMode != GoingMode.ready && isLocked;
     final isUnlockedShow = goingMode != GoingMode.ready && !isLocked;
@@ -54,12 +53,8 @@ class _MapBottomButtonsState extends State<MapBottomButtons> {
     final isAddPlacemarkShow = goingMode != GoingMode.ready && !isLocked;
     final isAddHeartRateShow = goingMode != GoingMode.ready && !isLocked;
 
-    final double buttonSize = Theme.of(context)
-            .iconButtonTheme
-            .style
-            ?.iconSize
-            ?.resolve(MaterialState.values.toSet()) ??
-        40;
+    final double buttonSize =
+        Theme.of(context).iconButtonTheme.style?.iconSize?.resolve(MaterialState.values.toSet()) ?? 40;
 
     return [
       isStopShow
@@ -104,7 +99,7 @@ class _MapBottomButtonsState extends State<MapBottomButtons> {
           : null,
       isAddHeartRateShow
           ? IconButton(
-              onPressed: () {},
+              onPressed: () => addHeartRateTap(context),
               icon: Icon(CupertinoIcons.heart),
             )
           : null,
@@ -175,12 +170,16 @@ class _MapBottomButtonsState extends State<MapBottomButtons> {
 
   void showSaveRecordDialog(BuildContext context) {
     final runRecorderCubit = context.read<RunRecorderCubit>();
+    final pulseRecorder = context.read<PulseRecorder>();
     final runRecordService = context.read<RunRecordService>();
 
     saveRecordTap(String title) {
       runRecordService
           .saveRecord(RunRecord(
-              title: title, runPoints: runRecorderCubit.GetRunPoints()))
+            title: title,
+            runPoints: runRecorderCubit.GetRunPoints(),
+            pulseMeasurements: pulseRecorder.pulseMeasurement.toList(),
+          ))
           .then((value) => context.go(Routes.historyPage));
     }
 
@@ -190,6 +189,17 @@ class _MapBottomButtonsState extends State<MapBottomButtons> {
       builder: (context) => SaveRecordDialog(
         onSave: saveRecordTap,
         titleInitial: runRecorderCubit.GetStartDateTime().toString(),
+      ),
+    );
+  }
+
+  void addHeartRateTap(BuildContext context) {
+    final pulseRecorder = context.read<PulseRecorder>();
+
+    showDialog(
+      context: context,
+      builder: (context) => PulseDialog(
+        onSave: pulseRecorder.addMeasurement,
       ),
     );
   }

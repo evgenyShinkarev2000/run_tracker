@@ -17,7 +17,10 @@ class PositionSignificantCubit extends Cubit<PositionSignificantState> {
       bool isPaused = false})
       : super(initialState) {
     geolocationSubscription = geoRepo.geolocationStream.listen((appGeolocation) {
-      emit(PositionSignificantState(appGeolocation, _isOffsetSignificant(appGeolocation)));
+      emit(PositionSignificantState(
+        appGeolocation,
+        _isOffsetSignificant(appGeolocation),
+      ));
     });
     if (isPaused) {
       geolocationSubscription.pause();

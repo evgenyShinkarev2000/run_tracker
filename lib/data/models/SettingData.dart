@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:run_tracker/data/HiveTypeId.dart';
 
-@HiveType(typeId: HiveTypeId.Setting)
+@HiveType(typeId: HiveTypeId.setting)
 class SettingData extends HiveObject {
   @override
   String? get key => super.key;

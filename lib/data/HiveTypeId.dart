@@ -4,5 +4,6 @@ class HiveTypeId {
   static const int runPointGeolocation = 3;
   static const int runPointStart = 4;
   static const int runPointStop = 5;
-  static const int Setting = 6;
+  static const int setting = 6;
+  static const int pulseMeasurement = 7;
 }

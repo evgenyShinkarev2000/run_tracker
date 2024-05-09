@@ -23,11 +23,15 @@ class RunCoverData extends AppHiveObject {
   @HiveField(5)
   double distance;
 
+  @HiveField(6)
+  double? averagePulse;
+
   RunCoverData(
       {required this.title,
       required this.startDateTime,
-      required this.averageSpeed,
       required this.duration,
       required this.distance,
-      this.runPointsKey});
+      this.runPointsKey,
+      this.averageSpeed,
+      this.averagePulse});
 }

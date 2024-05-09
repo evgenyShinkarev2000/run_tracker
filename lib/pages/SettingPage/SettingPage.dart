@@ -4,13 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:run_tracker/components/drawer/AppMainDrawer.dart';
 import 'package:run_tracker/helpers/AppLanguageCode.dart';
 import 'package:run_tracker/helpers/AppTheme.dart';
+import 'package:run_tracker/helpers/GeolocationProviderKind.dart';
 import 'package:run_tracker/helpers/extensions/BuildContextExtension.dart';
+import 'package:run_tracker/helpers/extensions/DurationExtension.dart';
 import 'package:run_tracker/helpers/extensions/SettingExtension.dart';
-import 'package:run_tracker/pages/SettingPage/ChooseSettingVariant.dart';
-import 'package:run_tracker/pages/SettingPage/ChooseSettingVariantDialog.dart';
+import 'package:run_tracker/pages/SettingPage/Setting.dart';
 import 'package:run_tracker/services/settings/SettingsProvider.dart';
 
-import '../../helpers/GeolocationProviderKind.dart';
 import 'SettingVariantView.dart';
 
 class SettingPageState extends State<SettingPage> {
@@ -26,37 +26,10 @@ class SettingPageState extends State<SettingPage> {
   Widget build(BuildContext context) {
     final appSettings = context.watch<SettingsProvider>().appSettings;
 
-    showChooseLanguageDialog() => showDialog(
-          context: context,
-          builder: (_) => ChooseSettingVariantDialog<AppLanguageCode>(
-            variants: supportedLanguages,
-            onSelect: (variant) => appSettings.locale.setVariant(variant),
-            selected: appSettings.locale.variantOrDefault,
-          ),
-        );
-    showChooseGeolocationProviderDialog() => showDialog(
-          context: context,
-          builder: (_) => ChooseSettingVariantDialog(
-            variants: supportedGeolocationProviders,
-            onSelect: (variant) => appSettings.geolocation.ProviderKind.setValue(variant),
-            selected: appSettings.geolocation.ProviderKind.valueOrDefault,
-            defaultVariant: appSettings.geolocation.ProviderKind.defaultValue,
-          ),
-        );
-
     final supportedThemes = [
       SettingVariantView(title: context.appLocalization.settingVariantThemeLigth, variant: AppTheme.light),
       SettingVariantView(title: context.appLocalization.settingVariantThemeDark, variant: AppTheme.dark),
     ];
-    showChooseThemeDialog() => showDialog(
-          context: context,
-          builder: (_) => ChooseSettingVariantDialog<AppTheme>(
-            variants: supportedThemes,
-            onSelect: (variant) => appSettings.theme.setVariant(variant),
-            selected: appSettings.theme.variantOrDefault,
-            defaultVariant: appSettings.theme.defaultVariant,
-          ),
-        );
 
     return Scaffold(
       appBar: AppBar(),
@@ -64,24 +37,40 @@ class SettingPageState extends State<SettingPage> {
       body: Center(
         child: ListView(
           children: [
-            ChooseSettingVariant(
+            Setting.withVariantDialog(
               name: context.appLocalization.settingsLanguage,
-              variantTitle: supportedLanguages.getSelectedOrDefaultTitle(appSettings.locale),
-              onTap: showChooseLanguageDialog,
+              variants: supportedLanguages,
+              onSelect: appSettings.locale.setVariant,
               icon: CupertinoIcons.globe,
+              selected: appSettings.locale.variantOrDefault,
+              variantTitle: supportedLanguages.getSelectedOrDefaultTitle(appSettings.locale),
             ),
-            ChooseSettingVariant(
+            Setting.withVariantDialog(
               name: context.appLocalization.settingsTheme,
-              onTap: showChooseThemeDialog,
-              variantTitle: supportedThemes.getSelectedOrDefaultTitle(appSettings.theme),
+              variants: supportedThemes,
+              onSelect: appSettings.theme.setVariant,
               icon: Icons.palette_outlined,
+              selected: appSettings.theme.variantOrDefault,
+              defaultVariant: appSettings.theme.defaultVariant,
+              variantTitle: supportedThemes.getSelectedOrDefaultTitle(appSettings.theme),
             ),
-            ChooseSettingVariant(
+            Setting.withVariantDialog(
               name: "Geolocation Provider",
-              onTap: showChooseGeolocationProviderDialog,
-              variantTitle: appSettings.geolocation.ProviderKind.value?.name ??
-                  appSettings.geolocation.ProviderKind.defaultValue?.name,
+              variants: supportedGeolocationProviders,
+              onSelect: appSettings.geolocation.providerKind.setValue,
               icon: CupertinoIcons.placemark,
+              selected: appSettings.geolocation.providerKind.valueOrDefault,
+              defaultVariant: appSettings.geolocation.providerKind.defaultValue,
+              variantTitle: appSettings.geolocation.providerKind.valueOrDefault?.name,
+            ),
+            Setting.withDoubleSliderDialog(
+              name: "camera unstable time, s",
+              icon: CupertinoIcons.clock,
+              onSave: (v) =>
+                  appSettings.pulseByCamera.cameraUnstableTime.setValue(Duration(milliseconds: (v * 1000).toInt())),
+              value: appSettings.pulseByCamera.cameraUnstableTime.valueOrDefault?.inSecondsDouble,
+              defaultValue: appSettings.pulseByCamera.cameraUnstableTime.defaultValue?.inSecondsDouble,
+              max: 2,
             ),
           ],
         ),

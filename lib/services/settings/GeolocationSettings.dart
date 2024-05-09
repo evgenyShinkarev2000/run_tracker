@@ -6,7 +6,7 @@ import 'package:run_tracker/services/settings/SettingSetBase.dart';
 class GeolocationSettings extends SettingSetBase {
   final SettingFactory _settingFactory;
 
-  late final SettingValue<GeolocationProviderKind> ProviderKind;
+  late final SettingValue<GeolocationProviderKind> providerKind;
 
   GeolocationSettings(SettingFactory settingFactory, {super.prefix})
       : _settingFactory = settingFactory,
@@ -21,7 +21,7 @@ class GeolocationSettings extends SettingSetBase {
                 GeolocationProviderKind.values,
                 GeolocationProviderKind.Subscription,
               )
-              .then((value) => ProviderKind = value),
+              .then((value) => providerKind = value),
         ]);
   }
 }

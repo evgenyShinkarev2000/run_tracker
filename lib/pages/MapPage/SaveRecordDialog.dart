@@ -24,7 +24,7 @@ class _SaveRecordDialogState extends State<SaveRecordDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final saveLabel = context.appLocalization.saveRecordDialogSave;
+    final saveLabel = context.appLocalization.verbSave;
     final titleValidatorMessage = context.appLocalization.saveRecordDialogTitleValidatorMessage(1);
 
     return AlertDialog(

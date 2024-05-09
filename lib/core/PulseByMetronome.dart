@@ -3,7 +3,7 @@ import 'package:run_tracker/core/SortedDateTimeQueue.dart';
 import 'package:run_tracker/core/library/MovingAverage.dart';
 
 class PulseByMetronome {
-  final SortedDateTimeQueue<int> _sortedQueue = SortedDateTimeQueue();
+  final SortedDateTimeQueue<double> _sortedQueue = SortedDateTimeQueue();
   final Duration _resetDuration = Duration(seconds: 2);
   final MovingAverage _movingAverage;
   final int minPulse;
@@ -18,7 +18,7 @@ class PulseByMetronome {
       : _movingAverage = MovingAverage(averageCount);
 
   /// beats per minute
-  int? findPulse(DateTime timeClick) {
+  double? findPulse(DateTime timeClick) {
     if (_lastClick == null) {
       _lastClick = timeClick;
 
@@ -42,7 +42,7 @@ class PulseByMetronome {
       final medianBpm = _sortedQueue.getBottomMedianElement()!.data;
 
       if (((currentBPM - medianBpm) / medianBpm).abs() > medianFilterTresholdCoef) {
-        _sortedQueue.add(DataWithDateTime(timeClick, currentBPM.round()));
+        _sortedQueue.add(DataWithDateTime(timeClick, currentBPM));
 
         return null;
       }
@@ -50,7 +50,7 @@ class PulseByMetronome {
 
     _movingAverage.add(currentBPM);
     _lastClick = timeClick;
-    final averageBPM = _movingAverage.average!.round();
+    final averageBPM = _movingAverage.average!;
     _sortedQueue.add(DataWithDateTime(timeClick, averageBPM));
 
     return averageBPM;

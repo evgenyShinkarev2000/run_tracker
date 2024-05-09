@@ -8,6 +8,8 @@ extension DurationExtension on Duration {
   /// 0-23
   int get hours => inHours % 24;
 
+  double get inSecondsDouble => inMicroseconds / 1e6;
+
   String get hhmmss => getFormatedTime();
 
   String get mmss => getFormatedTime(includeHours: false);

@@ -17,9 +17,6 @@
   "runCardCoverPace": "темп",
   "runcardCoverPulse": "пульс",
   "stopRecordingDialogQuestion": "остановить запись?",
-  "stopRecordingDialogConfirm": "подтвердить",
-  "stopRecordingDialogCancel": "отмена",
-  "saveRecordDialogSave": "сохранить",
   "saveRecordDialogTitleValidatorMessage": "Название должно быть длинее {length}",
   "@saveRecordDialogTitleValidatorMessage": {
     "placeholders":{
@@ -44,9 +41,13 @@
   "nounUnits": "единицы измерения",
   "nounPulse": "пульс",
   "nounCancel": "отмена",
+  "verbCanfirm": "подтвердить",
+  "verbCancel": "отменить",
+  "verbSave": "сохранить",
   "runRecordBarIntervalType": "тип интервала",
   "pulseMeasureTabMetronome": "метроном",
   "pulseMeasureTabCamera": "камера",
+  "pulseMeasureCameraInstructionInitial": "плотно прижмите палец к камере и вспышки",
   "pulseMeasureTabTimer": "таймер",
   "pulseMeasureTabManual": "вручную",
   "pulseMeasureMetronomIntructionClickAtDrum": "нажимайте барабан на каждый удар сердца",

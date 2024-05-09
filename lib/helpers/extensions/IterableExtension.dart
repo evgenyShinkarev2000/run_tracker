@@ -7,7 +7,7 @@ extension IterableExtension<T> on Iterable<T> {
     var maxElement = first;
     var maxValue = selector(first);
 
-    for (var element in this) {
+    for (var element in skip(1)) {
       var currentValue = selector(element);
       if (currentValue.compareTo(maxValue) > 0) {
         maxElement = element;
@@ -24,17 +24,40 @@ extension IterableExtension<T> on Iterable<T> {
     }
 
     var minElement = first;
-    var maxValue = selector(first);
+    var minValue = selector(first);
 
-    for (var element in this) {
+    for (var element in skip(1)) {
       var currentValue = selector(element);
-      if (currentValue.compareTo(maxValue) < 0) {
+      if (currentValue.compareTo(minValue) < 0) {
         minElement = element;
-        maxValue = currentValue;
+        minValue = currentValue;
       }
     }
 
     return minElement;
+  }
+
+  (T, T)? minMax<TComparable extends Comparable>(TComparable Function(T) selector) {
+    if (length == 0) {
+      return null;
+    }
+    var minElement = first;
+    var minValue = selector(first);
+    var maxElement = minElement;
+    var maxValue = minValue;
+
+    for (var element in skip(1)) {
+      var currentValue = selector(element);
+      if (currentValue.compareTo(minValue) < 0) {
+        minElement = element;
+        minValue = currentValue;
+      } else if (currentValue.compareTo(maxValue) > 0) {
+        maxElement = element;
+        maxValue = currentValue;
+      }
+    }
+
+    return (minElement, maxElement);
   }
 
 //TODO O(n) time https://habr.com/en/articles/346930/

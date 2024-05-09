@@ -11,6 +11,7 @@ import 'package:run_tracker/bloc/cubits/PositionSignificantCubit.dart';
 import 'package:run_tracker/bloc/cubits/RunRecorderCubit.dart';
 import 'package:run_tracker/components/drawer/AppMainDrawer.dart';
 import 'package:run_tracker/components/future_builder_loader/MultiFutureBuilderLoader.dart';
+import 'package:run_tracker/core/PulseRecorder.dart';
 import 'package:run_tracker/core/RunRecorder.dart';
 import 'package:run_tracker/data/models/SettingData.dart';
 import 'package:run_tracker/data/repositories/RunCoverRepository.dart';
@@ -73,6 +74,9 @@ final AppRouterConfig = GoRouter(routes: [
         store.register(context.read<SettingsProvider>().appSettings.geolocation.init());
         store.register(RunCoverRepositoryFactory().create());
         store.register(RunPointsRepositoryFactory().create());
+        store.register(GeolocatorWrapper.checkPermission());
+        final appsettings = context.read<SettingsProvider>().appSettings;
+        store.register(appsettings.pulseByCamera.init());
       },
       loader: (_, __) => Container(),
       builder: (context, store) {
@@ -80,12 +84,13 @@ final AppRouterConfig = GoRouter(routes: [
           providers: [
             Provider<RunCoverRepository>(create: (_) => store.get()),
             Provider<RunPointsRepository>(create: (_) => store.get()),
+            Provider<PulseRecorder>(create: (_) => PulseRecorder()),
             Provider<GeolocatorWrapper>(create: (_) => GeolocatorWrapper()),
             ProxyProvider<GeolocatorWrapper, IGeolocationProvider>(
               update: (context, geoWrapper, _) {
                 final geolocationSettings = context.read<SettingsProvider>().appSettings.geolocation;
 
-                return GeolocationProviderFactory(geoWrapper).create(geolocationSettings.ProviderKind.valueOrDefault!);
+                return GeolocationProviderFactory(geoWrapper).create(geolocationSettings.providerKind.valueOrDefault!);
               },
               dispose: (context, geoRepo) => geoRepo.dispose(),
             ),
@@ -184,7 +189,14 @@ final AppRouterConfig = GoRouter(routes: [
   ),
   GoRoute(
     path: Routes.pulsePage,
-    builder: (context, state) => PulsePage(),
+    builder: (context, state) => MultiFutureBuilderLoader(
+      loader: (_, __) => Container(),
+      register: (storage) {
+        final appSettings = context.read<SettingsProvider>().appSettings;
+        storage.register(appSettings.pulseByCamera.init());
+      },
+      builder: (context, store) => PulsePage(),
+    ),
   ),
   GoRoute(
     path: Routes.hivePage,

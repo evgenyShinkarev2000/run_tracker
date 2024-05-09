@@ -1,76 +1,116 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:run_tracker/bloc/cubits/PulseCameraCubit.dart';
 import 'package:run_tracker/bloc/cubits/PulseMetronomeCubit.dart';
 import 'package:run_tracker/components/pulse/CameraTab.dart';
 import 'package:run_tracker/components/pulse/MetronomTab.dart';
+import 'package:run_tracker/core/PulseMeasurement.dart';
 import 'package:run_tracker/helpers/extensions/BuildContextExtension.dart';
+import 'package:run_tracker/helpers/extensions/SettingExtension.dart';
+import 'package:run_tracker/services/settings/SettingsProvider.dart';
 
 class PulseInnerContent extends StatefulWidget {
+  void Function(PulseMeasurementBase?)? onPulseUpdated;
+  PulseInnerContent({this.onPulseUpdated});
+
   @override
   State<StatefulWidget> createState() => _PulseInnerContentState();
 }
 
 class _PulseInnerContentState extends State<PulseInnerContent> {
   int selectedTabIndex = 0;
+  StreamSubscription? pulseSubscription;
+
+  @override
+  void dispose() {
+    pulseSubscription?.cancel();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return IntrinsicHeight(
-      child: Column(
-        children: [
-          DefaultTabController(
-            length: 4,
-            child: TabBar(
-              unselectedLabelStyle: context.themeDate.textTheme.titleMedium,
-              labelStyle:
-                  context.themeDate.textTheme.titleMedium!.copyWith(color: context.themeDate.colorScheme.primary),
-              padding: EdgeInsets.zero,
-              indicatorPadding: EdgeInsets.zero,
-              labelPadding: EdgeInsets.zero,
-              onTap: (index) => setState(() {
-                selectedTabIndex = index;
-              }),
-              tabs: [
-                Tab(text: context.appLocalization.pulseMeasureTabMetronome),
-                Tab(text: context.appLocalization.pulseMeasureTabCamera),
-                Tab(text: context.appLocalization.pulseMeasureTabTimer),
-                Tab(text: context.appLocalization.pulseMeasureTabManual),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 8,
-          ),
-          Builder(builder: (context) {
-            switch (selectedTabIndex) {
-              case 0:
-                return BlocProvider<PulseMetronomeCubit>(
-                  create: (context) => PulseMetronomeCubit(),
-                  child: Builder(builder: (context) {
-                    final pulseMetronomeCubit = context.read<PulseMetronomeCubit>();
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        DefaultTabController(
+          length: 4,
+          child: TabBar(
+            unselectedLabelStyle: context.themeDate.textTheme.titleMedium,
+            labelStyle: context.themeDate.textTheme.titleMedium!.copyWith(color: context.themeDate.colorScheme.primary),
+            padding: EdgeInsets.zero,
+            indicatorPadding: EdgeInsets.zero,
+            labelPadding: EdgeInsets.zero,
+            onTap: (index) {
+              resetSubscriptionAndPulse();
 
-                    return BlocBuilder<PulseMetronomeCubit, PulseMetronomeCubitState>(
-                      builder: (context, state) => MetronomTab(
-                        onClick: pulseMetronomeCubit.metronomeTap,
-                        pulse: state.pulseBPM,
-                      ),
-                    );
-                  }),
-                );
-              case 1:
-                return BlocProvider<PulseCameraCubit>(
-                  create: (context) => PulseCameraCubit(),
-                  child: CameraTab(),
-                );
-              case 2:
-                return Text("tim");
-              default:
-                return Text("metr");
-            }
-          }),
-        ],
-      ),
+              setState(() {
+                selectedTabIndex = index;
+              });
+            },
+            tabs: [
+              Tab(text: context.appLocalization.pulseMeasureTabMetronome),
+              Tab(text: context.appLocalization.pulseMeasureTabCamera),
+              Tab(text: context.appLocalization.pulseMeasureTabTimer),
+              Tab(text: context.appLocalization.pulseMeasureTabManual),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 8,
+        ),
+        Builder(builder: (context) {
+          switch (selectedTabIndex) {
+            case 0:
+              return BlocProvider<PulseMetronomeCubit>(
+                create: (context) => PulseMetronomeCubit(),
+                child: BlocBuilder<PulseMetronomeCubit, PulseMetronomeCubitState>(builder: (context, state) {
+                  final pulseMetronomeCubit = context.read<PulseMetronomeCubit>();
+                  pulseSubscription = pulseMetronomeCubit.stream.listen((state) {
+                    if (state.pulseBPM != null) {
+                      widget.onPulseUpdated
+                          ?.call(PulseMeasurementByMetronome(dateTime: DateTime.now(), pulse: state.pulseBPM!));
+                    }
+                  });
+
+                  return MetronomTab(
+                    onClick: pulseMetronomeCubit.metronomeTap,
+                    pulse: state.pulseBPM?.round() ?? 0,
+                  );
+                }),
+              );
+            case 1:
+              final appSetting = context.read<SettingsProvider>().appSettings;
+
+              return BlocProvider<PulseCameraCubit>(
+                create: (context) {
+                  final pulseCameraCubit =
+                      PulseCameraCubit(cameraUnstableTime: appSetting.pulseByCamera.cameraUnstableTime.valueOrDefault);
+                  pulseCameraCubit.stream.listen((state) {
+                    if (state.pulse != null) {
+                      widget.onPulseUpdated
+                          ?.call(PulseMeasurementByCamera(dateTime: DateTime.now(), pulse: state.pulse!));
+                    }
+                  });
+
+                  return pulseCameraCubit;
+                },
+                child: CameraTab(),
+              );
+            case 2:
+              return Text("tim");
+            default:
+              return Text("metr");
+          }
+        }),
+      ],
     );
+  }
+
+  void resetSubscriptionAndPulse() {
+    pulseSubscription?.cancel();
+    widget.onPulseUpdated?.call(null);
   }
 }

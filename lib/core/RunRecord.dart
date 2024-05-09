@@ -1,5 +1,7 @@
+import 'package:run_tracker/core/PulseMeasurement.dart';
 import 'package:run_tracker/core/RunPoint.dart';
 import 'package:run_tracker/helpers/GeolocatorWrapper.dart';
+import 'package:run_tracker/helpers/extensions/ListExtension.dart';
 
 class RunRecord {
   String get title => _title;
@@ -7,6 +9,9 @@ class RunRecord {
 
   final List<RunPoint> _runPoints;
   Iterable<RunPoint> get runPoints => _runPoints;
+
+  final List<PulseMeasurementBase> _pulseMeasurements;
+  Iterable<PulseMeasurementBase> get pulseMeasurements => _pulseMeasurements;
 
   DateTime? _startDateTime;
   DateTime get startDateTime => _startDateTime!;
@@ -29,11 +34,19 @@ class RunRecord {
   /// m/s
   double? get averageSpeed => _averageSpeed;
 
+  /// BPM
+  double? _averagePulse;
+
+  ///BPM
+  double? get averagePulse => _averagePulse;
+
   late RunPointStart _startItem;
   late RunPointStop _stopItem;
 
-  RunRecord({required String title, required List<RunPoint> runPoints})
+  RunRecord(
+      {required String title, required List<RunPoint> runPoints, required List<PulseMeasurementBase> pulseMeasurements})
       : _runPoints = runPoints,
+        _pulseMeasurements = pulseMeasurements,
         _title = title {
     try {
       _processStartItem();
@@ -52,6 +65,8 @@ class RunRecord {
     } catch (ex) {
       print("exception in process geolocation items");
     }
+
+    _processPulseMeaserements();
   }
 
   void setTitle(String title) {
@@ -102,6 +117,12 @@ class RunRecord {
     weightedAverageSpeed += _findWeightedSpeed(previousGeolocation!, _stopItem);
 
     _averageSpeed = weightedAverageSpeed;
+  }
+
+  void _processPulseMeaserements() {
+    if (_pulseMeasurements.isNotEmpty) {
+      _averagePulse = _pulseMeasurements.fastAverage((pm) => pm.pulse);
+    }
   }
 
   double _findWeightedSpeed(RunPointNullableGeolocation a, RunPointNullableGeolocation b) {

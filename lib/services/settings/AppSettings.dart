@@ -24,16 +24,16 @@ class AppSettings extends SettingSetBase {
     required void Function() onChange,
   })  : _settingFactory = SettingFactory(settingRepository, onChange),
         super(name: "AppDevSettings") {
-    pulseByCamera = PulseByCameraSettings(_settingFactory);
-    geolocation = GeolocationSettings(_settingFactory);
+    pulseByCamera = PulseByCameraSettings(_settingFactory, prefix: name);
+    geolocation = GeolocationSettings(_settingFactory, prefix: name);
   }
 
   @override
   Future<void> init() async {
     await initFutures(() => [
           _settingFactory
-              .initSettingVariantWithStringSerializer(
-                  buildSettingName("Locale"), AppLanguageCode.values, LanguageCodeToLocale().map, AppLanguageCode.en)
+              .initSettingVariantWithStringSerializer(buildSettingName("Locale"), AppLanguageCode.values,
+                  LanguageCodeToLocale().map, getDefaultAppLanguageCode())
               .then((value) => locale = value),
           _settingFactory
               .initSettingVariantWithStringSerializer(
@@ -44,5 +44,17 @@ class AppSettings extends SettingSetBase {
               )
               .then((value) => theme = value),
         ]);
+  }
+
+  AppLanguageCode getDefaultAppLanguageCode() {
+    final languageCode = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+    switch (languageCode) {
+      case "en":
+        return AppLanguageCode.en;
+      case "ru":
+        return AppLanguageCode.ru;
+      default:
+        return AppLanguageCode.en;
+    }
   }
 }

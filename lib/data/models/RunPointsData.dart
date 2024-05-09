@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:run_tracker/data/AppHiveObject.dart';
 import 'package:run_tracker/data/HiveTypeId.dart';
+import 'package:run_tracker/data/models/PulseMeasurementData.dart';
 import 'package:run_tracker/data/models/RunItemGeolocationData.dart';
 import 'package:run_tracker/data/models/RunItemStartData.dart';
 import 'package:run_tracker/data/models/RunItemStopData.dart';
@@ -19,8 +20,15 @@ class RunPointsData extends AppHiveObject {
   @HiveField(3)
   final RunPointStopData stop;
 
-  RunPointsData(
-      {required this.geolocations, required this.start, required this.stop});
+  @HiveField(4)
+  final List<PulseMeasurementData> pulseMeasurements;
+
+  RunPointsData({
+    required this.geolocations,
+    required this.start,
+    required this.stop,
+    required this.pulseMeasurements,
+  });
 }
 
 abstract class RunItemData {
