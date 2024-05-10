@@ -22,7 +22,7 @@ abstract class IRunRecorder implements IDisposable {
 }
 
 abstract class RunRecorderBase implements IRunRecorder {
-  final IGeolocationProvider _geolocationRepository;
+  final IGeolocationProvider _geolocationProvider;
   late final StreamSubscription<AppGeolocation> _geoSubscr;
 
   @override
@@ -40,33 +40,30 @@ abstract class RunRecorderBase implements IRunRecorder {
   AppGeolocation? lastKnownGeolocation;
 
   RunRecorderBase({required IGeolocationProvider geolocationProvider, required this.runPoints})
-      : _geolocationRepository = geolocationProvider {
-    _geoSubscr = _geolocationRepository.geolocationStream.listen((appGeolocation) {
+      : _geolocationProvider = geolocationProvider {
+    _geoSubscr = _geolocationProvider.geolocationStream.listen((appGeolocation) {
       if (lastKnownGeolocation != null && phase == RunRecorderPhase.writing) {
         _distance += GeolocatorWrapper.distanceBetweenGeolocations(lastKnownGeolocation!, appGeolocation);
       }
       lastKnownGeolocation = appGeolocation;
+      if (phase != RunRecorderPhase.writing) {
+        return;
+      }
       final record = RunPointGeolocation(geolocation: appGeolocation);
       runPoints.add(record);
     });
-    _geoSubscr.pause();
   }
 
   @override
   void start() {
-    runPoints.add(RunPointStart(dateTime: DateTime.now(), geolocation: _geolocationRepository.lastGeolocation));
-    _geoSubscr.resume();
+    runPoints.add(RunPointStart(dateTime: DateTime.now(), geolocation: _geolocationProvider.lastGeolocation));
   }
 
   @override
-  void pause() {
-    _geoSubscr.pause();
-  }
+  void pause() {}
 
   @override
-  void resume() {
-    _geoSubscr.resume();
-  }
+  void resume() {}
 
   @override
   void stop() {
@@ -74,7 +71,6 @@ abstract class RunRecorderBase implements IRunRecorder {
       dateTime: DateTime.now(),
       distance: distance,
     ));
-    _geoSubscr.pause();
   }
 }
 

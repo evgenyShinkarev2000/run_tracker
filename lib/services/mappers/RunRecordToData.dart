@@ -1,4 +1,3 @@
-import 'package:run_tracker/core/PulseMeasurement.dart';
 import 'package:run_tracker/core/RunPoint.dart';
 import 'package:run_tracker/core/RunRecord.dart';
 import 'package:run_tracker/data/models/PulseMeasurementData.dart';

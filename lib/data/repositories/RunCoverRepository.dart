@@ -18,6 +18,10 @@ class RunCoverRepository {
   Future<RunCoverData?> getByKey(int key) {
     return Future.value(_runCoverLazyBox.get(key));
   }
+
+  Future<void> removeByKey(int key) async {
+    await _runCoverLazyBox.delete(key);
+  }
 }
 
 class RunCoverRepositoryFactory {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:run_tracker/core/RunPoint.dart';
 import 'package:run_tracker/core/RunRecord.dart';
 import 'package:run_tracker/data/mappers/RunPointGeolocationDataToCore.dart';
@@ -52,6 +54,15 @@ class RunRecordService {
     }
 
     return RunRecordModel(runCoverData: runCover, runPointsData: runPoints);
+  }
+
+  Future<void> removeByModel(RunRecordModel runRecordModel) async {
+    assert(runRecordModel.runCoverData.key != null && runRecordModel.runCoverData.key != null);
+
+    await Future.wait([
+      _runCoverRepository.removeByKey(runRecordModel.runCoverData.key!),
+      _runPointsRepository.removeByKey(runRecordModel.runPointsData.key!),
+    ]);
   }
 
   static List<RunPointGeolocation> GetGeolocationsFromModel(RunRecordModel model) {

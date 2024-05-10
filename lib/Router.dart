@@ -108,6 +108,7 @@ final AppRouterConfig = GoRouter(routes: [
             providers: [
               BlocProvider<PositionSignificantCubit>(
                 create: (context) => PositionSignificantCubit(
+                  geolocationWrapper: context.read<GeolocatorWrapper>(),
                   geoRepo: context.read<IGeolocationProvider>(),
                   initialState: PositionSignificantState(null, false),
                 ),

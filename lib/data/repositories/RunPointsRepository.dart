@@ -16,6 +16,10 @@ class RunPointsRepository {
   Future<RunPointsData?> getByKey(int key) async {
     return await _recordsLazyBox.get(key);
   }
+
+  Future<void> removeByKey(int key) async {
+    await _recordsLazyBox.delete(key);
+  }
 }
 
 class RunPointsRepositoryFactory {

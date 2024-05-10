@@ -1,13 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:run_tracker/Router.dart';
+import 'package:run_tracker/components/AppMainLoader.dart';
 import 'package:run_tracker/helpers/extensions/BuildContextExtension.dart';
 import 'package:run_tracker/pages/RunRecordPage/RunRecordBarTab/RunRecordBarTab.dart';
+import 'package:run_tracker/pages/RunRecordPage/RunRecordChartTab/RunRecordChartTab.dart';
 import 'package:run_tracker/pages/RunRecordPage/RunRecordMapTab.dart';
 import 'package:run_tracker/pages/RunRecordPage/RunRecordPointsTab.dart';
 import 'package:run_tracker/services/RunRecordService.dart';
+import 'package:run_tracker/services/models/RunRecordModel.dart';
 
 class RunRecordPage extends StatelessWidget {
   final int runCoverKey;
@@ -20,13 +23,11 @@ class RunRecordPage extends StatelessWidget {
         future: runRecordService.getByCoverKey(runCoverKey),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Center(
-              child: Text("loading"),
-            );
+            return AppMainLoader();
           }
 
           return DefaultTabController(
-            length: 3,
+            length: 4,
             child: Scaffold(
               appBar: AppBar(
                   toolbarHeight: 60,
@@ -38,18 +39,29 @@ class RunRecordPage extends StatelessWidget {
                     icon: Icon(Icons.arrow_back),
                     onPressed: () => context.go(Routes.historyPage),
                   ),
+                  actions: [
+                    PopupMenuButton(
+                      onSelected: (v) {},
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          child: Text(context.appLocalization.verbRemove),
+                          onTap: () => removeRecord(context, snapshot.requireData!),
+                        ),
+                      ],
+                    ),
+                  ],
                   bottom: TabBar(
                     dividerColor: context.themeDate.appBarTheme.backgroundColor,
-                    tabs: [
-                      Tab(icon: Icon(Icons.map)),
+                    tabs: const [
+                      Tab(icon: Icon(CupertinoIcons.map)),
                       Tab(
-                        icon: SvgPicture.asset(
-                          "assets/images/bar-icon.svg",
-                          width: 28,
-                        ),
+                        icon: Icon(CupertinoIcons.chart_bar),
                       ),
                       Tab(
-                        icon: Icon(Icons.place),
+                        icon: Icon(CupertinoIcons.placemark),
+                      ),
+                      Tab(
+                        icon: Icon(CupertinoIcons.graph_square),
                       ),
                     ],
                   )),
@@ -58,11 +70,16 @@ class RunRecordPage extends StatelessWidget {
                   RunRecordMapTab(runRecordModel: snapshot.requireData!),
                   RunRecordBarTab(runRecordModel: snapshot.requireData!),
                   RunRecordPointsTab(runRecordModel: snapshot.requireData!),
+                  RunRecordChartTab(runRecordModel: snapshot.requireData!),
                 ],
               ),
             ),
           );
         });
+  }
+
+  void removeRecord(BuildContext context, RunRecordModel runRecordModel) {
+    context.read<RunRecordService>().removeByModel(runRecordModel).then((value) => context.go(Routes.historyPage));
   }
 }
 

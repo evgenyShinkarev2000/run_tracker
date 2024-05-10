@@ -1,9 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:run_tracker/core/AppGeolocation.dart';
 import 'package:run_tracker/helpers/GeolocationProvider.dart';
 import 'package:run_tracker/helpers/GeolocatorWrapper.dart';
+import 'package:run_tracker/helpers/extensions/PositionExtension.dart';
 
 class PositionSignificantCubit extends Cubit<PositionSignificantState> {
   final IGeolocationProvider geoRepo;
@@ -13,13 +16,22 @@ class PositionSignificantCubit extends Cubit<PositionSignificantState> {
   PositionSignificantCubit(
       {required this.geoRepo,
       required PositionSignificantState initialState,
+      required GeolocatorWrapper geolocationWrapper,
       this.significantDistance = 10,
       bool isPaused = false})
       : super(initialState) {
+    geolocationWrapper.getLastPosition().then((p) => emit(state.copyWith(initialPosition: p?.toLatLng())));
+    Future.delayed(Duration(seconds: 5), () {
+      if (isClosed || state.initialPosition != null) {
+        return;
+      }
+      emit(state.copyWith(initialPosition: LatLng(0, 0)));
+    });
+
     geolocationSubscription = geoRepo.geolocationStream.listen((appGeolocation) {
-      emit(PositionSignificantState(
-        appGeolocation,
-        _isOffsetSignificant(appGeolocation),
+      emit(state.copyWith(
+        currentGeolocation: appGeolocation,
+        isDistanceOffsetSignificant: _isOffsetSignificant(appGeolocation),
       ));
     });
     if (isPaused) {
@@ -36,12 +48,12 @@ class PositionSignificantCubit extends Cubit<PositionSignificantState> {
 
   void resume() {
     geolocationSubscription.resume();
-    emit(PositionSignificantState(state.currentGeolocation, true));
+    emit(state.copyWith(isDistanceOffsetSignificant: true));
   }
 
   void pause() {
     geolocationSubscription.pause();
-    emit(PositionSignificantState(state.currentGeolocation, false));
+    emit(state.copyWith(isDistanceOffsetSignificant: false));
   }
 
   bool _isOffsetSignificant(AppGeolocation appGeolocation) {
@@ -65,6 +77,19 @@ class PositionSignificantCubit extends Cubit<PositionSignificantState> {
 class PositionSignificantState {
   final AppGeolocation? currentGeolocation;
   final bool isDistanceOffsetSignificant;
+  final LatLng? initialPosition;
 
-  PositionSignificantState(this.currentGeolocation, this.isDistanceOffsetSignificant);
+  PositionSignificantState(this.currentGeolocation, this.isDistanceOffsetSignificant, [this.initialPosition]);
+
+  PositionSignificantState copyWith({
+    AppGeolocation? currentGeolocation,
+    bool? isDistanceOffsetSignificant,
+    LatLng? initialPosition,
+  }) {
+    return PositionSignificantState(
+      currentGeolocation ?? this.currentGeolocation,
+      isDistanceOffsetSignificant ?? this.isDistanceOffsetSignificant,
+      initialPosition ?? this.initialPosition,
+    );
+  }
 }

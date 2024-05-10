@@ -1,10 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:run_tracker/Router.dart';
+import 'package:run_tracker/components/AppMainLoader.dart';
 import 'package:run_tracker/components/drawer/AppMainDrawer.dart';
 import 'package:run_tracker/data/mappers/RunPointGeolocationDataToCore.dart';
 import 'package:run_tracker/helpers/SpeedHelper.dart';
+import 'package:run_tracker/helpers/extensions/BuildContextExtension.dart';
 import 'package:run_tracker/pages/HistoryPage/RunCoverCard.dart';
 import 'package:run_tracker/services/RunRecordService.dart';
 
@@ -23,13 +26,15 @@ class HistoryPage extends StatelessWidget {
         future: Future.wait(runRecordService.getIterator()),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Center(child: Text("loading"));
+            return AppMainLoader();
           } else if (snapshot.hasError) {
-            return Center(child: Text("error"));
+            return Center(
+              child: Text(context.appLocalization.nounError),
+            );
           }
           final runRecordModels = snapshot.requireData;
           if (runRecordModels.isEmpty) {
-            return Center(child: Text("no data"));
+            return Center(child: Text(context.appLocalization.historyPageNoRecords));
           }
 
           return ListView.builder(

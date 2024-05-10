@@ -41,9 +41,11 @@
   "nounUnits": "единицы измерения",
   "nounPulse": "пульс",
   "nounCancel": "отмена",
+  "nounError": "ошибка",
   "verbCanfirm": "подтвердить",
   "verbCancel": "отменить",
   "verbSave": "сохранить",
+  "verbRemove": "удалить",
   "runRecordBarIntervalType": "тип интервала",
   "pulseMeasureTabMetronome": "метроном",
   "pulseMeasureTabCamera": "камера",
@@ -55,5 +57,6 @@
   "settingsTheme": "тема",
   "settingVariantDialogButtonDefault": "по умолчанию",
   "settingVariantThemeLigth": "светлая",
-  "settingVariantThemeDark": "темная"
+  "settingVariantThemeDark": "темная",
+  "historyPageNoRecords": "нет записей"
 }
