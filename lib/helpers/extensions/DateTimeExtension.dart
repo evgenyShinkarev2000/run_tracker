@@ -1,17 +1,7 @@
+import 'package:intl/intl.dart';
+
 extension DateTimeExtension on DateTime {
-  String get hhmmss => getTimeString();
-  String get dmmyyyy => getDateString();
-  String get dateSpaceTime => "$dmmyyyy $hhmmss";
-
-  String getDateString({String? delimiter = "-"}) => "$day$delimiter${month.toString().padLeft(2, "0")}$delimiter$year";
-
-  String getTimeString({String? delimiter = ":", includeMiliseconds = false}) {
-    var token =
-        "${hour.toString().padLeft(2, "0")}$delimiter${minute.toString().padLeft(2, "0")}$delimiter${second.toString().padLeft(2, "0")}";
-    if (includeMiliseconds) {
-      token = "$token$delimiter${millisecond.toString().padLeft(3, "0")}";
-    }
-
-    return token;
-  }
+  String get appFormatedDateOnly => DateFormat("y.MM.dd").format(this);
+  String get appFormatedTimeOnly => DateFormat("HH:mm:ss").format(this);
+  String get appFormatedDateTime => DateFormat("y.MM.dd HH:mm:ss").format(this);
 }

@@ -42,5 +42,5 @@ class RunRecordPointsTab extends StatelessWidget {
     ]);
   }
 
-  String toFormatedDateTime(DateTime dateTime) => dateTime.hhmmss;
+  String toFormatedDateTime(DateTime dateTime) => dateTime.appFormatedTimeOnly;
 }

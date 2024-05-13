@@ -11,8 +11,8 @@ class RunCoverCard extends StatelessWidget {
   final DateTime beginDateTime;
   final Duration duration;
   final double distance;
-  final Duration pace;
-  final int pulse;
+  final Duration? pace;
+  final int? pulse;
   final Iterable<AppGeolocation> geolocations;
   final void Function() onTap;
 
@@ -22,10 +22,10 @@ class RunCoverCard extends StatelessWidget {
     required this.beginDateTime,
     required this.duration,
     required this.distance,
-    required this.pace,
-    required this.pulse,
     required this.geolocations,
     required this.onTap,
+    this.pace,
+    this.pulse,
   });
 
   @override
@@ -79,7 +79,7 @@ class RunCoverCard extends StatelessWidget {
                         softWrap: false,
                       ),
                       Text(
-                        beginDateTime.dateSpaceTime,
+                        beginDateTime.toLocal().appFormatedDateTime,
                         overflow: TextOverflow.clip,
                         softWrap: false,
                       ),
@@ -94,12 +94,12 @@ class RunCoverCard extends StatelessWidget {
                         softWrap: false,
                       ),
                       Text(
-                        pace.mmss,
+                        pace?.mmss ?? context.appLocalization.nounNoData,
                         overflow: TextOverflow.clip,
                         softWrap: false,
                       ),
                       Text(
-                        pulse.toString(),
+                        pulse?.toString() ?? context.appLocalization.nounNoData,
                         overflow: TextOverflow.clip,
                         softWrap: false,
                       ),

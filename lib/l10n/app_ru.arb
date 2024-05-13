@@ -42,6 +42,7 @@
   "nounPulse": "пульс",
   "nounCancel": "отмена",
   "nounError": "ошибка",
+  "nounNoData": "нет данных",
   "verbCanfirm": "подтвердить",
   "verbCancel": "отменить",
   "verbSave": "сохранить",

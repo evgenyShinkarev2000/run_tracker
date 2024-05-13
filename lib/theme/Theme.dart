@@ -29,5 +29,27 @@ ThemeData _applyThemeChanges(ThemeData themeData) {
       ]);
 }
 
-final AppThemeLight = _applyThemeChanges(ThemeData.from(colorScheme: ColorScheme.light(primary: blue)));
-final AppThemeDark = _applyThemeChanges(ThemeData.dark());
+ThemeData _applyLightThemeChanges(ThemeData themeData) {
+  return themeData.copyWith(
+      appBarTheme: themeData.appBarTheme.copyWith(
+    backgroundColor: Color.fromARGB(255, 237, 242, 244),
+  ));
+}
+
+ThemeData _applyDarkThemeChanges(ThemeData themeData) {
+  return themeData.copyWith(
+      appBarTheme: themeData.appBarTheme.copyWith(
+    backgroundColor: Color.fromARGB(255, 31, 29, 29),
+  ));
+}
+
+final AppThemeLight = _applyLightThemeChanges(
+  _applyThemeChanges(
+    ThemeData.from(colorScheme: ColorScheme.light(primary: blue)),
+  ),
+);
+final AppThemeDark = _applyDarkThemeChanges(
+  _applyThemeChanges(
+    ThemeData.dark(),
+  ),
+);

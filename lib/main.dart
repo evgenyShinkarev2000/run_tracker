@@ -4,7 +4,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:run_tracker/Router.dart';
 import 'package:run_tracker/components/AppMainLoader.dart';
-import 'package:run_tracker/components/drawer/AppMainDrawer.dart';
 import 'package:run_tracker/components/future_builder_loader/MultiFutureBuilderLoader.dart';
 import 'package:run_tracker/data/data.dart';
 import 'package:run_tracker/data/repositories/repositories.dart';

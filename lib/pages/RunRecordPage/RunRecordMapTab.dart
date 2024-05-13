@@ -48,7 +48,7 @@ class RunRecordMapTab extends StatelessWidget {
         children: [
           RunRecordRow(
             beginDateTimeLabel,
-            runRecordModel.runCoverData.startDateTime.dateSpaceTime,
+            runRecordModel.runCoverData.startDateTime.toLocal().appFormatedDateTime,
           ),
           RunRecordRow(
             durationLabel,
@@ -62,19 +62,20 @@ class RunRecordMapTab extends StatelessWidget {
           ),
           RunRecordRow(
             speedLabel,
-            runRecordModel.runCoverData.averageSpeed?.round().toString() ?? "",
+            runRecordModel.runCoverData.averageSpeed?.round().toString() ?? context.appLocalization.nounNoData,
             unit: context.appLocalization.unitShortKmPerHour,
             isSelected: true,
           ),
           RunRecordRow(
             paceLabel,
-            SpeedHelper.speedToPace(runRecordModel.runCoverData.averageSpeed)?.mmss ?? "0",
+            SpeedHelper.speedToPace(runRecordModel.runCoverData.averageSpeed)?.mmss ??
+                context.appLocalization.nounNoData,
             unit: context.appLocalization.unitShortMinPerKm,
           ),
           RunRecordRow(
             pulseLabel,
-            100.toString(),
-            unit: context.appLocalization.unitShortBPM,
+            runRecordModel.runCoverData.averagePulse?.round().toString() ?? context.appLocalization.nounNoData,
+            unit: runRecordModel.runCoverData.averagePulse != null ? context.appLocalization.unitShortBPM : null,
             isSelected: true,
           ),
         ],

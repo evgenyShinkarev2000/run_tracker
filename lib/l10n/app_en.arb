@@ -42,6 +42,7 @@
   "nounPulse": "pulse",
   "nounCancel": "cancel",
   "nounError": "error",
+  "nounNoData": "no data",
   "verbCanfirm": "confirm",
   "verbCancel": "cancel",
   "verbSave": "save",

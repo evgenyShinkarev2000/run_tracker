@@ -8,6 +8,7 @@ import 'package:run_tracker/components/pulse/PulseDialog.dart';
 import 'package:run_tracker/core/PulseRecorder.dart';
 import 'package:run_tracker/core/RunRecord.dart';
 import 'package:run_tracker/core/RunRecorder.dart';
+import 'package:run_tracker/helpers/extensions/DateTimeExtension.dart';
 import 'package:run_tracker/pages/MapPage/SaveRecordDialog.dart';
 import 'package:run_tracker/pages/MapPage/StopRecordingDialog.dart';
 import 'package:run_tracker/services/RunRecordService.dart';
@@ -188,7 +189,7 @@ class _MapBottomButtonsState extends State<MapBottomButtons> {
       context: context,
       builder: (context) => SaveRecordDialog(
         onSave: saveRecordTap,
-        titleInitial: runRecorderCubit.GetStartDateTime().toString(),
+        titleInitial: runRecorderCubit.GetStartDateTime().toLocal().appFormatedDateTime,
       ),
     );
   }

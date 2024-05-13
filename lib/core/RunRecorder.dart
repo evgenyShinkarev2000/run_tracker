@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:run_tracker/core/RunPoint.dart';
-import 'package:run_tracker/helpers/extensions/DisposedException.dart';
 import 'package:run_tracker/helpers/GeolocationProvider.dart';
 import 'package:run_tracker/helpers/GeolocatorWrapper.dart';
 import 'package:run_tracker/helpers/IDisposable.dart';
+import 'package:run_tracker/helpers/extensions/DisposedException.dart';
 
 import 'AppGeolocation.dart';
 
@@ -56,7 +56,7 @@ abstract class RunRecorderBase implements IRunRecorder {
 
   @override
   void start() {
-    runPoints.add(RunPointStart(dateTime: DateTime.now(), geolocation: _geolocationProvider.lastGeolocation));
+    runPoints.add(RunPointStart(dateTime: DateTime.now().toUtc(), geolocation: _geolocationProvider.lastGeolocation));
   }
 
   @override
@@ -68,7 +68,7 @@ abstract class RunRecorderBase implements IRunRecorder {
   @override
   void stop() {
     runPoints.add(RunPointStop(
-      dateTime: DateTime.now(),
+      dateTime: DateTime.now().toUtc(),
       distance: distance,
     ));
   }

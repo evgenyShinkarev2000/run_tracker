@@ -55,8 +55,8 @@ class HistoryPage extends StatelessWidget {
                     beginDateTime: runCover.startDateTime,
                     duration: Duration(microseconds: runCover.duration),
                     distance: runCover.distance,
-                    pace: SpeedHelper.speedToPace(runCover.averageSpeed) ?? Duration(),
-                    pulse: runCover.averagePulse?.round() ?? 0);
+                    pace: SpeedHelper.speedToPace(runCover.averageSpeed),
+                    pulse: runCover.averagePulse?.round());
               });
             },
           );

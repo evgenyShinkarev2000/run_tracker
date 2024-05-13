@@ -79,7 +79,7 @@ class RunRecord {
     final firstGeolocationItem = runPoints.whereType<RunPointGeolocation>().firstOrNull;
     if (_startItem.geolocation == null &&
         firstGeolocationItem?.geolocation != null &&
-        firstGeolocationItem!.dateTime.microsecondsSinceEpoch - _startDateTime!.microsecondsSinceEpoch < 3e6) {
+        firstGeolocationItem!.dateTime.microsecondsSinceEpoch - _startDateTime!.microsecondsSinceEpoch < 1e6) {
       _startItem.setStartGeolocation(firstGeolocationItem.geolocation);
     }
   }
@@ -99,22 +99,16 @@ class RunRecord {
   }
 
   void _processGeolocationItems() {
-    var previousGeolocation = runPoints.whereType<RunPointGeolocation>().firstOrNull;
-    if (previousGeolocation == null) {
-      if (_startItem.geolocation != null && _stopItem.geolocation != null) {
-        _distance = GeolocatorWrapper.distanceBetweenGeolocations(_startItem.geolocation!, _stopItem.geolocation!);
-        _averageSpeed = _distance / duration.inMicroseconds * 1000000;
-      }
+    var previousPoint = runPoints.whereType<RunPointGeolocation>().firstOrNull;
+    if (previousPoint == null) {
+      return;
     }
 
-    double weightedAverageSpeed = _findWeightedSpeed(_startItem, previousGeolocation!);
-
-    for (var currentGeolocation in runPoints.whereType<RunPointGeolocation>().skip(1)) {
-      weightedAverageSpeed += _findWeightedSpeed(previousGeolocation!, currentGeolocation);
-      previousGeolocation = currentGeolocation;
+    var weightedAverageSpeed = 0.0;
+    for (var point in runPoints.whereType<RunPointGeolocation>().skip(1)) {
+      weightedAverageSpeed += _findWeightedSpeed(previousPoint!, point);
+      previousPoint = point;
     }
-
-    weightedAverageSpeed += _findWeightedSpeed(previousGeolocation!, _stopItem);
 
     _averageSpeed = weightedAverageSpeed;
   }
@@ -126,8 +120,8 @@ class RunRecord {
   }
 
   double _findWeightedSpeed(RunPointNullableGeolocation a, RunPointNullableGeolocation b) {
-    return GeolocatorWrapper.distanceBetweenGeolocations(a.geolocation!, b.geolocation!) *
-        (b.dateTime.microsecondsSinceEpoch - a.dateTime.microsecondsSinceEpoch) /
-        duration.inMicroseconds;
+    return GeolocatorWrapper.distanceBetweenGeolocations(a.geolocation!, b.geolocation!) /
+        duration.inMicroseconds *
+        (b.dateTime.microsecondsSinceEpoch - a.dateTime.microsecondsSinceEpoch);
   }
 }
