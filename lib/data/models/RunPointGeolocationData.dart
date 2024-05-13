@@ -33,6 +33,9 @@ class RunPointGeolocationData implements RunItemData {
   static RunPointGeolocationData fromJson(Map<String, dynamic> json) => _$RunPointGeolocationDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$RunPointGeolocationDataToJson(this);
+
+  @override
+  String toString() => json.encode(toJson());
 }
 
 // **************************************************************************

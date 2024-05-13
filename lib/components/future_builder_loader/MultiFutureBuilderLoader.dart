@@ -37,6 +37,11 @@ class _MultiFutureBuilderLoaderState extends State<MultiFutureBuilderLoader> {
     );
 
     widget.register(helper);
+    if (helper.activeFutureCount == 0) {
+      setState(() {
+        isCompleated = true;
+      });
+    }
 
     super.initState();
   }

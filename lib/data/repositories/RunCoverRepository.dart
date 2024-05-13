@@ -1,25 +1,25 @@
 part of repositories;
 
 class RunCoverRepository {
-  final Box<RunCoverData> _runCoverLazyBox;
-  RunCoverRepository({required Box<RunCoverData> runsLazyBox}) : _runCoverLazyBox = runsLazyBox;
+  final Box<RunCoverData> runCoverBox;
+  RunCoverRepository({required this.runCoverBox});
 
   Future<RunCoverData> add(RunCoverData runData) async {
-    await _runCoverLazyBox.add(runData);
+    await runCoverBox.add(runData);
 
     return runData;
   }
 
   Iterable<Future<RunCoverData>> getIterator() {
-    return _runCoverLazyBox.values.map((runCover) => Future.value(runCover));
+    return runCoverBox.values.map((runCover) => Future.value(runCover));
   }
 
   Future<RunCoverData?> getByKey(int key) {
-    return Future.value(_runCoverLazyBox.get(key));
+    return Future.value(runCoverBox.get(key));
   }
 
   Future<void> removeByKey(int key) async {
-    await _runCoverLazyBox.delete(key);
+    await runCoverBox.delete(key);
   }
 }
 
@@ -27,12 +27,12 @@ class RunCoverRepositoryFactory {
   static const String runCoverBoxName = "RunCovers";
   Future<RunCoverRepository> create() async {
     if (Hive.isBoxOpen(runCoverBoxName)) {
-      return RunCoverRepository(runsLazyBox: Hive.box(runCoverBoxName));
+      return RunCoverRepository(runCoverBox: Hive.box(runCoverBoxName));
     }
     try {
       final runsLazyBox = await Hive.openBox<RunCoverData>(runCoverBoxName);
 
-      return RunCoverRepository(runsLazyBox: runsLazyBox);
+      return RunCoverRepository(runCoverBox: runsLazyBox);
     } catch (ex) {
       rethrow;
     }

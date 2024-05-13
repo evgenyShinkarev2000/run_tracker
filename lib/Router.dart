@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive/hive.dart';
 import 'package:hive_ui/hive_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:run_tracker/bloc/cubits/CounterCubit.dart';
@@ -9,6 +10,7 @@ import 'package:run_tracker/bloc/cubits/DashBoardGeolocationCubit.dart';
 import 'package:run_tracker/bloc/cubits/LocationMarkerPositionCubit.dart';
 import 'package:run_tracker/bloc/cubits/PositionSignificantCubit.dart';
 import 'package:run_tracker/bloc/cubits/RunRecorderCubit.dart';
+import 'package:run_tracker/components/AppMainLoader.dart';
 import 'package:run_tracker/components/drawer/AppMainDrawer.dart';
 import 'package:run_tracker/components/future_builder_loader/MultiFutureBuilderLoader.dart';
 import 'package:run_tracker/core/PulseRecorder.dart';
@@ -199,17 +201,40 @@ final AppRouterConfig = GoRouter(routes: [
   ),
   GoRoute(
     path: Routes.hivePage,
+    onExit: (_) async {
+      await Hive.box<RunPointsData>(RunPointsRepositoryFactory.runPointsBoxName).close();
+
+      return true;
+    },
     builder: (context, state) => MultiFutureBuilderLoader(
       register: (storage) {
-        storage.register(SettingRepositoryFactory().create());
+        if (!Hive.isBoxOpen(SettingRepositoryFactory.settingBoxName)) {
+          storage.register(Hive.openBox<SettingData>(SettingRepositoryFactory.settingBoxName));
+        }
+        if (!Hive.isBoxOpen(RunCoverRepositoryFactory.runCoverBoxName)) {
+          storage.register(Hive.openBox<RunCoverData>(RunCoverRepositoryFactory.runCoverBoxName));
+        }
+        try {
+          final lazyBox = Hive.lazyBox<RunPointsData>(RunPointsRepositoryFactory.runPointsBoxName);
+
+          storage.register(Future(() async {
+            await lazyBox.close();
+            await Hive.openBox<RunPointsData>(RunPointsRepositoryFactory.runPointsBoxName);
+          }));
+        } catch (e) {
+          storage.register(Hive.openBox<RunPointsData>(RunPointsRepositoryFactory.runPointsBoxName));
+        }
       },
-      loader: (_, __) => Container(),
+      loader: (_, __) => AppMainLoader(),
       builder: (context, store) => Scaffold(
         appBar: AppBar(),
         drawer: AppMainDrawer(),
         body: HiveBoxesView(
           hiveBoxes: {
-            store.get<SettingRepository>().settingBox: (json) => SettingData.fromJson(json),
+            Hive.box<SettingData>(SettingRepositoryFactory.settingBoxName): (json) => SettingData.fromJson(json),
+            Hive.box<RunCoverData>(RunCoverRepositoryFactory.runCoverBoxName): (json) => RunCoverData.fromJson(json),
+            Hive.box<RunPointsData>(RunPointsRepositoryFactory.runPointsBoxName): (json) =>
+                RunPointsData.fromJson(json),
           },
           onError: (e) {},
         ),

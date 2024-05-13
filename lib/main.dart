@@ -3,12 +3,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:run_tracker/Router.dart';
+import 'package:run_tracker/components/AppMainLoader.dart';
+import 'package:run_tracker/components/drawer/AppMainDrawer.dart';
 import 'package:run_tracker/components/future_builder_loader/MultiFutureBuilderLoader.dart';
 import 'package:run_tracker/data/data.dart';
 import 'package:run_tracker/data/repositories/repositories.dart';
 import 'package:run_tracker/helpers/AppLanguageCode.dart';
 import 'package:run_tracker/helpers/extensions/SettingExtension.dart';
 import 'package:run_tracker/services/settings/settings.dart';
+import 'package:run_tracker/theme/Theme.dart';
 
 void main() async {
   await initAppData();
@@ -22,7 +25,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiFutureBuilderLoader(
-      loader: (_, __) => Container(),
+      loader: (_, __) => Container(
+        constraints: BoxConstraints(maxHeight: 1200, minHeight: 200, maxWidth: 800, minWidth: 200),
+        color: AppThemeLight.colorScheme.background,
+        child: Theme(
+          data: AppThemeLight,
+          child: Center(
+            child: Directionality(
+              textDirection: TextDirection.ltr,
+              child: AppMainLoader(),
+            ),
+          ),
+        ),
+      ),
       register: (builder) {
         builder.register(Future(() async {
           final settingRepository = await SettingRepositoryFactory().create();

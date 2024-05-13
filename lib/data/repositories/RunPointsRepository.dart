@@ -1,23 +1,22 @@
 part of repositories;
 
 class RunPointsRepository {
-  final LazyBox<RunPointsData> _recordsLazyBox;
+  final LazyBox<RunPointsData> recordsLazyBox;
 
-  RunPointsRepository.RunPointsRepository({required LazyBox<RunPointsData> recordsLazyBox})
-      : _recordsLazyBox = recordsLazyBox;
+  RunPointsRepository.RunPointsRepository({required this.recordsLazyBox});
 
   Future<RunPointsData> add(RunPointsData runRecordData) async {
-    await _recordsLazyBox.add(runRecordData);
+    await recordsLazyBox.add(runRecordData);
 
     return runRecordData;
   }
 
   Future<RunPointsData?> getByKey(int key) async {
-    return await _recordsLazyBox.get(key);
+    return await recordsLazyBox.get(key);
   }
 
   Future<void> removeByKey(int key) async {
-    await _recordsLazyBox.delete(key);
+    await recordsLazyBox.delete(key);
   }
 }
 

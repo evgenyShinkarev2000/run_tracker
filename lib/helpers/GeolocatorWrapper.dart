@@ -13,7 +13,15 @@ class GeolocatorWrapper {
 
   Stream<Position> getPositionStream(Duration? updateInterval) {
     if (Platform.isAndroid) {
-      return Geolocator.getPositionStream(locationSettings: AndroidSettings(intervalDuration: updateInterval));
+      return Geolocator.getPositionStream(
+          locationSettings: AndroidSettings(
+        intervalDuration: updateInterval,
+        foregroundNotificationConfig: ForegroundNotificationConfig(
+          notificationTitle: "run tracker",
+          notificationText: "gps working",
+          enableWakeLock: true,
+        ),
+      ));
     }
 
     return Geolocator.getPositionStream();
