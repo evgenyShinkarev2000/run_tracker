@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:run_tracker/core/AppGeolocation.dart';
 import 'package:run_tracker/helpers/GeolocationProvider.dart';

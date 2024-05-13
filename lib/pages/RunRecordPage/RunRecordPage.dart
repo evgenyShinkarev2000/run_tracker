@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:run_tracker/Router.dart';
 import 'package:run_tracker/components/AppMainLoader.dart';
@@ -10,7 +11,7 @@ import 'package:run_tracker/pages/RunRecordPage/RunRecordChartTab/RunRecordChart
 import 'package:run_tracker/pages/RunRecordPage/RunRecordMapTab.dart';
 import 'package:run_tracker/pages/RunRecordPage/RunRecordPointsTab.dart';
 import 'package:run_tracker/services/RunRecordService.dart';
-import 'package:run_tracker/services/models/RunRecordModel.dart';
+import 'package:run_tracker/services/models/models.dart';
 
 class RunRecordPage extends StatelessWidget {
   final int runCoverKey;
@@ -47,6 +48,10 @@ class RunRecordPage extends StatelessWidget {
                           child: Text(context.appLocalization.verbRemove),
                           onTap: () => removeRecord(context, snapshot.requireData!),
                         ),
+                        PopupMenuItem(
+                          child: Text(context.appLocalization.verbExport),
+                          onTap: () => export(context, snapshot.requireData!),
+                        ),
                       ],
                     ),
                   ],
@@ -80,6 +85,13 @@ class RunRecordPage extends StatelessWidget {
 
   void removeRecord(BuildContext context, RunRecordModel runRecordModel) {
     context.read<RunRecordService>().removeByModel(runRecordModel).then((value) => context.go(Routes.historyPage));
+  }
+
+  void export(BuildContext context, RunRecordModel runRecordModel) {
+    context
+        .read<RunRecordService>()
+        .export(runRecordModel)
+        .then((pathToFile) => Fluttertoast.showToast(msg: pathToFile));
   }
 }
 

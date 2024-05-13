@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:run_tracker/components/map_painter/MapPainterFull.dart';
-import 'package:run_tracker/data/mappers/RunPointGeolocationDataToCore.dart';
+import 'package:run_tracker/data/mappers/mappers.dart';
 import 'package:run_tracker/helpers/extensions/AppGeolocationExtension.dart';
 import 'package:run_tracker/helpers/extensions/BuildContextExtension.dart';
 import 'package:run_tracker/helpers/extensions/DateTimeExtension.dart';
 import 'package:run_tracker/helpers/extensions/DurationExtension.dart';
 import 'package:run_tracker/helpers/SpeedHelper.dart';
 import 'package:run_tracker/pages/RunRecordPage/RunRecordRow.dart';
-import 'package:run_tracker/services/models/RunRecordModel.dart';
+import 'package:run_tracker/services/models/models.dart';
 
 class RunRecordMapTab extends StatelessWidget {
   final RunRecordModel runRecordModel;

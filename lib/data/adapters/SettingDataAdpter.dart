@@ -1,5 +1,4 @@
-import 'package:hive/hive.dart';
-import 'package:run_tracker/data/models/SettingData.dart';
+part of adapters;
 
 class SettingDataAdapter extends TypeAdapter<SettingData> {
   @override

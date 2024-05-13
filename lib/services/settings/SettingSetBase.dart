@@ -1,4 +1,4 @@
-import 'dart:async';
+part of settings;
 
 abstract class SettingSetBase {
   bool isInitialized = false;

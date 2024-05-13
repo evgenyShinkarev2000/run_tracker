@@ -8,7 +8,7 @@ import 'package:run_tracker/helpers/extensions/IterableExtension.dart';
 import 'package:run_tracker/pages/RunRecordPage/RunRecordBarTab/DropdownControls.dart';
 import 'package:run_tracker/pages/RunRecordPage/RunRecordBarTab/RunRecordBarHeader.dart';
 import 'package:run_tracker/services/RunRecordService.dart';
-import 'package:run_tracker/services/models/RunRecordModel.dart';
+import 'package:run_tracker/services/models/models.dart';
 
 import 'IntervalType.dart';
 import 'RunRecordBarTable.dart';

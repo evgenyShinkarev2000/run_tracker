@@ -24,7 +24,4 @@
 //   });
 // }
 
-import 'package:flutter/material.dart';
-import 'package:run_tracker/main.dart';
-
 void main() {}

@@ -4,11 +4,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:run_tracker/Router.dart';
 import 'package:run_tracker/components/future_builder_loader/MultiFutureBuilderLoader.dart';
-import 'package:run_tracker/data/initAppData.dart';
-import 'package:run_tracker/data/repositories/SettingRepository.dart';
+import 'package:run_tracker/data/data.dart';
+import 'package:run_tracker/data/repositories/repositories.dart';
 import 'package:run_tracker/helpers/AppLanguageCode.dart';
 import 'package:run_tracker/helpers/extensions/SettingExtension.dart';
-import 'package:run_tracker/services/settings/SettingsProvider.dart';
+import 'package:run_tracker/services/settings/settings.dart';
 
 void main() async {
   await initAppData();

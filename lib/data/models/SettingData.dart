@@ -1,6 +1,6 @@
-import 'package:hive/hive.dart';
-import 'package:run_tracker/data/HiveTypeId.dart';
+part of models;
 
+@JsonSerializable()
 @HiveType(typeId: HiveTypeId.setting)
 class SettingData extends HiveObject {
   @override
@@ -14,14 +14,21 @@ class SettingData extends HiveObject {
 
   SettingData({this.value, String? watchKey}) : _watchKey = watchKey;
 
-  Map<String, dynamic> toJson() {
-    return {
-      "watchKey": key,
-      "value": value,
-    };
-  }
+  static SettingData fromJson(Map<String, dynamic> json) => _$SettingDataFromJson(json);
 
-  static SettingData fromJson(Map<dynamic, dynamic> json) {
-    return SettingData(watchKey: json["watchKey"], value: json["value"]);
-  }
+  Map<String, dynamic> toJson() => _$SettingDataToJson(this);
 }
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+SettingData _$SettingDataFromJson(Map<String, dynamic> json) => SettingData(
+      value: json['value'] as String?,
+      watchKey: json['watchKey'] as String?,
+    );
+
+Map<String, dynamic> _$SettingDataToJson(SettingData instance) => <String, dynamic>{
+      'watchKey': instance.watchKey,
+      'value': instance.value,
+    };

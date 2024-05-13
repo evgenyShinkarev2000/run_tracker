@@ -13,10 +13,8 @@ import 'package:run_tracker/components/drawer/AppMainDrawer.dart';
 import 'package:run_tracker/components/future_builder_loader/MultiFutureBuilderLoader.dart';
 import 'package:run_tracker/core/PulseRecorder.dart';
 import 'package:run_tracker/core/RunRecorder.dart';
-import 'package:run_tracker/data/models/SettingData.dart';
-import 'package:run_tracker/data/repositories/RunCoverRepository.dart';
-import 'package:run_tracker/data/repositories/RunPointsRepository.dart';
-import 'package:run_tracker/data/repositories/SettingRepository.dart';
+import 'package:run_tracker/data/models/models.dart';
+import 'package:run_tracker/data/repositories/repositories.dart';
 import 'package:run_tracker/helpers/GeolocationProvider.dart';
 import 'package:run_tracker/helpers/GeolocatorWrapper.dart';
 import 'package:run_tracker/helpers/extensions/SettingExtension.dart';
@@ -27,7 +25,7 @@ import 'package:run_tracker/pages/PulsePage/PulsePage.dart';
 import 'package:run_tracker/pages/RunRecordPage/RunRecordPage.dart';
 import 'package:run_tracker/pages/SettingPage/SettingPage.dart';
 import 'package:run_tracker/services/RunRecordService.dart';
-import 'package:run_tracker/services/settings/SettingsProvider.dart';
+import 'package:run_tracker/services/settings/settings.dart';
 
 class Routes {
   static const activityPage = "/ActivityPage";

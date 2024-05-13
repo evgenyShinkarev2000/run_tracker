@@ -1,11 +1,4 @@
-import 'package:run_tracker/core/RunPoint.dart';
-import 'package:run_tracker/core/RunRecord.dart';
-import 'package:run_tracker/data/models/PulseMeasurementData.dart';
-import 'package:run_tracker/data/models/RunPointsData.dart';
-import 'package:run_tracker/services/mappers/CoreToDataMapper.dart';
-import 'package:run_tracker/services/mappers/RunPointGeolocationToData.dart';
-import 'package:run_tracker/services/mappers/RunPointStartToData.dart';
-import 'package:run_tracker/services/mappers/RunPointStopToData.dart';
+part of mappers;
 
 class RunRecordToData implements CoreToDataMapper<RunRecord, RunPointsData> {
   static const RunPointGeolocationToData _runPointGeolocationToData = RunPointGeolocationToData();

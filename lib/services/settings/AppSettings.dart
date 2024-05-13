@@ -1,14 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:run_tracker/data/repositories/SettingRepository.dart';
-import 'package:run_tracker/helpers/AppLanguageCode.dart';
-import 'package:run_tracker/helpers/AppTheme.dart';
-import 'package:run_tracker/services/settings/GeolocationSettings.dart';
-import 'package:run_tracker/services/settings/PulseByCameraSettings.dart';
-import 'package:run_tracker/services/settings/Setting.dart';
-import 'package:run_tracker/services/settings/SettingFactory.dart';
-import 'package:run_tracker/services/settings/SettingSetBase.dart';
-import 'package:run_tracker/services/settings/mappers/LanguageCodeToLocale.dart';
-import 'package:run_tracker/services/settings/mappers/ThemeNameToThemeData.dart';
+part of settings;
 
 class AppSettings extends SettingSetBase {
   final SettingFactory _settingFactory;

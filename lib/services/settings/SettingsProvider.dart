@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:run_tracker/data/repositories/SettingRepository.dart';
-import 'package:run_tracker/services/settings/AppSettings.dart';
+part of settings;
 
 class SettingsProvider with ChangeNotifier {
   late final AppSettings appSettings;

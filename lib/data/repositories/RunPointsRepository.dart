@@ -1,5 +1,4 @@
-import 'package:hive/hive.dart';
-import 'package:run_tracker/data/models/RunPointsData.dart';
+part of repositories;
 
 class RunPointsRepository {
   final LazyBox<RunPointsData> _recordsLazyBox;

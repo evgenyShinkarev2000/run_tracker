@@ -1,3 +1,5 @@
+part of data;
+
 class HiveTypeId {
   static const int runCover = 1;
   static const int runPoints = 2;

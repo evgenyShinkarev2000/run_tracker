@@ -1,4 +1,4 @@
-import 'package:run_tracker/services/settings/Setting.dart';
+import 'package:run_tracker/services/settings/settings.dart';
 
 class SettingVariantView<T extends Enum> {
   final T variant;

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:run_tracker/helpers/extensions/BuildContextExtension.dart';
 import 'package:run_tracker/helpers/extensions/DateTimeExtension.dart';
 import 'package:run_tracker/services/RunRecordService.dart';
-import 'package:run_tracker/services/models/RunRecordModel.dart';
+import 'package:run_tracker/services/models/models.dart';
 
 class RunRecordPointsTab extends StatelessWidget {
   final RunRecordModel runRecordModel;

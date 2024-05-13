@@ -4,12 +4,12 @@ import 'package:run_tracker/helpers/extensions/BuildContextExtension.dart';
 import 'IntervalType.dart';
 
 class DropDownControls extends StatefulWidget {
-  void Function(double? distance) onSelectDistance;
-  double initialDistance;
-  void Function(Duration? duration) onSelectDuration;
-  Duration initialDuration;
-  void Function(IntervalType? intervalType) onSelectIntervalType;
-  IntervalType intervalTypeInitial;
+  final void Function(double? distance) onSelectDistance;
+  final double initialDistance;
+  final void Function(Duration? duration) onSelectDuration;
+  final Duration initialDuration;
+  final void Function(IntervalType? intervalType) onSelectIntervalType;
+  final IntervalType intervalTypeInitial;
 
   DropDownControls(
       {required this.onSelectDistance,

@@ -46,6 +46,7 @@
   "verbCancel": "отменить",
   "verbSave": "сохранить",
   "verbRemove": "удалить",
+  "verbExport": "экспортировать",
   "runRecordBarIntervalType": "тип интервала",
   "pulseMeasureTabMetronome": "метроном",
   "pulseMeasureTabCamera": "камера",

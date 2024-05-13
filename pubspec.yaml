@@ -59,6 +59,8 @@ dependencies:
   path_provider: ^2.1.2
   hive_ui: ^1.0.14
   loading_animation_widget: ^1.2.1
+  fluttertoast: ^8.2.5
+  json_annotation: ^4.9.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -70,8 +72,9 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
   hive_generator: ^2.0.1
-  build_runner: ^2.4.8
+  build_runner: ^2.4.9
   rename: ^3.0.1
+  json_serializable: ^6.8.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

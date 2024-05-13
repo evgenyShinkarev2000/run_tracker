@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:run_tracker/services/models/RunRecordModel.dart';
+import 'package:run_tracker/services/models/models.dart';
 
 class RunRecordChartTab extends StatelessWidget {
   final RunRecordModel runRecordModel;

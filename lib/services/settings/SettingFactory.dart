@@ -1,7 +1,4 @@
-import 'package:run_tracker/data/models/SettingData.dart';
-import 'package:run_tracker/data/repositories/SettingRepository.dart';
-import 'package:run_tracker/helpers/extensions/IterableExtension.dart';
-import 'package:run_tracker/services/settings/Setting.dart';
+part of settings;
 
 class SettingFactory {
   final void Function() _onChange;

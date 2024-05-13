@@ -6,10 +6,10 @@ import 'package:run_tracker/helpers/AppLanguageCode.dart';
 import 'package:run_tracker/helpers/AppTheme.dart';
 import 'package:run_tracker/helpers/GeolocationProviderKind.dart';
 import 'package:run_tracker/helpers/extensions/BuildContextExtension.dart';
-import 'package:run_tracker/helpers/extensions/DurationExtension.dart';
 import 'package:run_tracker/helpers/extensions/SettingExtension.dart';
 import 'package:run_tracker/pages/SettingPage/Setting.dart';
-import 'package:run_tracker/services/settings/SettingsProvider.dart';
+import 'package:run_tracker/services/settings/settings.dart';
+import 'package:run_tracker/helpers/extensions/DurationExtension.dart';
 
 import 'SettingVariantView.dart';
 

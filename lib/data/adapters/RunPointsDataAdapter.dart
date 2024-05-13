@@ -1,9 +1,4 @@
-import 'package:hive/hive.dart';
-import 'package:run_tracker/data/models/PulseMeasurementData.dart';
-import 'package:run_tracker/data/models/RunItemGeolocationData.dart';
-import 'package:run_tracker/data/models/RunItemStartData.dart';
-import 'package:run_tracker/data/models/RunItemStopData.dart';
-import 'package:run_tracker/data/models/RunPointsData.dart';
+part of adapters;
 
 class RunPointsDataAdapter extends TypeAdapter<RunPointsData> {
   @override

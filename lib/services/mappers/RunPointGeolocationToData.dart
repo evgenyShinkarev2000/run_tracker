@@ -1,9 +1,6 @@
-import 'package:run_tracker/services/mappers/CoreToDataMapper.dart';
-import 'package:run_tracker/core/RunPoint.dart';
-import 'package:run_tracker/data/models/RunItemGeolocationData.dart';
+part of mappers;
 
-class RunPointGeolocationToData
-    implements CoreToDataMapper<RunPointGeolocation, RunPointGeolocationData> {
+class RunPointGeolocationToData implements CoreToDataMapper<RunPointGeolocation, RunPointGeolocationData> {
   const RunPointGeolocationToData();
   @override
   RunPointGeolocationData map(RunPointGeolocation core) {

@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
+part of theme;
 
 class MapPainterFullTheme extends ThemeExtension<MapPainterFullTheme> {
   final Color startMarkerColor;
   final Color stopMarkerColor;
 
-  MapPainterFullTheme(
-      {required this.startMarkerColor, required this.stopMarkerColor});
+  MapPainterFullTheme({required this.startMarkerColor, required this.stopMarkerColor});
 
   @override
   ThemeExtension<MapPainterFullTheme> copyWith() {
@@ -13,8 +12,7 @@ class MapPainterFullTheme extends ThemeExtension<MapPainterFullTheme> {
   }
 
   @override
-  ThemeExtension<MapPainterFullTheme> lerp(
-      covariant ThemeExtension<MapPainterFullTheme>? other, double t) {
+  ThemeExtension<MapPainterFullTheme> lerp(covariant ThemeExtension<MapPainterFullTheme>? other, double t) {
     return this;
   }
 }

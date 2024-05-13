@@ -1,5 +1,4 @@
-import 'package:hive/hive.dart';
-import 'package:run_tracker/data/models/SettingData.dart';
+part of repositories;
 
 class SettingRepository {
   final Box<SettingData> settingBox;

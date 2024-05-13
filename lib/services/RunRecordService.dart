@@ -1,13 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
+import 'package:path_provider/path_provider.dart' as pp;
 import 'package:run_tracker/core/RunPoint.dart';
 import 'package:run_tracker/core/RunRecord.dart';
-import 'package:run_tracker/data/mappers/RunPointGeolocationDataToCore.dart';
-import 'package:run_tracker/data/repositories/RunCoverRepository.dart';
-import 'package:run_tracker/data/repositories/RunPointsRepository.dart';
-import 'package:run_tracker/services/models/RunRecordModel.dart';
-import 'package:run_tracker/services/mappers/RunRecordToData.dart';
-import 'package:run_tracker/services/mappers/RunRecordToCoverData.dart';
+import 'package:run_tracker/data/mappers/mappers.dart';
+import 'package:run_tracker/data/repositories/repositories.dart';
+import 'package:run_tracker/services/mappers/mappers.dart';
+import 'package:run_tracker/services/models/models.dart';
 
 class RunRecordService {
   static final RunPointGeolocationDataToCore runPointGeolocationDataToCore = RunPointGeolocationDataToCore();
@@ -63,6 +64,25 @@ class RunRecordService {
       _runCoverRepository.removeByKey(runRecordModel.runCoverData.key!),
       _runPointsRepository.removeByKey(runRecordModel.runPointsData.key!),
     ]);
+  }
+
+  /// return path to file
+  Future<String> export(RunRecordModel runRecordModel) async {
+    final directory = await pp.getDownloadsDirectory();
+    final jsonString = json.encode(runRecordModel);
+    final fileName = getFileNameByModel(runRecordModel);
+    final fullPath = "${directory!.path}/$fileName.json";
+    final file = File(fullPath);
+
+    await file.writeAsString(jsonString, mode: FileMode.writeOnly);
+
+    return fullPath;
+  }
+
+  String getFileNameByModel(RunRecordModel runRecordModel) {
+    return runRecordModel.runCoverData.title.isNotEmpty
+        ? runRecordModel.runCoverData.title
+        : runRecordModel.runCoverData.startDateTime.toIso8601String();
   }
 
   static List<RunPointGeolocation> GetGeolocationsFromModel(RunRecordModel model) {

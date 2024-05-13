@@ -46,6 +46,7 @@
   "verbCancel": "cancel",
   "verbSave": "save",
   "verbRemove": "remove",
+  "verbExport": "export",
   "runRecordBarIntervalType": "interval type",
   "pulseMeasureTabMetronome": "metronome",
   "pulseMeasureTabCamera": "camera",

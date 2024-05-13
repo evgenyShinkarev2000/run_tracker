@@ -9,10 +9,11 @@ import 'package:run_tracker/components/pulse/MetronomTab.dart';
 import 'package:run_tracker/core/PulseMeasurement.dart';
 import 'package:run_tracker/helpers/extensions/BuildContextExtension.dart';
 import 'package:run_tracker/helpers/extensions/SettingExtension.dart';
-import 'package:run_tracker/services/settings/SettingsProvider.dart';
+import 'package:run_tracker/services/settings/settings.dart';
 
 class PulseInnerContent extends StatefulWidget {
-  void Function(PulseMeasurementBase?)? onPulseUpdated;
+  final void Function(PulseMeasurementBase?)? onPulseUpdated;
+
   PulseInnerContent({this.onPulseUpdated});
 
   @override

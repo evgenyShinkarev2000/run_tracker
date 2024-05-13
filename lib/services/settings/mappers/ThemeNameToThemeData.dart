@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:run_tracker/helpers/AppTheme.dart';
 import 'package:run_tracker/services/settings/mappers/IVariantToValueMapper.dart';
-import 'package:run_tracker/themes/Theme.dart';
+import 'package:run_tracker/theme/Theme.dart';
 
 class ThemeNameToThemeData implements IVariantToValueMapper<AppTheme, ThemeData> {
   @override

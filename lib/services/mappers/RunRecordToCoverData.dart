@@ -1,6 +1,4 @@
-import 'package:run_tracker/core/RunRecord.dart';
-import 'package:run_tracker/data/models/RunCoverData.dart';
-import 'package:run_tracker/services/mappers/CoreToDataMapper.dart';
+part of mappers;
 
 class RunRecordToCoverData implements CoreToDataMapper<RunRecord, RunCoverData> {
   @override

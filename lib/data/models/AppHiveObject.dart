@@ -1,4 +1,4 @@
-import 'package:hive_flutter/adapters.dart';
+part of models;
 
 class AppHiveObject extends HiveObject {
   @override

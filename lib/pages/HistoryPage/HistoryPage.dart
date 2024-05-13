@@ -1,11 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:run_tracker/Router.dart';
 import 'package:run_tracker/components/AppMainLoader.dart';
 import 'package:run_tracker/components/drawer/AppMainDrawer.dart';
-import 'package:run_tracker/data/mappers/RunPointGeolocationDataToCore.dart';
+import 'package:run_tracker/data/mappers/mappers.dart';
 import 'package:run_tracker/helpers/SpeedHelper.dart';
 import 'package:run_tracker/helpers/extensions/BuildContextExtension.dart';
 import 'package:run_tracker/pages/HistoryPage/RunCoverCard.dart';

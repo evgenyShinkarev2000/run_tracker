@@ -1,5 +1,4 @@
-import 'package:hive/hive.dart';
-import 'package:run_tracker/data/models/RunCoverData.dart';
+part of repositories;
 
 class RunCoverRepository {
   final Box<RunCoverData> _runCoverLazyBox;

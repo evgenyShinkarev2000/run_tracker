@@ -1,3 +1,5 @@
+part of settings;
+
 class SettingVariant<TVariant extends Enum, TValue> extends SettingBase<TValue> {
   final Future<void> Function(String name, TVariant? variant)? onChange;
   final TValue? Function(TVariant?) variantToValue;

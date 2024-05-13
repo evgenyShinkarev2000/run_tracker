@@ -1,6 +1,4 @@
-import 'package:run_tracker/services/settings/Setting.dart';
-import 'package:run_tracker/services/settings/SettingFactory.dart';
-import 'package:run_tracker/services/settings/SettingSetBase.dart';
+part of settings;
 
 class PulseByCameraSettings extends SettingSetBase {
   final SettingFactory _settingFactory;

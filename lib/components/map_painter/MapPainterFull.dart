@@ -3,7 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:run_tracker/helpers/extensions/BuildContextExtension.dart';
 import 'package:run_tracker/pages/MapPage/MapTileLayer.dart';
-import 'package:run_tracker/themes/Theme.dart';
+import 'package:run_tracker/theme/Theme.dart';
 
 class MapPainterFull extends StatelessWidget {
   final List<LatLng> geolocations;

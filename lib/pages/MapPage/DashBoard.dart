@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:run_tracker/themes/Theme.dart';
+import 'package:run_tracker/theme/Theme.dart';
 import 'package:run_tracker/bloc/cubits/DashBoardDurationCubit.dart';
 import 'package:run_tracker/bloc/cubits/DashBoardGeolocationCubit.dart';
 import 'package:run_tracker/helpers/extensions/BuildContextExtension.dart';

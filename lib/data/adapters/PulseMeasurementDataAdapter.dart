@@ -1,5 +1,4 @@
-import 'package:hive/hive.dart';
-import 'package:run_tracker/data/models/PulseMeasurementData.dart';
+part of adapters;
 
 class PulseMeasurementDataAdapter extends TypeAdapter<PulseMeasurementData> {
   @override

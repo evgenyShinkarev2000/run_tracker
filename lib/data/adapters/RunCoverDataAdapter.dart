@@ -1,5 +1,4 @@
-import 'package:hive/hive.dart';
-import 'package:run_tracker/data/models/RunCoverData.dart';
+part of adapters;
 
 class RunCoverDataAdapter extends TypeAdapter<RunCoverData> {
   @override

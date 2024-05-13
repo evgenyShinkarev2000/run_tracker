@@ -1,6 +1,4 @@
-import 'package:hive/hive.dart';
-import 'package:run_tracker/data/models/RunItemGeolocationData.dart';
-import 'package:run_tracker/data/models/RunItemStartData.dart';
+part of adapters;
 
 class RunPointStartDataAdapter extends TypeAdapter<RunPointStartData> {
   @override
@@ -34,7 +32,5 @@ class RunPointStartDataAdapter extends TypeAdapter<RunPointStartData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is RunPointStartDataAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+      other is RunPointStartDataAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
 }
