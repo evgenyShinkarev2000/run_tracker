@@ -21,7 +21,7 @@ class MapPainterFull extends StatelessWidget {
       );
     }
 
-    final theme = context.themeDate.mapPainterFullTheme;
+    final theme = context.themeData.mapPainterFullTheme;
 
     final markers = [
       start != null

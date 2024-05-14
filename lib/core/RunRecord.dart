@@ -79,7 +79,7 @@ class RunRecord {
     final firstGeolocationItem = runPoints.whereType<RunPointGeolocation>().firstOrNull;
     if (_startItem.geolocation == null &&
         firstGeolocationItem?.geolocation != null &&
-        firstGeolocationItem!.dateTime.microsecondsSinceEpoch - _startDateTime!.microsecondsSinceEpoch < 1e6) {
+        (firstGeolocationItem!.dateTime.microsecondsSinceEpoch - _startDateTime!.microsecondsSinceEpoch).abs() < 1e6) {
       _startItem.setStartGeolocation(firstGeolocationItem.geolocation);
     }
   }
@@ -89,7 +89,9 @@ class RunRecord {
     _stopDateTime = _stopItem.dateTime;
     _runDuration = Duration(microseconds: stopDateTime.microsecondsSinceEpoch - startDateTime.microsecondsSinceEpoch);
     final lastGeolocation = runPoints.whereType<RunPointGeolocation>().lastOrNull;
-    if (lastGeolocation != null && _stopItem.geolocation == null) {
+    if (lastGeolocation != null &&
+        _stopItem.geolocation == null &&
+        (_stopItem.dateTime.microsecondsSinceEpoch - lastGeolocation.dateTime.microsecondsSinceEpoch).abs() < 1e6) {
       _stopItem.setStopGeolocation(lastGeolocation.geolocation);
     }
     if (_stopItem.distance != null) {

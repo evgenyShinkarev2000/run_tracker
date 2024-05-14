@@ -155,6 +155,7 @@ class RunRecorder extends RunRecorderBase implements IDisposable {
     }
     assert(_phase == RunRecorderPhase.writing || _phase == RunRecorderPhase.paused);
 
+    _stopwatch.stop();
     super.stop();
 
     _phase = RunRecorderPhase.stopped;

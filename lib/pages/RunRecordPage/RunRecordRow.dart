@@ -1,37 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:run_tracker/helpers/extensions/BuildContextExtension.dart';
 
+import 'ValueWithUnit.dart';
+
 class RunRecordRow extends StatelessWidget {
   final String title;
-  final String value;
+  final String? value;
   final String? unit;
   final bool isSelected;
 
-  RunRecordRow(this.title, this.value, {this.unit, this.isSelected = false});
+  RunRecordRow(this.title, {this.value, this.unit, this.isSelected = false});
 
   @override
   Widget build(BuildContext context) {
-    final style = context.themeDate.textTheme;
-
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 4),
-      color: isSelected ? Colors.grey[100] : null,
+      padding: EdgeInsets.symmetric(horizontal: 8),
+      color: isSelected ? context.themeData.colorScheme.primary.withOpacity(0.05) : null,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             title,
-            style: style.bodyLarge,
+            style: context.themeData.textTheme.bodyLarge,
           ),
-          Row(
-            children: [
-              Text(
-                unit != null ? "$value," : value,
-                style: style.bodyLarge,
-              ),
-              unit != null ? Text(" $unit", style: style.bodySmall) : null,
-            ].nonNulls.toList(),
-          ),
+          ValueWithUnit(value: value, unit: unit),
         ],
       ),
     );

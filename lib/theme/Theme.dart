@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 part "DashBoardTheme.dart";
 part "MapPainterFullTheme.dart";
 part "ThemeDataExtension.dart";
+part "CustomColors.dart";
 
 const blue = Colors.blue;
 const black = Colors.black;
@@ -26,6 +27,7 @@ ThemeData _applyThemeChanges(ThemeData themeData) {
           startMarkerColor: brightGreen,
           stopMarkerColor: brightRed,
         ),
+        CustomColors(),
       ]);
 }
 
@@ -33,13 +35,15 @@ ThemeData _applyLightThemeChanges(ThemeData themeData) {
   return themeData.copyWith(
       appBarTheme: themeData.appBarTheme.copyWith(
     backgroundColor: Color.fromARGB(255, 237, 242, 244),
+    // backgroundColor: Color.lerp(themeData.colorScheme.background, themeData.colorScheme.primary, 0.075),
   ));
 }
 
 ThemeData _applyDarkThemeChanges(ThemeData themeData) {
   return themeData.copyWith(
       appBarTheme: themeData.appBarTheme.copyWith(
-    backgroundColor: Color.fromARGB(255, 31, 29, 29),
+    backgroundColor: Color.lerp(themeData.colorScheme.background, themeData.colorScheme.primary, 0.03),
+    // backgroundColor: Color.fromARGB(255, 31, 29, 29),
   ));
 }
 

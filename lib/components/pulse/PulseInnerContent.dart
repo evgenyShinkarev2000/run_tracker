@@ -39,8 +39,8 @@ class _PulseInnerContentState extends State<PulseInnerContent> {
         DefaultTabController(
           length: 4,
           child: TabBar(
-            unselectedLabelStyle: context.themeDate.textTheme.titleMedium,
-            labelStyle: context.themeDate.textTheme.titleMedium!.copyWith(color: context.themeDate.colorScheme.primary),
+            unselectedLabelStyle: context.themeData.textTheme.titleMedium,
+            labelStyle: context.themeData.textTheme.titleMedium!.copyWith(color: context.themeData.colorScheme.primary),
             padding: EdgeInsets.zero,
             indicatorPadding: EdgeInsets.zero,
             labelPadding: EdgeInsets.zero,

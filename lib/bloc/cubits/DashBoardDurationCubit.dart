@@ -18,6 +18,8 @@ class DashBoardDurationCubit extends Cubit<DashBoardDurationState> {
         case RunRecorderPhase.paused:
           _pause();
           break;
+        case RunRecorderPhase.stopped:
+          _pause();
         default:
           break;
       }

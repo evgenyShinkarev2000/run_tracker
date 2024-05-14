@@ -7,7 +7,7 @@ class AppMainLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = context.themeDate.primaryColor.withOpacity(0.75);
+    final color = context.themeData.primaryColor.withOpacity(0.75);
 
     return Material(
       child: Center(child: LoadingAnimationWidget.waveDots(color: color, size: 50)),

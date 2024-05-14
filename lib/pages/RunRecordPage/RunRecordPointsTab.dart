@@ -12,7 +12,7 @@ class RunRecordPointsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final points = RunRecordService.GetGeolocationsFromModel(runRecordModel);
-    final style = context.themeDate.textTheme.bodyLarge;
+    final style = context.themeData.textTheme.bodyLarge;
 
     return ListView(children: [
       ...points.map(

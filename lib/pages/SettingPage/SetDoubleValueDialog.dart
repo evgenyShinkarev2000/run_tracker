@@ -55,8 +55,8 @@ class _SetDoubleValueDialogState extends State<SetDoubleValueDialog> {
         width: double.maxFinite,
         child: IntrinsicHeight(
           child: Theme(
-            data: context.themeDate.copyWith(
-                sliderTheme: context.themeDate.sliderTheme.copyWith(showValueIndicator: ShowValueIndicator.always)),
+            data: context.themeData.copyWith(
+                sliderTheme: context.themeData.sliderTheme.copyWith(showValueIndicator: ShowValueIndicator.always)),
             child: Padding(
               padding: const EdgeInsets.only(top: 8),
               child: Slider(
@@ -69,7 +69,7 @@ class _SetDoubleValueDialogState extends State<SetDoubleValueDialog> {
                 },
                 min: widget.min ?? 0,
                 max: widget.max ?? 1,
-                inactiveColor: context.themeDate.colorScheme.primary.withOpacity(0.2),
+                inactiveColor: context.themeData.colorScheme.primary.withOpacity(0.2),
               ),
             ),
           ),

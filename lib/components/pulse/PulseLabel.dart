@@ -16,12 +16,12 @@ class PulseLabel extends StatelessWidget {
       children: [
         Text(
           "${context.appLocalization.nounPulse}, ${context.appLocalization.unitShortBPM}:",
-          style: context.themeDate.textTheme.titleMedium,
+          style: context.themeData.textTheme.titleMedium,
         ),
         SizedBox(width: 8),
         Text(
           pulse.toString(),
-          style: context.themeDate.textTheme.headlineSmall,
+          style: context.themeData.textTheme.headlineSmall,
         ),
       ],
     );

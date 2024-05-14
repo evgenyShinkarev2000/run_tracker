@@ -56,7 +56,7 @@ class RunRecordPage extends StatelessWidget {
                     ),
                   ],
                   bottom: TabBar(
-                    dividerColor: context.themeDate.appBarTheme.backgroundColor,
+                    dividerColor: context.themeData.appBarTheme.backgroundColor,
                     tabs: const [
                       Tab(icon: Icon(CupertinoIcons.map)),
                       Tab(

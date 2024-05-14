@@ -12,7 +12,7 @@ class RunRecordBarTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = context.themeDate.textTheme.bodyLarge;
+    final style = context.themeData.textTheme.bodyLarge;
     return Expanded(
       child: ListView.separated(
         scrollDirection: Axis.vertical,

@@ -13,7 +13,7 @@ class CameraTab extends StatelessWidget {
       children: [
         Text(
           context.appLocalization.pulseMeasureCameraInstructionInitial.capitalize(),
-          style: context.themeDate.textTheme.titleMedium,
+          style: context.themeData.textTheme.titleMedium,
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 8),

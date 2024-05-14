@@ -25,8 +25,8 @@ class _RunRecordBarHeaderState extends State<RunRecordBarHeader> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = context.themeDate.textTheme.bodyLarge;
-    final inputTheme = context.themeDate.inputDecorationTheme;
+    final textStyle = context.themeData.textTheme.bodyLarge;
+    final inputTheme = context.themeData.inputDecorationTheme;
     inputTheme.copyWith(
       disabledBorder: InputBorder.none,
       outlineBorder: BorderSide.none,

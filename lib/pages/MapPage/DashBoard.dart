@@ -43,7 +43,7 @@ class DashBoard extends StatelessWidget {
     final paceLabel = localization.dashPace;
     final runningTimeLabel = localization.dashTime;
     final distanceLabel = localization.dashDistance;
-    final dashBoardTheme = context.themeDate.dashBoardTheme;
+    final dashBoardTheme = context.themeData.dashBoardTheme;
 
     return Container(
       decoration: BoxDecoration(

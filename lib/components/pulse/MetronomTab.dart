@@ -25,7 +25,7 @@ class _MetronomTabState extends State<MetronomTab> {
           padding: EdgeInsets.symmetric(horizontal: 8),
           child: Text(
             context.appLocalization.pulseMeasureMetronomIntructionClickAtDrum.capitalize(),
-            style: context.themeDate.textTheme.titleMedium,
+            style: context.themeData.textTheme.titleMedium,
             textAlign: TextAlign.center,
           ),
         ),
