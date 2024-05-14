@@ -1,11 +1,11 @@
 part of chart_tab;
 
-class PulseChart extends StatelessWidget {
+class HeightChart extends StatelessWidget {
   final List<FlSpot> spots;
   final double minX;
   final double maxX;
 
-  PulseChart({
+  HeightChart({
     required this.spots,
     required this.minX,
     required this.maxX,
@@ -13,14 +13,15 @@ class PulseChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    for (var p in spots) {
+      debugPrint("${p.x} ${p.y}");
+    }
     return ChartBase(
       spots: spots,
-      chartLineStyle: ChartLineStyle.dashed,
-      isDotDataVisible: true,
       minX: minX,
       maxX: maxX,
-      minY: 40,
-      topCutInterval: 10,
+      topCutInterval: 5,
+      bottomCutInterval: 5,
       bottomTitlesSelector: (value, meta) => ChartHelper.durationToTitle(Duration(microseconds: value.round())),
       leftTitlesSelector: (value, meta) => value.round().toString(),
       leftTitlesReservedSize: 30,

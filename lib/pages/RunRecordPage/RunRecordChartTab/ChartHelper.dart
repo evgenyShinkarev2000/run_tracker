@@ -79,4 +79,6 @@ class ChartHelper {
 
     return textWidget;
   }
+
+  static String durationToTitle(Duration duration) => duration.hours > 0 ? duration.hhmmss : duration.mmss;
 }

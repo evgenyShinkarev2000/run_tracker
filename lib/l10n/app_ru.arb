@@ -43,6 +43,7 @@
   "nounCancel": "отмена",
   "nounError": "ошибка",
   "nounNoData": "нет данных",
+  "nounHeight": "высота",
   "verbCanfirm": "подтвердить",
   "verbCancel": "отменить",
   "verbSave": "сохранить",

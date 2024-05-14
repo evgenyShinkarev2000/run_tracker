@@ -18,13 +18,10 @@ class SpeedChart extends StatelessWidget {
       minX: minX,
       maxX: maxX,
       topCutInterval: 5,
-      bottomTitlesSelector: (value, meta) {
-        final duration = Duration(microseconds: value.toInt());
-
-        return duration.hours > 0 ? duration.hhmmss : duration.mmss;
-      },
+      bottomTitlesSelector: (value, meta) => ChartHelper.durationToTitle(Duration(microseconds: value.round())),
       leftTitlesSelector: (value, meta) => value.roundTo(1).toStringWithoutTrailingZeros(),
-      leftTitlesReservedSize: 28,
+      leftTitlesReservedSize: 30,
+      touchTooltipSelector: (value) => value.roundTo(1).toStringWithoutTrailingZeros(),
     );
   }
 }

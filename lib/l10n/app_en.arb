@@ -43,6 +43,7 @@
   "nounCancel": "cancel",
   "nounError": "error",
   "nounNoData": "no data",
+  "nounHeight": "height",
   "verbCanfirm": "confirm",
   "verbCancel": "cancel",
   "verbSave": "save",

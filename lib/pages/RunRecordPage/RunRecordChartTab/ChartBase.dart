@@ -7,11 +7,15 @@ class ChartBase extends StatelessWidget {
   final double maxX;
   final double aspectRation;
   final double topCutInterval;
+  final ChartLineStyle chartLineStyle;
+  final bool isDotDataVisible;
   final int? bottomTitlesCount;
   final double? bottomCutInterval;
   final double? leftTitlesReservedSize;
+  final double? minY;
   final String Function(double value, TitleMeta meta)? leftTitlesSelector;
   final String Function(double value, TitleMeta meta)? bottomTitlesSelector;
+  final String Function(double value)? touchTooltipSelector;
 
   ChartBase({
     required this.spots,
@@ -20,14 +24,19 @@ class ChartBase extends StatelessWidget {
     this.aspectRation = 2,
     this.topCutInterval = 5,
     this.bottomTitlesCount = 3,
+    this.chartLineStyle = ChartLineStyle.solid,
+    this.isDotDataVisible = false,
     this.leftTitlesReservedSize,
     this.bottomCutInterval,
+    this.minY,
     this.leftTitlesSelector,
     this.bottomTitlesSelector,
+    this.touchTooltipSelector,
   })  : assert(aspectRation > 0),
         assert(topCutInterval > 0),
         assert(bottomCutInterval == null || bottomCutInterval > 0),
-        assert(bottomTitlesCount == null || bottomTitlesCount >= 0);
+        assert(bottomTitlesCount == null || bottomTitlesCount >= 0),
+        assert(!(minY != null && bottomCutInterval != null));
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +47,7 @@ class ChartBase extends StatelessWidget {
     }
 
     final maxY = (spots.max((p) => p.y)!.y / topCutInterval).ceilToDouble() * topCutInterval;
-    var minY = 0.0;
+    var minY = this.minY ?? 0;
     if (bottomCutInterval != null) {
       minY = (minY / bottomCutInterval!).floorToDouble() * bottomCutInterval!;
     }
@@ -52,7 +61,7 @@ class ChartBase extends StatelessWidget {
 
     getBottomTitlesWidgetBuilder() {
       getBottomTitlesWidget(double value, TitleMeta meta) {
-        final text = bottomTitlesSelector!.call(value, meta);
+        final text = bottomTitlesSelector!(value, meta);
 
         return ChartHelper.getBottomTitlesWithEndPointsOffset(value, meta, text, context);
       }
@@ -83,14 +92,15 @@ class ChartBase extends StatelessWidget {
           minY: minY,
           maxY: maxY,
           lineTouchData: LineTouchData(
+              enabled: touchTooltipSelector != null,
               touchTooltipData: LineTouchTooltipData(
-            getTooltipColor: (touchedSpot) => touchTooltipBackgroundColor,
-            getTooltipItems: (touchedSpots) {
-              return touchedSpots
-                  .map((ts) => LineTooltipItem(ts.y.roundTo(1).toStringWithoutTrailingZeros(), touchTooltipTextStyle))
-                  .toList();
-            },
-          )),
+                getTooltipColor: (touchedSpot) => touchTooltipBackgroundColor,
+                getTooltipItems: (touchedSpots) {
+                  return touchedSpots
+                      .map((ts) => LineTooltipItem(touchTooltipSelector!(ts.y), touchTooltipTextStyle))
+                      .toList();
+                },
+              )),
           titlesData: FlTitlesData(
             topTitles: AxisTitles(),
             leftTitles: AxisTitles(
@@ -98,7 +108,7 @@ class ChartBase extends StatelessWidget {
                   showTitles: leftTitlesSelector != null,
                   reservedSize: leftTitlesReservedSize ?? 22,
                   getTitlesWidget: (value, meta) {
-                    final text = leftTitlesSelector!.call(value, meta);
+                    final text = leftTitlesSelector!(value, meta);
 
                     return ChartHelper.getLeftTitlesWithEndPointsOffset(value, meta, text, context);
                   }),
@@ -113,12 +123,18 @@ class ChartBase extends StatelessWidget {
           ),
           lineBarsData: [
             LineChartBarData(
-              dotData: FlDotData(show: false),
+              dotData: FlDotData(show: isDotDataVisible),
               spots: spots,
+              dashArray: chartLineStyle == ChartLineStyle.dashed ? [10, 5] : null,
             ),
           ],
         ),
       ),
     );
   }
+}
+
+enum ChartLineStyle {
+  solid,
+  dashed,
 }

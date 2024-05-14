@@ -14,6 +14,7 @@ part "ChartBase.dart";
 part "ChartHelper.dart";
 part "PulseChart.dart";
 part "SpeedChart.dart";
+part "HeigthChart.dart";
 
 class RunRecordChartTab extends StatelessWidget {
   final RunRecordModel runRecordModel;
@@ -46,6 +47,37 @@ class RunRecordChartTab extends StatelessWidget {
             spots: runRecordModel.runPointsData.geolocations
                 .where((g) => g.speed != null)
                 .map((g) => FlSpot((g.dateTime.microsecondsSinceEpoch - startTimeOffset).toDouble(), g.speed!))
+                .toList(),
+            minX: minX,
+            maxX: maxX,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ValueWithUnit(
+                value: context.appLocalization.nounPulse,
+                unit: context.appLocalization.unitShortBPM,
+              )
+            ],
+          ),
+          PulseChart(
+              spots: runRecordModel.runPointsData.pulseMeasurements
+                  .map((pm) => FlSpot((pm.dateTime.microsecondsSinceEpoch - startTimeOffset).toDouble(), pm.pulse))
+                  .toList(),
+              minX: minX,
+              maxX: maxX),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ValueWithUnit(
+                value: context.appLocalization.nounHeight,
+                unit: context.appLocalization.unitShortM,
+              )
+            ],
+          ),
+          HeightChart(
+            spots: runRecordModel.runPointsData.geolocations
+                .map((g) => FlSpot((g.dateTime.microsecondsSinceEpoch - startTimeOffset).toDouble(), g.altitude))
                 .toList(),
             minX: minX,
             maxX: maxX,

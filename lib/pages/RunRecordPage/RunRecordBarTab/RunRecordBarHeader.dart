@@ -61,7 +61,7 @@ class _RunRecordBarHeaderState extends State<RunRecordBarHeader> {
           ),
         ],
       ),
-      tileColor: Colors.blue[50],
+      tileColor: context.themeData.appBarTheme.backgroundColor,
     );
   }
 
