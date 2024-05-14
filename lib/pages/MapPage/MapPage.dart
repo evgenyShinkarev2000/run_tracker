@@ -11,7 +11,7 @@ import 'package:run_tracker/helpers/extensions/AppGeolocationExtension.dart';
 import 'package:run_tracker/pages/MapPage/DashBoard.dart';
 import 'package:run_tracker/pages/MapPage/MapBottomButtons.dart';
 import 'package:run_tracker/pages/MapPage/MapContribution.dart';
-import 'package:run_tracker/pages/MapPage/MapRightButtons.dart';
+import 'package:run_tracker/pages/MapPage/MapRightButton.dart';
 import 'package:run_tracker/pages/MapPage/MapTileLayer.dart';
 
 class MapPage extends StatefulWidget {

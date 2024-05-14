@@ -6,6 +6,7 @@ part "DashBoardTheme.dart";
 part "MapPainterFullTheme.dart";
 part "ThemeDataExtension.dart";
 part "CustomColors.dart";
+part "AppMapScreenButtonTheme.dart";
 
 const blue = Colors.blue;
 const black = Colors.black;
@@ -15,7 +16,7 @@ final brightRed = Color.fromARGB(255, 255, 62, 62);
 ThemeData _applyThemeChanges(ThemeData themeData) {
   return themeData.copyWith(
       iconButtonTheme: IconButtonThemeData(
-        style: themeData.iconButtonTheme.style?.copyWith(iconSize: MaterialStatePropertyAll<double>(40)),
+        style: themeData.iconButtonTheme.style?.copyWith(iconSize: MaterialStatePropertyAll<double>(20)),
       ),
       extensions: [
         DashBoardTheme(
@@ -28,6 +29,7 @@ ThemeData _applyThemeChanges(ThemeData themeData) {
           stopMarkerColor: brightRed,
         ),
         CustomColors(),
+        AppMapScreenButtonTheme(size: 32),
       ]);
 }
 

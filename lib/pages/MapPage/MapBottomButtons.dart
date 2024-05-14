@@ -9,6 +9,7 @@ import 'package:run_tracker/core/PulseRecorder.dart';
 import 'package:run_tracker/core/RunRecord.dart';
 import 'package:run_tracker/core/RunRecorder.dart';
 import 'package:run_tracker/helpers/extensions/DateTimeExtension.dart';
+import 'package:run_tracker/pages/MapPage/MapIconButton.dart';
 import 'package:run_tracker/pages/MapPage/SaveRecordDialog.dart';
 import 'package:run_tracker/pages/MapPage/StopRecordingDialog.dart';
 import 'package:run_tracker/services/RunRecordService.dart';
@@ -54,52 +55,40 @@ class _MapBottomButtonsState extends State<MapBottomButtons> {
     final isAddPlacemarkShow = goingMode != GoingMode.ready && !isLocked;
     final isAddHeartRateShow = goingMode != GoingMode.ready && !isLocked;
 
-    final double buttonSize =
-        Theme.of(context).iconButtonTheme.style?.iconSize?.resolve(MaterialState.values.toSet()) ?? 40;
-
     return [
       isStopShow
-          ? IconButton(
+          ? MapIconButton(
               onPressed: () => stopTap(context),
               icon: Icon(CupertinoIcons.stop),
             )
           : null,
-      isPlayShow
-          ? IconButton(
-              onPressed: () => playTap(context),
-              icon: Container(
-                width: buttonSize,
-                padding: EdgeInsets.only(left: buttonSize / 6),
-                child: Icon(CupertinoIcons.play),
-              ),
-            )
-          : null,
+      isPlayShow ? MapIconButton(onPressed: () => playTap(context), icon: Icon(CupertinoIcons.play)) : null,
       isPauseShow
-          ? IconButton(
+          ? MapIconButton(
               onPressed: () => pauseTap(context),
               icon: Icon(CupertinoIcons.pause),
             )
           : null,
       isLockedShow
-          ? IconButton(
+          ? MapIconButton(
               onPressed: lockTap,
               icon: Icon(CupertinoIcons.lock),
             )
           : null,
       isUnlockedShow
-          ? IconButton(
+          ? MapIconButton(
               onPressed: unlockTap,
               icon: Icon(CupertinoIcons.lock_open),
             )
           : null,
       isAddPlacemarkShow
-          ? IconButton(
+          ? MapIconButton(
               onPressed: () {},
               icon: Icon(CupertinoIcons.placemark),
             )
           : null,
       isAddHeartRateShow
-          ? IconButton(
+          ? MapIconButton(
               onPressed: () => addHeartRateTap(context),
               icon: Icon(CupertinoIcons.heart),
             )

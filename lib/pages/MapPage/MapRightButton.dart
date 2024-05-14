@@ -1,14 +1,12 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:run_tracker/pages/MapPage/MapIconButton.dart';
 
 class MapRightButton extends StatelessWidget {
   final Function() onNavigateTap;
   final Function() onStopNavigateTap;
   final bool isNavigating;
   const MapRightButton(
-      {super.key, required this.onNavigateTap,
-      required this.isNavigating,
-      required this.onStopNavigateTap});
+      {super.key, required this.onNavigateTap, required this.isNavigating, required this.onStopNavigateTap});
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +19,13 @@ class MapRightButton extends StatelessWidget {
             children: [
               Spacer(flex: 5),
               isNavigating
-                  ? IconButton(
+                  ? MapIconButton(
                       onPressed: onNavigateTap,
                       icon: Icon(CupertinoIcons.location),
                     )
                   : null,
               !isNavigating
-                  ? IconButton(
+                  ? MapIconButton(
                       onPressed: onStopNavigateTap,
                       icon: Icon(CupertinoIcons.location_slash),
                     )
