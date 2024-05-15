@@ -48,7 +48,8 @@ class _MapBottomButtonsState extends State<MapBottomButtons> {
 
   List<Widget> buildIcons(BuildContext context) {
     final isPlayShow = (goingMode == GoingMode.ready || goingMode == GoingMode.pause) && !isLocked;
-    final isPauseShow = goingMode == GoingMode.play && !isLocked;
+    // final isPauseShow = goingMode == GoingMode.play && !isLocked;
+    final isPauseShow = false;
     final isLockedShow = goingMode != GoingMode.ready && isLocked;
     final isUnlockedShow = goingMode != GoingMode.ready && !isLocked;
     final isStopShow = goingMode != GoingMode.ready && !isLocked;

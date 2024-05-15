@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:run_tracker/theme/Theme.dart';
 import 'package:run_tracker/bloc/cubits/DashBoardDurationCubit.dart';
 import 'package:run_tracker/bloc/cubits/DashBoardGeolocationCubit.dart';
 import 'package:run_tracker/helpers/extensions/BuildContextExtension.dart';
@@ -43,11 +42,10 @@ class DashBoard extends StatelessWidget {
     final paceLabel = localization.dashPace;
     final runningTimeLabel = localization.dashTime;
     final distanceLabel = localization.dashDistance;
-    final dashBoardTheme = context.themeData.dashBoardTheme;
 
     return Container(
       decoration: BoxDecoration(
-        color: dashBoardTheme.backgroundColor,
+        color: context.themeData.colorScheme.background,
       ),
       child: IntrinsicHeight(
         child: Row(
@@ -55,18 +53,18 @@ class DashBoard extends StatelessWidget {
             Expanded(
               child: Dash(label: speedLabel, value: toSpeedView(speed)),
             ),
-            VerticalDivider(color: dashBoardTheme.innerBorderColor),
+            VerticalDivider(),
             Expanded(
               child: Dash(label: paceLabel, value: toPaceView(pace)),
             ),
-            VerticalDivider(color: dashBoardTheme.innerBorderColor),
+            VerticalDivider(),
             Expanded(
               child: Dash(
                 label: runningTimeLabel,
                 value: toRunningTimeView(runningTime),
               ),
             ),
-            VerticalDivider(color: dashBoardTheme.innerBorderColor),
+            VerticalDivider(),
             Expanded(
               child: Dash(label: distanceLabel, value: distance.toString()),
             ),

@@ -1,11 +1,7 @@
 part of theme;
 
 class DashBoardTheme extends ThemeExtension<DashBoardTheme> {
-  final Color backgroundColor;
-  final Color outerBorderColor;
-  final Color innerBorderColor;
-
-  DashBoardTheme({required this.backgroundColor, required this.outerBorderColor, required this.innerBorderColor});
+  DashBoardTheme();
 
   @override
   ThemeExtension<DashBoardTheme> copyWith() {

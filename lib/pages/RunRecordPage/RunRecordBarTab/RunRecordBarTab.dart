@@ -6,10 +6,13 @@ import 'package:run_tracker/helpers/extensions/DurationExtension.dart';
 import 'package:run_tracker/helpers/extensions/IterableExtension.dart';
 import 'package:run_tracker/helpers/units_helper/units_helper.dart';
 import 'package:run_tracker/pages/RunRecordPage/RunRecordBarTab/DropdownControls.dart';
+import 'package:run_tracker/pages/RunRecordPage/RunRecordBarTab/IntervalInfo.dart';
+import 'package:run_tracker/pages/RunRecordPage/RunRecordBarTab/IntervalProcessor.dart';
 import 'package:run_tracker/pages/RunRecordPage/RunRecordBarTab/RunRecordBarHeader.dart';
 import 'package:run_tracker/services/RunRecordService.dart';
 import 'package:run_tracker/services/models/models.dart';
 
+import 'BarModel.dart';
 import 'IntervalType.dart';
 import 'RunRecordBarTable.dart';
 
@@ -24,7 +27,7 @@ class RunRecordBarTab extends StatefulWidget {
 
 class _RunRecordBarTabState extends State<RunRecordBarTab> {
   double distanceLimit = 1000;
-  Duration timelimit = Duration(minutes: 5);
+  Duration timeLimit = Duration(minutes: 5);
   IntervalType intervalType = IntervalType.distance;
   UnitType unitType = UnitType.speed;
 
@@ -39,14 +42,20 @@ class _RunRecordBarTabState extends State<RunRecordBarTab> {
           onSelectUnitType: handleSelectUnitType,
           initialUnitType: unitType,
         ),
-        RunRecordBarTable(rowModels: rowModels),
-        DropDownControls(
-          onSelectDistance: handleSelectDistanceLimit,
-          initialDistance: distanceLimit,
-          onSelectDuration: handleSelectTimeLimit,
-          initialDuration: timelimit,
-          onSelectIntervalType: handleSelectIntervalType,
-          intervalTypeInitial: intervalType,
+        RunRecordBarTable(
+          rowModels: rowModels,
+          unitType: unitType,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: DropDownControls(
+            onSelectDistance: handleSelectDistanceLimit,
+            initialDistance: distanceLimit,
+            onSelectDuration: handleSelectTimeLimit,
+            initialDuration: timeLimit,
+            onSelectIntervalType: handleSelectIntervalType,
+            intervalTypeInitial: intervalType,
+          ),
         )
       ],
     );
@@ -78,7 +87,7 @@ class _RunRecordBarTabState extends State<RunRecordBarTab> {
     }
 
     setState(() {
-      timelimit = duration;
+      timeLimit = duration;
     });
   }
 
@@ -92,122 +101,135 @@ class _RunRecordBarTabState extends State<RunRecordBarTab> {
     });
   }
 
-  List<RunRecordBarRowModel<String, String>> getFormatedRows() {
+  List<BarModel> getFormatedRows() {
     final geolocations = RunRecordService.GetGeolocationsFromModel(widget.runRecordModel);
-    String Function(double speed) speedTransform;
+    if (geolocations.isEmpty) {
+      return List.empty();
+    }
+
+    String Function(Speed speed) speedToTitle;
     switch (unitType) {
       case UnitType.speed:
-        speedTransform = (speed) => Speed.fromMetersPerSecond(speed).kilometersPerHour.toStringAsFixed(1);
-        break;
+        speedToTitle = (speed) => speed.kilometersPerHour.toStringAsFixed(1);
       case UnitType.pace:
-        speedTransform = (speed) => Speed.fromMetersPerSecond(speed).toPace().toDurationKm().mmss;
+        speedToTitle = (speed) => speed.toPace().toDurationKm().mmss;
     }
 
+    IntervalProcessor intervalProcessor;
+    String Function(IntervalInfo intervalInfo, int index, int intervalCount) intervalInfoToLeading;
     switch (intervalType) {
-      case IntervalType.distance:
-        var rowModels = geolocationsToRowModelsByDistance(geolocations, distanceLimit);
-        var rowModelsWithLength = appendLength(rowModels);
-
-        return rowModelsWithLength.map((row) {
-          return RunRecordBarRowModel(
-              (row.label / 1000).roundTo(3).toString().padRight(1, "0"), speedTransform(row.value), row.length);
-        }).toList();
       case IntervalType.time:
-        var rowModels = geolocationsToRowModelsByTime(geolocations, timelimit);
-        var rowModelsWithLength = appendLength(rowModels);
-        final hasHour = rowModels.any((row) => row.label.hours > 0);
+        intervalProcessor = IntervalByTime(timeLimit: timeLimit);
+        intervalInfoToLeading = buildIntervalInfoToTimeTitle(timeLimit);
+      case IntervalType.distance:
+        intervalProcessor = IntervalByDistance(distanceLimit: distanceLimit);
+        intervalInfoToLeading = buildIntervalInfoToDistanceTitle(distanceLimit);
+    }
 
-        return rowModelsWithLength.map((row) {
-          return RunRecordBarRowModel(
-              hasHour ? row.label.hhmmss : row.label.mmss, speedTransform(row.value), row.length);
-        }).toList();
+    final intervals = getIntervals(intervalProcessor, geolocations);
+
+    return buildRows(intervals.toList(), speedToTitle, intervalInfoToLeading).toList();
+  }
+
+  static String Function(IntervalInfo, int, int) buildIntervalInfoToTimeTitle(Duration timeLimit) {
+    return (intervalInfo, index, intervalCount) {
+      Duration Function(Duration) roundDuration;
+      if (index == intervalCount - 1) {
+        roundDuration = (duration) =>
+            Duration(microseconds: timeLimit.inMicroseconds * index + intervalInfo.duration.inMicroseconds);
+      } else {
+        roundDuration = (duration) => Duration(microseconds: timeLimit.inMicroseconds * (index + 1));
+      }
+
+      final roundedDuration = roundDuration(intervalInfo.duration);
+
+      return roundedDuration.hours > 0 ? roundedDuration.hhmmss : roundedDuration.mmss;
+    };
+  }
+
+  static String Function(IntervalInfo, int, int) buildIntervalInfoToDistanceTitle(double distanceLimit) {
+    return (intervalInfo, index, intervalCount) {
+      if (index == intervalCount - 1) {
+        return ((distanceLimit * index + intervalInfo.distance) / 1000).toStringAsFixed(3);
+      }
+
+      return ((distanceLimit * (index + 1)) / 1000).toStringAsFixed(1);
+    };
+  }
+
+  static Iterable<BarModel> buildRows(List<IntervalInfo> intervals, String Function(Speed) speedTitleSelector,
+      String Function(IntervalInfo, int, int) leadingSelector) sync* {
+    final speeds = intervals.map((i) => i.distance / i.duration.inSecondsDouble).toList();
+    final maxSpeed = speeds.max((s) => s)!;
+    double? previousHeight;
+
+    var i = 0;
+    final length = intervals.length;
+    for (var interval in intervals) {
+      String heightTrailing = "0";
+      if (previousHeight != null) {
+        final deltaHeight = (interval.averageHeight - previousHeight).roundTo(1);
+        var sign = "";
+        if (deltaHeight < 0) {
+          sign = "-";
+        } else if (deltaHeight > 0) {
+          sign = "+";
+        }
+        heightTrailing = "$sign${deltaHeight.abs().toStringWithoutTrailingZeros()}";
+      }
+
+      yield BarModel(
+        leading: leadingSelector(interval, i, length),
+        value: speedTitleSelector((Speed.fromMetersPerSecond(speeds[i]))),
+        trailing: heightTrailing,
+        trackLength: speeds[i] / maxSpeed,
+      );
+
+      previousHeight = interval.averageHeight;
+      ++i;
     }
   }
 
-  static List<RunRecordBarRowModel<Duration, double>> geolocationsToRowModelsByTime(
-      List<RunPointGeolocation> points, Duration timeLimit) {
-    //TODO segment doesn't match geolocation exactly
-    if (points.isEmpty) {
-      return List.empty();
-    }
+  static Iterable<IntervalInfo> getIntervals(
+    IntervalProcessor intervalProcessor,
+    Iterable<RunPointGeolocation> geolocations,
+  ) sync* {
+    var previousPoint = geolocations.first;
+    var intervalDuration = Duration.zero;
+    var intervalDistance = 0.0;
+    var heightSum = previousPoint.geolocation.altitude;
+    var pointsCount = 1;
 
-    final durationLimitMicroseconds = timeLimit.inMicroseconds;
-    final rowModels = <RunRecordBarRowModel<Duration, double>>[];
-    var distance = 0.0;
-    var durationMicroseconds = 0;
-    var segmentCount = 0;
-    var previousPoint = points.first;
+    for (var point in geolocations.skip(1)) {
+      ++pointsCount;
+      heightSum += point.geolocation.altitude;
+      final distance = GeolocatorWrapper.distanceBetweenGeolocations(previousPoint.geolocation, point.geolocation);
+      final duration =
+          Duration(microseconds: point.dateTime.microsecondsSinceEpoch - previousPoint.dateTime.microsecondsSinceEpoch);
+      intervalProcessor.add(distance, duration);
+      if (intervalProcessor.wasNewInterval) {
+        yield IntervalInfo(
+            distance: intervalDistance + distance - intervalProcessor.distanceRemainder,
+            duration: intervalDuration + duration - intervalProcessor.durationRemainder,
+            averageHeight: heightSum / pointsCount);
 
-    for (var point in points.skip(1)) {
-      distance += GeolocatorWrapper.distanceBetweenGeolocations(previousPoint.geolocation, point.geolocation);
-      durationMicroseconds += point.dateTime.microsecondsSinceEpoch - previousPoint.dateTime.microsecondsSinceEpoch;
-      if (durationMicroseconds > durationLimitMicroseconds) {
-        ++segmentCount;
-        rowModels.add(RunRecordBarRowModel(
-            Duration(microseconds: segmentCount * durationLimitMicroseconds), distance / durationMicroseconds * 1e6));
-        distance = 0;
-        durationMicroseconds = 0;
+        intervalDistance = intervalProcessor.distanceRemainder;
+        intervalDuration = intervalProcessor.durationRemainder;
+        pointsCount = 0;
+        heightSum = 0;
+      } else {
+        intervalDistance += distance;
+        intervalDuration += duration;
       }
       previousPoint = point;
     }
 
-    if (durationMicroseconds != 0) {
-      rowModels.add(RunRecordBarRowModel(
-          Duration(microseconds: segmentCount * durationLimitMicroseconds + durationMicroseconds),
-          distance / durationMicroseconds * 1e6));
+    if (pointsCount != 0) {
+      yield IntervalInfo(
+        distance: intervalDistance,
+        duration: intervalDuration,
+        averageHeight: heightSum / pointsCount,
+      );
     }
-
-    return rowModels;
   }
-
-  static List<RunRecordBarRowModel<double, double>> geolocationsToRowModelsByDistance(
-      List<RunPointGeolocation> points, double segmentLimit) {
-    //TODO segment doesn't match geolocation exactly
-    if (points.isEmpty) {
-      return List.empty();
-    }
-
-    final rowModels = <RunRecordBarRowModel<double, double>>[];
-    var distance = 0.0;
-    var durationMicroseconds = 0;
-    var segmentCount = 0;
-    var previousPoint = points.first;
-
-    for (var point in points.skip(1)) {
-      distance += GeolocatorWrapper.distanceBetweenGeolocations(previousPoint.geolocation, point.geolocation);
-      durationMicroseconds += point.dateTime.microsecondsSinceEpoch - previousPoint.dateTime.microsecondsSinceEpoch;
-      if (distance > segmentLimit) {
-        ++segmentCount;
-        rowModels.add(RunRecordBarRowModel(segmentCount * segmentLimit, distance / durationMicroseconds * 1e6));
-        distance = 0;
-        durationMicroseconds = 0;
-      }
-      previousPoint = point;
-    }
-
-    if (distance != 0) {
-      rowModels
-          .add(RunRecordBarRowModel(segmentCount * segmentLimit + distance, distance / durationMicroseconds * 1e6));
-    }
-
-    return rowModels;
-  }
-
-  static List<RunRecordBarRowModel<TLabel, double>> appendLength<TLabel>(
-      List<RunRecordBarRowModel<TLabel, double>> rowModels) {
-    final maxSpeed = rowModels.max((row) => row.value)!.value;
-    for (var row in rowModels) {
-      row.length = row.value / maxSpeed;
-    }
-
-    return rowModels;
-  }
-}
-
-class RunRecordBarRowModel<TLabel, TValue> {
-  TLabel label;
-  TValue value;
-  double? length;
-
-  RunRecordBarRowModel(this.label, this.value, [this.length]);
 }

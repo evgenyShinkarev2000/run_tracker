@@ -19,11 +19,7 @@ ThemeData _applyThemeChanges(ThemeData themeData) {
         style: themeData.iconButtonTheme.style?.copyWith(iconSize: MaterialStatePropertyAll<double>(20)),
       ),
       extensions: [
-        DashBoardTheme(
-          backgroundColor: themeData.colorScheme.background,
-          outerBorderColor: black,
-          innerBorderColor: blue,
-        ),
+        DashBoardTheme(),
         MapPainterFullTheme(
           startMarkerColor: brightGreen,
           stopMarkerColor: brightRed,
