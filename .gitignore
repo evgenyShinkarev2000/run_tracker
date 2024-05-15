@@ -45,3 +45,6 @@ app.*.map.json
 
 # big samples
 /test/visualization/samples
+
+# real tracks
+/tracks

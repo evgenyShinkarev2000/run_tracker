@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:run_tracker/core/RunPoint.dart';
 import 'package:run_tracker/helpers/GeolocatorWrapper.dart';
-import 'package:run_tracker/helpers/SpeedHelper.dart';
 import 'package:run_tracker/helpers/extensions/DoubleExtension.dart';
 import 'package:run_tracker/helpers/extensions/DurationExtension.dart';
 import 'package:run_tracker/helpers/extensions/IterableExtension.dart';
+import 'package:run_tracker/helpers/units_helper/units_helper.dart';
 import 'package:run_tracker/pages/RunRecordPage/RunRecordBarTab/DropdownControls.dart';
 import 'package:run_tracker/pages/RunRecordPage/RunRecordBarTab/RunRecordBarHeader.dart';
 import 'package:run_tracker/services/RunRecordService.dart';
@@ -97,10 +97,10 @@ class _RunRecordBarTabState extends State<RunRecordBarTab> {
     String Function(double speed) speedTransform;
     switch (unitType) {
       case UnitType.speed:
-        speedTransform = (speed) => SpeedHelper.meterPerSecondToKilometrPerHour(speed).toStringAsFixed(1);
+        speedTransform = (speed) => Speed.fromMetersPerSecond(speed).kilometersPerHour.toStringAsFixed(1);
         break;
       case UnitType.pace:
-        speedTransform = (speed) => SpeedHelper.speedToPace(speed)!.mmss;
+        speedTransform = (speed) => Speed.fromMetersPerSecond(speed).toPace().toDurationKm().mmss;
     }
 
     switch (intervalType) {

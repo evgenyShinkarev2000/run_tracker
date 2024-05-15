@@ -6,7 +6,7 @@ import 'package:run_tracker/helpers/extensions/AppGeolocationExtension.dart';
 import 'package:run_tracker/helpers/extensions/BuildContextExtension.dart';
 import 'package:run_tracker/helpers/extensions/DateTimeExtension.dart';
 import 'package:run_tracker/helpers/extensions/DurationExtension.dart';
-import 'package:run_tracker/helpers/SpeedHelper.dart';
+import 'package:run_tracker/helpers/units_helper/units_helper.dart';
 import 'package:run_tracker/pages/RunRecordPage/RunRecordRow.dart';
 import 'package:run_tracker/services/models/models.dart';
 
@@ -62,14 +62,19 @@ class RunRecordMapTab extends StatelessWidget {
           ),
           RunRecordRow(
             speedLabel,
-            value: runRecordModel.runCoverData.averageSpeed?.round().toString() ?? context.appLocalization.nounNoData,
+            value: runRecordModel.runCoverData.averageSpeed != null && !runRecordModel.runCoverData.averageSpeed!.isNaN
+                ? Speed.fromMetersPerSecond(runRecordModel.runCoverData.averageSpeed!)
+                    .kilometersPerHour
+                    .toStringAsFixed(1)
+                : context.appLocalization.nounNoData,
             unit: context.appLocalization.unitShortKmPerHour,
             isSelected: true,
           ),
           RunRecordRow(
             paceLabel,
-            value: SpeedHelper.speedToPace(runRecordModel.runCoverData.averageSpeed)?.mmss ??
-                context.appLocalization.nounNoData,
+            value: runRecordModel.runCoverData.averageSpeed != null && !runRecordModel.runCoverData.averagePulse!.isNaN
+                ? Speed.fromMetersPerSecond(runRecordModel.runCoverData.averageSpeed!).toPace().toDurationKm().mmss
+                : context.appLocalization.nounNoData,
             unit: context.appLocalization.unitShortMinPerKm,
           ),
           RunRecordRow(

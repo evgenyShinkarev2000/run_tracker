@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:run_tracker/core/AppGeolocation.dart';
 import 'package:run_tracker/core/RunRecorder.dart';
 import 'package:run_tracker/helpers/GeolocationProvider.dart';
-import 'package:run_tracker/helpers/SpeedHelper.dart';
+import 'package:run_tracker/helpers/units_helper/units_helper.dart';
 
 class DashBoardGeolocationCubit extends Cubit<DashBoardGeolocationState> {
   final IRunRecorder _runRecorder;
@@ -43,7 +43,8 @@ class DashBoardGeolocationState {
   final double? speed;
 
   /// m/km
-  Duration? get pace => SpeedHelper.speedToPace(speed);
+  Duration? get pace =>
+      speed != null && !speed!.isNaN ? Speed.fromMetersPerSecond(speed!).toPace().toDurationKm() : null;
 
   const DashBoardGeolocationState({required this.speed, required this.distance});
 }

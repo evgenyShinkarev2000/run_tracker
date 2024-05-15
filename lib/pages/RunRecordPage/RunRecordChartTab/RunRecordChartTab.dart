@@ -7,6 +7,7 @@ import 'package:run_tracker/helpers/extensions/BuildContextExtension.dart';
 import 'package:run_tracker/helpers/extensions/DoubleExtension.dart';
 import 'package:run_tracker/helpers/extensions/DurationExtension.dart';
 import 'package:run_tracker/helpers/extensions/IterableExtension.dart';
+import 'package:run_tracker/helpers/units_helper/units_helper.dart';
 import 'package:run_tracker/pages/RunRecordPage/ValueWithUnit.dart';
 import 'package:run_tracker/services/models/models.dart';
 
@@ -45,8 +46,11 @@ class RunRecordChartTab extends StatelessWidget {
           ),
           SpeedChart(
             spots: runRecordModel.runPointsData.geolocations
-                .where((g) => g.speed != null)
-                .map((g) => FlSpot((g.dateTime.microsecondsSinceEpoch - startTimeOffset).toDouble(), g.speed!))
+                .where((g) => g.speed != null && !g.speed!.isNaN)
+                .map((g) => FlSpot(
+                      (g.dateTime.microsecondsSinceEpoch - startTimeOffset).toDouble(),
+                      Speed.fromMetersPerSecond(g.speed!).kilometersPerHour,
+                    ))
                 .toList(),
             minX: minX,
             maxX: maxX,

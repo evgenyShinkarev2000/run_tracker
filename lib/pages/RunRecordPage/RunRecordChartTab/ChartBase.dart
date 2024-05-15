@@ -49,7 +49,7 @@ class ChartBase extends StatelessWidget {
     final maxY = (spots.max((p) => p.y)!.y / topCutInterval).ceilToDouble() * topCutInterval;
     var minY = this.minY ?? 0;
     if (bottomCutInterval != null) {
-      minY = (minY / bottomCutInterval!).floorToDouble() * bottomCutInterval!;
+      minY = (spots.min((s) => s.y)!.y / bottomCutInterval!).floorToDouble() * bottomCutInterval!;
     }
 
     double? bottomInterval;

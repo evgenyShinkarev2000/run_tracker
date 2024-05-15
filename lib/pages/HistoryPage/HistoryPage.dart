@@ -5,8 +5,8 @@ import 'package:run_tracker/Router.dart';
 import 'package:run_tracker/components/AppMainLoader.dart';
 import 'package:run_tracker/components/drawer/AppMainDrawer.dart';
 import 'package:run_tracker/data/mappers/mappers.dart';
-import 'package:run_tracker/helpers/SpeedHelper.dart';
 import 'package:run_tracker/helpers/extensions/BuildContextExtension.dart';
+import 'package:run_tracker/helpers/units_helper/units_helper.dart';
 import 'package:run_tracker/pages/HistoryPage/RunCoverCard.dart';
 import 'package:run_tracker/services/RunRecordService.dart';
 
@@ -55,7 +55,9 @@ class HistoryPage extends StatelessWidget {
                     beginDateTime: runCover.startDateTime,
                     duration: Duration(microseconds: runCover.duration),
                     distance: runCover.distance,
-                    pace: SpeedHelper.speedToPace(runCover.averageSpeed),
+                    pace: runCover.averageSpeed != null && !runCover.averageSpeed!.isNaN
+                        ? Speed.fromMetersPerSecond(runCover.averageSpeed!).toPace().toDurationKm()
+                        : null,
                     pulse: runCover.averagePulse?.round());
               });
             },
