@@ -13,6 +13,7 @@ class RunRecordBarTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = context.themeData.textTheme.bodyLarge;
+
     return Expanded(
       child: ListView.separated(
         scrollDirection: Axis.vertical,
@@ -26,9 +27,31 @@ class RunRecordBarTable extends StatelessWidget {
               row.label,
               style: style,
             ),
-            title: Text(
-              row.value,
-              style: style,
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  row.value,
+                  style: style,
+                ),
+                SizedBox(width: 16),
+                row.length != null
+                    ? Expanded(
+                        child: LayoutBuilder(builder: (context, boxConstrains) {
+                          return Row(
+                            children: [
+                              Container(
+                                width: row.length! * boxConstrains.maxWidth,
+                                height: 16,
+                                color: Color.lerp(context.themeData.colorScheme.background,
+                                    context.themeData.colorScheme.primary, 0.7),
+                              ),
+                            ],
+                          );
+                        }),
+                      )
+                    : null,
+              ].nonNulls.toList(),
             ),
           );
         },

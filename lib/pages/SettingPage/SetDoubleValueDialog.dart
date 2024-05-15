@@ -69,7 +69,8 @@ class _SetDoubleValueDialogState extends State<SetDoubleValueDialog> {
                 },
                 min: widget.min ?? 0,
                 max: widget.max ?? 1,
-                inactiveColor: context.themeData.colorScheme.primary.withOpacity(0.2),
+                inactiveColor:
+                    Color.lerp(context.themeData.colorScheme.background, context.themeData.colorScheme.primary, 0.3),
               ),
             ),
           ),

@@ -50,28 +50,26 @@ class MyApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider<SettingsProvider>(create: (_) => store.get()),
         ],
-        child: Builder(
-          builder: (context) {
-            final appSettings = context.watch<SettingsProvider>().appSettings;
+        builder: (context, _) {
+          final appSettings = context.watch<SettingsProvider>().appSettings;
 
-            return MaterialApp.router(
-              title: 'Flutter Demo',
-              theme: appSettings.theme.valueOrDefault!,
-              routerConfig: AppRouterConfig,
-              localizationsDelegates: const [
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-                AppLocalizations.delegate,
-              ],
-              locale: appSettings.locale.valueOrDefault!,
-              supportedLocales: [
-                Locale(AppLanguageCode.en.name),
-                Locale(AppLanguageCode.ru.name),
-              ],
-            );
-          },
-        ),
+          return MaterialApp.router(
+            title: 'Flutter Demo',
+            theme: appSettings.theme.valueOrDefault!,
+            routerConfig: AppRouterConfig,
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+              AppLocalizations.delegate,
+            ],
+            locale: appSettings.locale.valueOrDefault!,
+            supportedLocales: [
+              Locale(AppLanguageCode.en.name),
+              Locale(AppLanguageCode.ru.name),
+            ],
+          );
+        },
       ),
     );
   }
