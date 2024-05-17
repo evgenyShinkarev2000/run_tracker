@@ -72,7 +72,7 @@ class RunRecordMapTab extends StatelessWidget {
           ),
           RunRecordRow(
             paceLabel,
-            value: runRecordModel.runCoverData.averageSpeed != null && !runRecordModel.runCoverData.averagePulse!.isNaN
+            value: runRecordModel.runCoverData.averageSpeed != null && !runRecordModel.runCoverData.averageSpeed!.isNaN
                 ? Speed.fromMetersPerSecond(runRecordModel.runCoverData.averageSpeed!).toPace().toDurationKm().mmss
                 : context.appLocalization.nounNoData,
             unit: context.appLocalization.unitShortMinPerKm,

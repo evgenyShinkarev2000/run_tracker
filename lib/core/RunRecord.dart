@@ -1,6 +1,6 @@
 import 'package:run_tracker/core/PulseMeasurement.dart';
 import 'package:run_tracker/core/RunPoint.dart';
-import 'package:run_tracker/helpers/GeolocatorWrapper.dart';
+import 'package:run_tracker/helpers/extensions/DurationExtension.dart';
 import 'package:run_tracker/helpers/extensions/ListExtension.dart';
 
 class RunRecord {
@@ -96,19 +96,37 @@ class RunRecord {
     }
   }
 
+  // void _processGeolocationItems() {
+  //   var previousPoint = runPoints.whereType<RunPointGeolocation>().firstOrNull;
+  //   if (previousPoint == null) {
+  //     return;
+  //   }
+
+  //   var weightedAverageSpeed = 0.0;
+  //   for (var point in runPoints.whereType<RunPointGeolocation>().skip(1)) {
+  //     weightedAverageSpeed += _findWeightedSpeed(previousPoint!, point);
+  //     previousPoint = point;
+  //   }
+
+  //   _averageSpeed = weightedAverageSpeed;
+  // }
+
   void _processGeolocationItems() {
-    var previousPoint = runPoints.whereType<RunPointGeolocation>().firstOrNull;
-    if (previousPoint == null) {
+    final firstGeolocation = runPoints.whereType<RunPointGeolocation>().firstOrNull;
+    final lastGeolocation = runPoints.whereType<RunPointGeolocation>().lastOrNull;
+
+    if (firstGeolocation == null || lastGeolocation == null || firstGeolocation == lastGeolocation) {
       return;
     }
 
-    var weightedAverageSpeed = 0.0;
-    for (var point in runPoints.whereType<RunPointGeolocation>().skip(1)) {
-      weightedAverageSpeed += _findWeightedSpeed(previousPoint!, point);
-      previousPoint = point;
+    final geolocationAvailableTime = Duration(
+        microseconds:
+            lastGeolocation.dateTime.microsecondsSinceEpoch - firstGeolocation.dateTime.microsecondsSinceEpoch);
+    if (geolocationAvailableTime == Duration.zero) {
+      return;
     }
 
-    _averageSpeed = weightedAverageSpeed;
+    _averageSpeed = distance / geolocationAvailableTime.inSecondsDouble;
   }
 
   void _processPulseMeaserements() {
@@ -117,9 +135,9 @@ class RunRecord {
     }
   }
 
-  double _findWeightedSpeed(RunPointNullableGeolocation a, RunPointNullableGeolocation b) {
-    return GeolocatorWrapper.distanceBetweenGeolocations(a.geolocation!, b.geolocation!) /
-        duration.inMicroseconds *
-        (b.dateTime.microsecondsSinceEpoch - a.dateTime.microsecondsSinceEpoch);
-  }
+  // double _findWeightedSpeed(RunPointNullableGeolocation a, RunPointNullableGeolocation b) {
+  //   return GeolocatorWrapper.distanceBetweenGeolocations(a.geolocation!, b.geolocation!) /
+  //       duration.inMicroseconds *
+  //       (b.dateTime.microsecondsSinceEpoch - a.dateTime.microsecondsSinceEpoch);
+  // }
 }
