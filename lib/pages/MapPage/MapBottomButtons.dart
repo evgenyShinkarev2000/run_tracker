@@ -65,6 +65,7 @@ class _MapBottomButtonsState extends State<MapBottomButtons> {
           : null,
       isPlayShow ? MapIconButton(onPressed: () => playTap(context), icon: Icon(CupertinoIcons.play)) : null,
       isPauseShow
+          // ignore: dead_code
           ? MapIconButton(
               onPressed: () => pauseTap(context),
               icon: Icon(CupertinoIcons.pause),

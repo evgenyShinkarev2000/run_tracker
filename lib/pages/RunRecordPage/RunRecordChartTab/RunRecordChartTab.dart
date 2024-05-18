@@ -8,7 +8,7 @@ import 'package:run_tracker/helpers/extensions/DoubleExtension.dart';
 import 'package:run_tracker/helpers/extensions/DurationExtension.dart';
 import 'package:run_tracker/helpers/extensions/IterableExtension.dart';
 import 'package:run_tracker/helpers/units_helper/units_helper.dart';
-import 'package:run_tracker/pages/RunRecordPage/ValueWithUnit.dart';
+import 'package:run_tracker/components/ValueWithUnit.dart';
 import 'package:run_tracker/services/models/models.dart';
 
 part "ChartBase.dart";

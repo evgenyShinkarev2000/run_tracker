@@ -26,6 +26,7 @@ import 'package:run_tracker/pages/MapPage/MapPage.dart';
 import 'package:run_tracker/pages/PulsePage/PulsePage.dart';
 import 'package:run_tracker/pages/RunRecordPage/RunRecordPage.dart';
 import 'package:run_tracker/pages/SettingPage/SettingPage.dart';
+import 'package:run_tracker/pages/StatisticPage/StatisticPage.dart';
 import 'package:run_tracker/services/RunRecordService.dart';
 import 'package:run_tracker/services/settings/settings.dart';
 
@@ -37,6 +38,7 @@ class Routes {
   static const runRecordPage = "/RunRecordPage";
   static const pulsePage = "/PulsePage";
   static const hivePage = "/HivePage";
+  static const statisticPage = "/StatisticPage";
 }
 
 final AppRouterConfig = GoRouter(routes: [
@@ -197,6 +199,21 @@ final AppRouterConfig = GoRouter(routes: [
         storage.register(appSettings.pulseByCamera.init());
       },
       builder: (context, store) => PulsePage(),
+    ),
+  ),
+  GoRoute(
+    path: Routes.statisticPage,
+    builder: (context, state) => MultiFutureBuilderLoader(
+      loader: (_, __) => AppMainLoader(),
+      register: (builder) {
+        builder.register(RunCoverRepositoryFactory().create());
+      },
+      builder: (context, store) => MultiProvider(
+        providers: [
+          Provider<RunCoverRepository>(create: (_) => store.get()),
+        ],
+        child: StatisticPage(),
+      ),
     ),
   ),
   GoRoute(

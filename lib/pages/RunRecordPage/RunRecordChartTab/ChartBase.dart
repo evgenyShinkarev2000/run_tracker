@@ -108,6 +108,10 @@ class ChartBase extends StatelessWidget {
                   showTitles: leftTitlesSelector != null,
                   reservedSize: leftTitlesReservedSize ?? 22,
                   getTitlesWidget: (value, meta) {
+                    if (value == meta.max) {
+                      return Container();
+                    }
+
                     final text = leftTitlesSelector!(value, meta);
 
                     return ChartHelper.getLeftTitlesWithEndPointsOffset(value, meta, text, context);

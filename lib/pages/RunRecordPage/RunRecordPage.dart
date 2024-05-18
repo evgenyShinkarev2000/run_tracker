@@ -38,7 +38,7 @@ class RunRecordPage extends StatelessWidget {
                   leading: IconButton(
                     iconSize: 30,
                     icon: Icon(Icons.arrow_back),
-                    onPressed: () => context.go(Routes.historyPage),
+                    onPressed: () => context.pop(),
                   ),
                   actions: [
                     PopupMenuButton(

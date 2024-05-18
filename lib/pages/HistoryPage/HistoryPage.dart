@@ -36,6 +36,8 @@ class HistoryPage extends StatelessWidget {
             return Center(child: Text(context.appLocalization.historyPageNoRecords));
           }
 
+          runRecordModels.sort((m1, m2) => -m1.runCoverData.startDateTime.compareTo(m2.runCoverData.startDateTime));
+
           return ListView.builder(
             itemCount: runRecordModels.length,
             itemBuilder: (context, index) {
@@ -68,6 +70,6 @@ class HistoryPage extends StatelessWidget {
   }
 
   void _handleCardTap(BuildContext context, int runCoverKey) {
-    context.go("${Routes.runRecordPage}/$runCoverKey");
+    context.push("${Routes.runRecordPage}/$runCoverKey");
   }
 }

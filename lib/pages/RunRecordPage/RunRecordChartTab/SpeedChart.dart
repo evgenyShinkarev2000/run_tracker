@@ -19,9 +19,9 @@ class SpeedChart extends StatelessWidget {
       maxX: maxX,
       topCutInterval: 5,
       bottomTitlesSelector: (value, meta) => ChartHelper.durationToTitle(Duration(microseconds: value.round())),
-      leftTitlesSelector: (value, meta) => value.roundTo(1).toStringWithoutTrailingZeros(),
+      leftTitlesSelector: (value, meta) => value.roundTo(1).toStringWithoutTrailingZeros(1),
       leftTitlesReservedSize: 30,
-      touchTooltipSelector: (value) => value.roundTo(1).toStringWithoutTrailingZeros(),
+      touchTooltipSelector: (value) => value.roundTo(1).toStringWithoutTrailingZeros(1),
     );
   }
 }

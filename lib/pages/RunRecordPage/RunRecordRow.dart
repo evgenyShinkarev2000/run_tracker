@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:run_tracker/helpers/extensions/BuildContextExtension.dart';
 
-import 'ValueWithUnit.dart';
+import '../../components/ValueWithUnit.dart';
 
 class RunRecordRow extends StatelessWidget {
   final String title;

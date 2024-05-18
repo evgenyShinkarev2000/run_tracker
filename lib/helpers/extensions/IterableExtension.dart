@@ -71,6 +71,17 @@ extension IterableExtension<T> on Iterable<T> {
 
     return sorted[(sorted.length / 2).floor()];
   }
+
+  Iterable<T> padRightOrCutToLength(int length, T padValue) sync* {
+    final iteratorInstance = this.iterator;
+    for (var _ in Iterable.generate(length, (index) => index)) {
+      if (iteratorInstance.moveNext()) {
+        yield iteratorInstance.current;
+      } else {
+        yield padValue;
+      }
+    }
+  }
 }
 
 extension IterableEnumExtension<T extends Enum> on Iterable<T> {

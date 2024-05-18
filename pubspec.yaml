@@ -61,6 +61,7 @@ dependencies:
   loading_animation_widget: ^1.2.1
   fluttertoast: ^8.2.5
   json_annotation: ^4.9.0
+  collection: ^1.18.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

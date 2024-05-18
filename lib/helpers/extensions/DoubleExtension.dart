@@ -12,5 +12,6 @@ extension DoubleExtension on double {
     return (this * powNumber).round() / powNumber;
   }
 
-  String toStringWithoutTrailingZeros() => toStringAsFixed(truncateToDouble() == this ? 0 : 1);
+  String toStringWithoutTrailingZeros(int fractionalCount) =>
+      toStringAsFixed(truncateToDouble() == this ? 0 : fractionalCount);
 }

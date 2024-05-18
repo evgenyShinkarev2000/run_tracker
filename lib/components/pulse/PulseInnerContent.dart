@@ -100,10 +100,8 @@ class _PulseInnerContentState extends State<PulseInnerContent> {
                 },
                 child: CameraTab(),
               );
-            case 2:
-              return Text("tim");
             default:
-              return Text("metr");
+              return Text("developing...");
           }
         }),
       ],

@@ -21,6 +21,7 @@ class AppMainDrawer extends StatelessWidget {
     goMap() => goRouter.go(Routes.mapPage);
     goHistory() => goRouter.go(Routes.historyPage);
     goPulse() => goRouter.go(Routes.pulsePage);
+    goStatistic() => goRouter.go(Routes.statisticPage);
     goHive() => goRouter.go(Routes.hivePage);
 
     return Drawer(
@@ -40,6 +41,11 @@ class AppMainDrawer extends StatelessWidget {
             history,
             onTap: goHistory,
             isActive: goRouter.currentRouteHas(Routes.historyPage),
+          ),
+          AppDrawerItem(
+            context.appLocalization.menuStatistic,
+            onTap: goStatistic,
+            isActive: goRouter.currentRouteHas(Routes.statisticPage),
           ),
           AppDrawerItem(
             context.appLocalization.menuPulse,

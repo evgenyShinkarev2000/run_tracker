@@ -175,7 +175,7 @@ class _RunRecordBarTabState extends State<RunRecordBarTab> {
         } else if (deltaHeight > 0) {
           sign = "+";
         }
-        heightTrailing = "$sign${deltaHeight.abs().toStringWithoutTrailingZeros()}";
+        heightTrailing = "$sign${deltaHeight.abs().toStringWithoutTrailingZeros(1)}";
       }
 
       yield BarModel(

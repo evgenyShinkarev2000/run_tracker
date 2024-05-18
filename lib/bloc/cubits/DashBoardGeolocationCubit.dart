@@ -22,8 +22,13 @@ class DashBoardGeolocationCubit extends Cubit<DashBoardGeolocationState> {
         _runRecorder = runRecorder,
         super(initialState) {
     geolocationSubscription = _geoRepo.geolocationStream.listen((geolocation) {
+      double? speed;
+      if (geolocation.speed != null && Speed.fromMetersPerSecond(geolocation.speed!).kilometersPerHour > 1.5) {
+        speed = geolocation.speed;
+      }
+
       emit(DashBoardGeolocationState(
-        speed: geolocation.speed,
+        speed: speed,
         distance: _runRecorder.distance,
       ));
     });
@@ -44,7 +49,7 @@ class DashBoardGeolocationState {
 
   /// m/km
   Duration? get pace =>
-      speed != null && !speed!.isNaN ? Speed.fromMetersPerSecond(speed!).toPace().toDurationKm() : null;
+      speed != null && !speed!.isNaN && speed != 0 ? Speed.fromMetersPerSecond(speed!).toPace().toDurationKm() : null;
 
   const DashBoardGeolocationState({required this.speed, required this.distance});
 }
