@@ -65,5 +65,7 @@
   "settingVariantDialogButtonDefault": "by default",
   "settingVariantThemeLigth": "light",
   "settingVariantThemeDark": "dark",
-  "historyPageNoRecords": "no records"
+  "historyPageNoRecords": "no records",
+  "runRecordPageShare": "share",
+  "runRecordPageShareError": "service is unavailable"
 }

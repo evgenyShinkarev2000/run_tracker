@@ -12,6 +12,7 @@ import 'package:run_tracker/pages/RunRecordPage/RunRecordMapTab.dart';
 import 'package:run_tracker/pages/RunRecordPage/RunRecordPointsTab.dart';
 import 'package:run_tracker/services/RunRecordService.dart';
 import 'package:run_tracker/services/models/models.dart';
+import 'package:share_plus/share_plus.dart';
 
 class RunRecordPage extends StatelessWidget {
   final int runCoverKey;
@@ -45,12 +46,34 @@ class RunRecordPage extends StatelessWidget {
                       onSelected: (v) {},
                       itemBuilder: (context) => [
                         PopupMenuItem(
-                          child: Text(context.appLocalization.verbRemove),
+                          child: Row(
+                            children: [
+                              Icon(CupertinoIcons.trash),
+                              SizedBox(width: 16),
+                              Text(context.appLocalization.verbRemove),
+                            ],
+                          ),
                           onTap: () => removeRecord(context, snapshot.requireData!),
                         ),
                         PopupMenuItem(
-                          child: Text(context.appLocalization.verbExport),
+                          child: Row(
+                            children: [
+                              Icon(CupertinoIcons.shift),
+                              SizedBox(width: 16),
+                              Text(context.appLocalization.verbExport),
+                            ],
+                          ),
                           onTap: () => export(context, snapshot.requireData!),
+                        ),
+                        PopupMenuItem(
+                          child: Row(
+                            children: [
+                              Icon(Icons.share),
+                              SizedBox(width: 16),
+                              Text(context.appLocalization.runRecordPageShare),
+                            ],
+                          ),
+                          onTap: () => share(context, snapshot.requireData!),
                         ),
                       ],
                     ),
@@ -92,6 +115,19 @@ class RunRecordPage extends StatelessWidget {
         .read<RunRecordService>()
         .export(runRecordModel)
         .then((pathToFile) => Fluttertoast.showToast(msg: pathToFile));
+  }
+
+  void share(BuildContext context, RunRecordModel runRecordModel) {
+    final webApi = context.webApi;
+    webApi.shareRunCover(runRecordModel.runCoverData).then(
+      (runCoverExternalId) {
+        Share.shareUri(webApi.buildShareUri(runCoverExternalId));
+      },
+    ).catchError((e) {
+      Fluttertoast.showToast(msg: context.appLocalization.runRecordPageShareError);
+
+      return null;
+    });
   }
 }
 

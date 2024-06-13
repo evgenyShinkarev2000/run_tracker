@@ -3,11 +3,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:run_tracker/Router.dart';
+import 'package:run_tracker/api/WebApi.dart';
 import 'package:run_tracker/components/AppMainLoader.dart';
 import 'package:run_tracker/components/future_builder_loader/MultiFutureBuilderLoader.dart';
 import 'package:run_tracker/data/data.dart';
 import 'package:run_tracker/data/repositories/repositories.dart';
 import 'package:run_tracker/helpers/AppLanguageCode.dart';
+import 'package:run_tracker/helpers/WebApiProvider.dart';
 import 'package:run_tracker/helpers/extensions/SettingExtension.dart';
 import 'package:run_tracker/services/settings/settings.dart';
 import 'package:run_tracker/theme/Theme.dart';
@@ -49,6 +51,7 @@ class MyApp extends StatelessWidget {
       builder: (context, store) => MultiProvider(
         providers: [
           ChangeNotifierProvider<SettingsProvider>(create: (_) => store.get()),
+          Provider<WebApiProvider>(create: (_) => WebApiProvider(webApi: WebApi())),
         ],
         builder: (context, _) {
           final appSettings = context.watch<SettingsProvider>().appSettings;

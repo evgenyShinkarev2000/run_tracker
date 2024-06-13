@@ -65,5 +65,7 @@
   "settingVariantDialogButtonDefault": "по умолчанию",
   "settingVariantThemeLigth": "светлая",
   "settingVariantThemeDark": "темная",
-  "historyPageNoRecords": "нет записей"
+  "historyPageNoRecords": "нет записей",
+  "runRecordPageShare": "поделиться",
+  "runRecordPageShareError": "сервис недоступен"
 }
