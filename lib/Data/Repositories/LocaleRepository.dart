@@ -2,23 +2,15 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:cancellation_token/cancellation_token.dart';
-import 'package:run_tracker/Core/export.dart';
+import 'package:drift/drift.dart';
+import 'package:run_tracker/Data/AppDatabase.dart';
 import 'package:run_tracker/Data/Contacts/ICommonValueRepository.dart';
 import 'package:run_tracker/localization/export.dart';
 
-mixin class LocaleRepository
-    implements ICommonValueRepository<Locale>, IDisposable {
-  @override
-  Stream<Locale> get stream => _lazyBehaviorSubject.stream;
+abstract class LocaleRepository extends CommonValueRepository<Locale> {}
 
+class MemoryLocaleRepository extends LocaleRepository {
   Locale _currentLocal = AppLocales.ru;
-  late final LazyBehaviorSubject<Locale> _lazyBehaviorSubject =
-      LazyBehaviorSubject(Get);
-
-  @override
-  void Dispose() {
-    _lazyBehaviorSubject.Dispose();
-  }
 
   @override
   Future<Locale> Get([CancellationToken? ct]) {
@@ -28,13 +20,33 @@ mixin class LocaleRepository
   @override
   Future Set(model, [CancellationToken? ct]) {
     _currentLocal = model;
-    _lazyBehaviorSubject.Add(_currentLocal);
+    super.Set(model);
 
     return Future.value();
   }
+}
+
+class DriftLocaleRepository extends LocaleRepository {
+  static const String key = "Locale";
+  final AppDatabase _database;
+
+  DriftLocaleRepository(this._database);
 
   @override
-  Stream<Locale> StreamValueWithLastOrGet() {
-    return _lazyBehaviorSubject.stream;
+  Future<Locale> Get([CancellationToken? ct]) async {
+    var setting =
+        await (_database.settings.select()..where((s) => s.value.equals(key)))
+            .getSingleOrNull()
+            .asCancellable(ct);
+
+    return AppLocales.fromCodeOrFallback(setting?.value);
+  }
+
+  @override
+  Future<dynamic> Set(Locale model, [CancellationToken? ct]) async {
+    await _database.settings.insertOnConflictUpdate(
+      Setting(name: key, value: model.languageCode),
+    );
+    super.Set(model);
   }
 }

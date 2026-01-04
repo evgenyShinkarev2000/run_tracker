@@ -1,3 +1,3 @@
-abstract class IDisposable {
+abstract interface class IDisposable {
   void Dispose();
 }
