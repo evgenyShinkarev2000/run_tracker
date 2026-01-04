@@ -1,3 +1,3 @@
 abstract class IStreamValueRepository<T> {
-  Stream<T> StreamValue();
+  Stream<T> get stream;
 }

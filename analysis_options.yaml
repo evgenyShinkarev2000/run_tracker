@@ -11,3 +11,5 @@ linter:
     file_names: false
     non_constant_identifier_names: false
     always_use_package_imports: true
+    constant_identifier_names: false
+    null_check_on_nullable_type_parameter: false
