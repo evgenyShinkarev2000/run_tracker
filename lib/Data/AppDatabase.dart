@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
 part 'AppDatabase.g.dart';
@@ -14,6 +15,8 @@ class Settings extends Table {
 
 @DriftDatabase(tables: [Settings])
 class AppDatabase extends _$AppDatabase {
+  static DriftWebOptions? webOptions;
+
   // After generating code, this class needs to define a `schemaVersion` getter
   // and a constructor telling drift where the database should be stored.
   // These are described in the getting started guide: https://drift.simonbinder.eu/setup/
@@ -30,11 +33,25 @@ class AppDatabase extends _$AppDatabase {
         // database files in `getApplicationDocumentsDirectory()`.
         databaseDirectory: getApplicationSupportDirectory,
       ),
-      web: DriftWebOptions(
-        sqlite3Wasm: Uri.parse('sqlite3.wasm'),
-        driftWorker: Uri.parse('drift_worker.dart.js'),
-      ),
+      web: webOptions,
       // If you need web support, see https://drift.simonbinder.eu/platforms/web/
+    );
+  }
+
+  static void Initialize() {
+    if (!kIsWeb) {
+      return;
+    }
+    AppDatabase.webOptions = DriftWebOptions(
+      sqlite3Wasm: Uri.parse(
+        const String.fromEnvironment("SQLITE3_URI", defaultValue: "sqlite3.wasm"),
+      ),
+      driftWorker: Uri.parse(
+        const String.fromEnvironment(
+          "DRIFT_WORKER_URI",
+          defaultValue: "drift_worker.dart.js",
+        ),
+      ),
     );
   }
 }

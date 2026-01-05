@@ -35,7 +35,7 @@ class DriftLocaleRepository extends LocaleRepository {
   @override
   Future<Locale> Get([CancellationToken? ct]) async {
     var setting =
-        await (_database.settings.select()..where((s) => s.value.equals(key)))
+        await (_database.settings.select()..where((s) => s.name.equals(key)))
             .getSingleOrNull()
             .asCancellable(ct);
 

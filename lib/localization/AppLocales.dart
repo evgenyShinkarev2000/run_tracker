@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 
 class AppLocales {
@@ -8,7 +7,7 @@ class AppLocales {
   static final List<Locale> supported = [en, ru];
 
   static Locale get fallback {
-    _fallback ??= fromCodeOrNull(Platform.localeName);
+    _fallback ??= fromCodeOrNull(PlatformDispatcher.instance.locale.languageCode);
 
     return _fallback!;
   }
