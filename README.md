@@ -1,2 +1,1 @@
-Для локального запуска в web нужно указать 
---dart-define sqlite3_uri=... --dart-define drift_worker_uri=... 
+Для локального запуска в web используется nginx для установки правильных заголовков для sqlite3.wasm и drift_worker.js с проксированием, должно работать из коробки, настройки в ./web_dev_config.yaml  ./nginx ./lib/Data/AppDatabase.dart

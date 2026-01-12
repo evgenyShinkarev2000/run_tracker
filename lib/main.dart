@@ -7,7 +7,7 @@ import 'package:run_tracker/Providers/export.dart';
 import 'package:run_tracker/l10n/app_localizations.dart';
 import 'package:run_tracker/localization/export.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   AppDatabase.Initialize();
 

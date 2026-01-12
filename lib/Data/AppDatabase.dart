@@ -43,15 +43,8 @@ class AppDatabase extends _$AppDatabase {
       return;
     }
     AppDatabase.webOptions = DriftWebOptions(
-      sqlite3Wasm: Uri.parse(
-        const String.fromEnvironment("SQLITE3_URI", defaultValue: "sqlite3.wasm"),
-      ),
-      driftWorker: Uri.parse(
-        const String.fromEnvironment(
-          "DRIFT_WORKER_URI",
-          defaultValue: "drift_worker.dart.js",
-        ),
-      ),
+      sqlite3Wasm: Uri.parse("sqlite3.wasm"),
+      driftWorker: Uri.parse("drift_worker.dart.js"),
     );
   }
 }

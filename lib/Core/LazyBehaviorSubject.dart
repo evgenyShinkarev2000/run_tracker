@@ -5,7 +5,9 @@ import 'package:run_tracker/Core/IDisposable.dart';
 class LazyBehaviorSubject<T> implements IDisposable {
   Stream<T> get stream => _streamController.stream;
 
-  late final StreamController<T> _streamController = StreamController.broadcast(onListen: _listen);
+  late final StreamController<T> _streamController = StreamController.broadcast(
+    onListen: _listen,
+  );
   late final Future<T> Function() _getInitialValue;
 
   T? _lastValue;
