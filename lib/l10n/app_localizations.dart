@@ -98,6 +98,12 @@ abstract class AppLocalizations {
     Locale('ru'),
   ];
 
+  /// No description provided for @menuMain.
+  ///
+  /// In en, this message translates to:
+  /// **'main'**
+  String get menuMain;
+
   /// No description provided for @menuActivities.
   ///
   /// In en, this message translates to:

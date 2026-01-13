@@ -1,5 +1,10 @@
 server:
   port: 5001
+  headers:
+    - name: Cross-Origin-Opener-Policy
+      value: same-origin
+    - name: Cross-Origin-Embedder-Policy
+      value: require-corp
   proxy:
     - target: "http://91.132.59.219:5001/sqlite3.wasm"
       prefix: "/sqlite3.wasm"

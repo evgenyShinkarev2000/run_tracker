@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+  "menuMain": "main",
   "menuActivities": "activities",
   "menuSettings": "settings",
   "menuMap": "map",

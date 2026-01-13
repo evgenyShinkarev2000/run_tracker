@@ -1,2 +1,2 @@
-export "AppLocalizationExtension.dart";
+export "BuildContextExtension.dart";
 export 'AppLocales.dart';

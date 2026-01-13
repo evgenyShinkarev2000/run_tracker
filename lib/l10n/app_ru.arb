@@ -1,5 +1,6 @@
 {
   "@@locale": "ru",
+  "menuMain": "главная",
   "menuActivities": "активности",
   "menuSettings": "настройки",
   "menuMap": "карта",

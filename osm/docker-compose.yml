@@ -1,0 +1,8 @@
+services:
+  map:
+    image: maptiler/tileserver-gl
+    volumes:
+      - ./mbtiles:/data
+    ports:
+      - "5002:8080"
+    command: ["--file", "russian-latest.mbtiles"]
