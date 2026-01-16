@@ -14,11 +14,13 @@ class MemoryLocaleRepository extends LocaleRepository {
 
   @override
   Future<Locale> Get([CancellationToken? ct]) {
+    ct?.throwIfCancelled();
     return Future.value(_currentLocal);
   }
 
   @override
   Future Set(model, [CancellationToken? ct]) {
+    ct?.throwIfCancelled();
     _currentLocal = model;
     super.Set(model);
 
@@ -34,6 +36,7 @@ class DriftLocaleRepository extends LocaleRepository {
 
   @override
   Future<Locale> Get([CancellationToken? ct]) async {
+    ct?.throwIfCancelled();
     var setting =
         await (_database.settings.select()..where((s) => s.name.equals(key)))
             .getSingleOrNull()
@@ -43,7 +46,8 @@ class DriftLocaleRepository extends LocaleRepository {
   }
 
   @override
-  Future<dynamic> Set(Locale model, [CancellationToken? ct]) async {
+  Future Set(Locale model, [CancellationToken? ct]) async {
+    ct?.throwIfCancelled();
     await _database.settings.insertOnConflictUpdate(
       Setting(name: key, value: model.languageCode),
     );

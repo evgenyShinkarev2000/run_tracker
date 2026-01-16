@@ -26,6 +26,9 @@ class Draweritem extends StatelessWidget {
   }
 
   bool _isActive(Uri uri) {
+    if (uri.path == path) {
+      return true;
+    }
     if (uri.pathSegments.length <= layer) {
       return false;
     }

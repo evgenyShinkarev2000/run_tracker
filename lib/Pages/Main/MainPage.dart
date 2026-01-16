@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:run_tracker/Providers/export.dart';
+import 'package:run_tracker/Routing/export.dart';
+import 'package:run_tracker/Theme/export.dart';
 import 'package:run_tracker/localization/export.dart';
 
 class MyHomePage extends ConsumerStatefulWidget {
@@ -23,7 +25,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   Widget build(BuildContext context) {
     var localeRepository = ref.watch(localeRepositoryProvider);
     return MyHomePageView(
-      title: "run tracker",
       counter: _counter,
       increment: _incrementCounter,
       setRussian: () => localeRepository.Set(AppLocales.ru),
@@ -33,7 +34,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 }
 
 class MyHomePageView extends StatelessWidget {
-  final String title;
   final int counter;
   final VoidCallback increment;
   final VoidCallback setRussian;
@@ -41,7 +41,6 @@ class MyHomePageView extends StatelessWidget {
 
   const MyHomePageView({
     super.key,
-    required this.title,
     required this.counter,
     required this.increment,
     required this.setRussian,
@@ -52,9 +51,10 @@ class MyHomePageView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(title),
+        backgroundColor: context.themeData.colorScheme.inversePrimary,
+        title: Text(context.appLocalization.menuMain),
       ),
+      drawer: AppMainDrawer(),
       body: Consumer(
         builder: (context, ref, child) {
           return Center(
