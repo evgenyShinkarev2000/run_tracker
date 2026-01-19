@@ -14,5 +14,5 @@ final localeProvider = StreamProvider<Locale>((ref) {
   var repo = ref.watch(localeRepositoryProvider);
   ref.onDispose(repo.Dispose);
 
-  return repo.StreamValueWithLastOrGet();
+  return repo.stream;
 }, dependencies: [localeRepositoryProvider]);

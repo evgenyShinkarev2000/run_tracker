@@ -3,18 +3,22 @@ import 'dart:async';
 import 'package:cancellation_token/cancellation_token.dart';
 import 'package:flutter/material.dart';
 import 'package:run_tracker/Core/export.dart';
-import 'package:run_tracker/Data/Contacts/IValueRepository.dart';
+import 'package:run_tracker/Data/Contracts/export.dart';
 
 abstract interface class ICommonValueRepository<T>
-    implements IValueRepository<T> {
-  Stream<T> StreamValueWithLastOrGet();
-}
+    implements
+        IValueRepository<T>,
+        ISetValueRepository<T>,
+        IStreamProvider<T> {}
 
 abstract class CommonValueRepository<T> extends ICommonValueRepository<T>
     implements IDisposable {
   late final LazyBehaviorSubject<T> _lazyBehaviorSubject = LazyBehaviorSubject(
     Get,
   );
+
+  @override
+  Stream<T> get stream => _lazyBehaviorSubject.stream;
 
   @override
   @mustCallSuper
@@ -28,10 +32,5 @@ abstract class CommonValueRepository<T> extends ICommonValueRepository<T>
     _lazyBehaviorSubject.Add(model);
 
     return Future.value();
-  }
-
-  @override
-  Stream<T> StreamValueWithLastOrGet() {
-    return _lazyBehaviorSubject.stream;
   }
 }

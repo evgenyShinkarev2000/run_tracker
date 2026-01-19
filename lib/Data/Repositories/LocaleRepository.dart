@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:cancellation_token/cancellation_token.dart';
 import 'package:drift/drift.dart';
 import 'package:run_tracker/Data/AppDatabase.dart';
-import 'package:run_tracker/Data/Contacts/ICommonValueRepository.dart';
+import 'package:run_tracker/Data/Contracts/ICommonValueRepository.dart';
 import 'package:run_tracker/localization/export.dart';
 
 abstract class LocaleRepository extends CommonValueRepository<Locale> {}
