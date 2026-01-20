@@ -6,6 +6,6 @@ class AppInitLoader extends StatelessWidget {
 
   @override
   Widget build(Object context) {
-    return MaterialApp(home: AppLoader());
+    return MaterialApp(builder: (context, child) => AppLoader(),);
   }
 }
