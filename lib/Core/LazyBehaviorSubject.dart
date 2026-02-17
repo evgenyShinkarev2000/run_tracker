@@ -45,10 +45,10 @@ class LazyBehaviorSubject<T> implements IDisposable {
           rethrow;
         }
         _state = LazyBehaviorSubjectState.Initialized;
-        _streamController.add(_lastValue!);
+        _streamController.add(_lastValue as T);
         break;
       case LazyBehaviorSubjectState.Initialized:
-        _streamController.add(_lastValue!);
+        _streamController.add(_lastValue as T);
         break;
       case LazyBehaviorSubjectState.Initializing:
         return;
