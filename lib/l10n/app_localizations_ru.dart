@@ -197,4 +197,26 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get runRecordPageShareError => 'сервис недоступен';
+
+  @override
+  String get locationPermissionMessageLoading =>
+      'получение статуса сервисов геолокации';
+
+  @override
+  String get locationPermissionMessagePermited =>
+      'приложение имеет доступ к сервисам геолокации';
+
+  @override
+  String get locationPermissionMessageDenied =>
+      'приложению запрещен доступ к сервисам геолокации';
+
+  @override
+  String get locationPermissionButtonRefresh => 'обновить';
+
+  @override
+  String get locationPermissionButtonRequestPermission =>
+      'запросить разрешение';
+
+  @override
+  String get locationPermissionButtonIgnore => 'игнорировать';
 }

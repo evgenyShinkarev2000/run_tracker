@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:run_tracker/Components/Loader/AppInitLoader.dart';
 import 'package:run_tracker/Data/AppDatabase.dart';
-import 'package:run_tracker/Providers/AppProvider.dart';
+import 'package:run_tracker/Data/AppSettings.dart';
+import 'package:run_tracker/Providers/AppSettingsProvider.dart';
 import 'package:run_tracker/Providers/export.dart';
 import 'package:run_tracker/Routing/export.dart';
 import 'package:run_tracker/l10n/app_localizations.dart';
@@ -13,7 +17,22 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   AppDatabase.Initialize();
 
-  runApp(AppProvider.Build(MyApp()));
+  final appSettings = await _loadAppSettings();
+
+  runApp(
+    ProviderScope(
+      overrides: [appSettingsProvider.overrideWithValue(appSettings)],
+      child: MyApp(),
+    ),
+  );
+}
+
+Future<AppSettings> _loadAppSettings() async {
+  final serializedAppSettings = await rootBundle.loadString("appsettings.json");
+
+  return AppSettings.fromJson(
+    jsonDecode(serializedAppSettings) as Map<String, dynamic>,
+  );
 }
 
 class MyApp extends ConsumerWidget {

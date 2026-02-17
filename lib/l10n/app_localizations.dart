@@ -469,6 +469,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'service is unavailable'**
   String get runRecordPageShareError;
+
+  /// No description provided for @locationPermissionMessageLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'obtaining the status of geolocation services'**
+  String get locationPermissionMessageLoading;
+
+  /// No description provided for @locationPermissionMessagePermited.
+  ///
+  /// In en, this message translates to:
+  /// **'the application has access to geolocation services'**
+  String get locationPermissionMessagePermited;
+
+  /// No description provided for @locationPermissionMessageDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'the app is denied access to location services'**
+  String get locationPermissionMessageDenied;
+
+  /// No description provided for @locationPermissionButtonRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'refresh'**
+  String get locationPermissionButtonRefresh;
+
+  /// No description provided for @locationPermissionButtonRequestPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'request permission'**
+  String get locationPermissionButtonRequestPermission;
+
+  /// No description provided for @locationPermissionButtonIgnore.
+  ///
+  /// In en, this message translates to:
+  /// **'ignore'**
+  String get locationPermissionButtonIgnore;
 }
 
 class _AppLocalizationsDelegate

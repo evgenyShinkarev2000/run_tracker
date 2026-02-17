@@ -68,5 +68,11 @@
   "settingVariantThemeDark": "dark",
   "historyPageNoRecords": "no records",
   "runRecordPageShare": "share",
-  "runRecordPageShareError": "service is unavailable"
+  "runRecordPageShareError": "service is unavailable",
+  "locationPermissionMessageLoading": "obtaining the status of geolocation services",
+  "locationPermissionMessagePermited": "the application has access to geolocation services",
+  "locationPermissionMessageDenied": "the app is denied access to location services",
+  "locationPermissionButtonRefresh": "refresh",
+  "locationPermissionButtonRequestPermission": "request permission",
+  "locationPermissionButtonIgnore": "ignore"
 }

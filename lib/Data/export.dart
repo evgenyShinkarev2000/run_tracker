@@ -1,5 +1,6 @@
 export 'Contracts/export.dart';
 export 'Providers/export.dart';
 export 'Repositories/export.dart';
+export 'Extensions/export.dart';
 export 'AppDatabase.dart';
-export 'AppConfiguration.dart';
+export 'AppSettings.dart';

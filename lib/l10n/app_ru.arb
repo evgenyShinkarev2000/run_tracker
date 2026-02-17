@@ -68,5 +68,11 @@
   "settingVariantThemeDark": "темная",
   "historyPageNoRecords": "нет записей",
   "runRecordPageShare": "поделиться",
-  "runRecordPageShareError": "сервис недоступен"
+  "runRecordPageShareError": "сервис недоступен",
+  "locationPermissionMessageLoading": "получение статуса сервисов геолокации",
+  "locationPermissionMessagePermited": "приложение имеет доступ к сервисам геолокации",
+  "locationPermissionMessageDenied": "приложению запрещен доступ к сервисам геолокации",
+  "locationPermissionButtonRefresh": "обновить",
+  "locationPermissionButtonRequestPermission": "запросить разрешение",
+  "locationPermissionButtonIgnore": "игнорировать"
 }

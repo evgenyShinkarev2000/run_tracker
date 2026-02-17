@@ -6,13 +6,14 @@ import 'package:run_tracker/Providers/AppDatabaseProvider.dart';
 
 final localeRepositoryProvider = Provider<LocaleRepository>((ref) {
   var appDatabase = ref.watch(appDatabaseProvider);
+  var repository = DriftLocaleRepository(appDatabase);
+  ref.onDispose(repository.Dispose);
 
-  return DriftLocaleRepository(appDatabase);
+  return repository;
 });
 
 final localeProvider = StreamProvider<Locale>((ref) {
   var repo = ref.watch(localeRepositoryProvider);
-  ref.onDispose(repo.Dispose);
 
   return repo.stream;
 }, dependencies: [localeRepositoryProvider]);

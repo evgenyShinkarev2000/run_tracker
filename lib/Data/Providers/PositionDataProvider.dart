@@ -24,6 +24,7 @@ class AppPosition {
   /// The altitude of the device in meters.
   final AppPositionComponent? altitude;
 
+  /// The heading in which the device is traveling in degrees.
   final AppPositionComponent? heading;
 
   /// The speed at which the devices is traveling in meters per second over

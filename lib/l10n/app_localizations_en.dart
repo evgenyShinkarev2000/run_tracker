@@ -197,4 +197,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get runRecordPageShareError => 'service is unavailable';
+
+  @override
+  String get locationPermissionMessageLoading =>
+      'obtaining the status of geolocation services';
+
+  @override
+  String get locationPermissionMessagePermited =>
+      'the application has access to geolocation services';
+
+  @override
+  String get locationPermissionMessageDenied =>
+      'the app is denied access to location services';
+
+  @override
+  String get locationPermissionButtonRefresh => 'refresh';
+
+  @override
+  String get locationPermissionButtonRequestPermission => 'request permission';
+
+  @override
+  String get locationPermissionButtonIgnore => 'ignore';
 }
