@@ -26,9 +26,11 @@ class _LocationPermissionDialogState
     final locationPermissionService = ref.watch(
       locationPermissionServiceProvider,
     );
-    final asyncLocationPermission = ref.watch(locationPermissionProivder);
+    final asyncDetailedLocationPermission = ref.watch(
+      locationPermissionProvider,
+    );
 
-    if (!asyncLocationPermission.hasValue) {
+    if (!asyncDetailedLocationPermission.hasValue) {
       return AppLoader();
     }
 
@@ -36,7 +38,11 @@ class _LocationPermissionDialogState
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        _getMessageByPermission(context, asyncLocationPermission.requireValue),
+        _getMessageByPermission(
+          context,
+          asyncDetailedLocationPermission.requireValue.ToSimple(),
+        ),
+        Text(asyncDetailedLocationPermission.requireValue.toString()),
         TextButton(
           onPressed: locationPermissionService.Initialize,
           child: Text(context.appLocalization.locationPermissionButtonRefresh),

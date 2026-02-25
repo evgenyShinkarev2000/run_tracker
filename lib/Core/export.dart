@@ -1,3 +1,7 @@
 export 'IDisposable.dart';
 export 'ActionCancellable.dart';
 export 'LazyBehaviorSubject.dart';
+export 'Logging/export.dart';
+export 'CircularBuffer.dart';
+export 'UnknownTypeSerializer.dart';
+export 'Exceptions/export.dart';

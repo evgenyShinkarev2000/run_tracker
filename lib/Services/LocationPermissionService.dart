@@ -88,28 +88,9 @@ DetailedLocationPermission _geolocatorToApp(LocationPermission permission) {
   };
 }
 
-extension LocationPermissionServiceExtension on LocationPermissionService{
-  SimpleLocationPermission get SimpleState => DetailedToSimple(State);
-
-  static SimpleLocationPermission DetailedToSimple(DetailedLocationPermission state) {
-  return switch (state) {
-    DetailedLocationPermission.NotInitialized ||
-    DetailedLocationPermission.Loading => SimpleLocationPermission.Loading,
-    DetailedLocationPermission.Disabled ||
-    DetailedLocationPermission.Unknown ||
-    DetailedLocationPermission.Denied ||
-    DetailedLocationPermission.DeniedForever ||
-    DetailedLocationPermission.ConsiderDenied =>
-      SimpleLocationPermission.Denied,
-    DetailedLocationPermission.Permited ||
-    DetailedLocationPermission.PermitedInUse ||
-    DetailedLocationPermission.ConsiderPermited =>
-      SimpleLocationPermission.Permited,
-  };
+extension LocationPermissionServiceExtension on LocationPermissionService {
+  SimpleLocationPermission get SimpleState => State.ToSimple();
 }
-}
-
-enum SimpleLocationPermission { Loading, Denied, Permited }
 
 enum DetailedLocationPermission {
   NotInitialized,
@@ -122,4 +103,29 @@ enum DetailedLocationPermission {
   Denied,
   DeniedForever,
   ConsiderDenied,
+}
+
+enum SimpleLocationPermission { Loading, Denied, Permited }
+
+extension DetailedLocationPermissionExtension on DetailedLocationPermission {
+  SimpleLocationPermission ToSimple() => DetailedToSimple(this);
+
+  static SimpleLocationPermission DetailedToSimple(
+    DetailedLocationPermission state,
+  ) {
+    return switch (state) {
+      DetailedLocationPermission.NotInitialized ||
+      DetailedLocationPermission.Loading => SimpleLocationPermission.Loading,
+      DetailedLocationPermission.Disabled ||
+      DetailedLocationPermission.Unknown ||
+      DetailedLocationPermission.Denied ||
+      DetailedLocationPermission.DeniedForever ||
+      DetailedLocationPermission.ConsiderDenied =>
+        SimpleLocationPermission.Denied,
+      DetailedLocationPermission.Permited ||
+      DetailedLocationPermission.PermitedInUse ||
+      DetailedLocationPermission.ConsiderPermited =>
+        SimpleLocationPermission.Permited,
+    };
+  }
 }

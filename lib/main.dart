@@ -5,25 +5,39 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:run_tracker/Components/Loader/AppInitLoader.dart';
+import 'package:run_tracker/Core/export.dart';
 import 'package:run_tracker/Data/AppDatabase.dart';
 import 'package:run_tracker/Data/AppSettings.dart';
+import 'package:run_tracker/Providers/AppRouterProvider.dart';
 import 'package:run_tracker/Providers/AppSettingsProvider.dart';
 import 'package:run_tracker/Providers/export.dart';
-import 'package:run_tracker/Routing/export.dart';
 import 'package:run_tracker/l10n/app_localizations.dart';
 import 'package:run_tracker/localization/export.dart';
+import 'package:talker_flutter/talker_flutter.dart';
+import 'package:talker_riverpod_logger/talker_riverpod_logger_observer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   AppDatabase.Initialize();
 
   final appSettings = await _loadAppSettings();
+  final talker = TalkerFlutter.init(
+    logger: TalkerLogger(formatter: ColoredLoggerFormatter()),
+  );
+  final providerContainer = ProviderContainer(
+    observers: [TalkerRiverpodObserver(talker: talker)],
+    overrides: [
+      appSettingsProvider.overrideWithValue(appSettings),
+      talkerProvider.overrideWithValue(talker),
+    ],
+  );
+  final logger = providerContainer.read(loggerProvider);
+  FlutterError.onError = (FlutterErrorDetails error) {
+    logger.logError(null, appException: FlutterExceptionWrapper(error));
+  };
 
   runApp(
-    ProviderScope(
-      overrides: [appSettingsProvider.overrideWithValue(appSettings)],
-      child: MyApp(),
-    ),
+    UncontrolledProviderScope(container: providerContainer, child: MyApp()),
   );
 }
 
@@ -44,6 +58,7 @@ class MyApp extends ConsumerWidget {
     if (locale.isLoading) {
       return AppInitLoader();
     }
+    var appRouter = ref.watch(appRouterProvider);
 
     return MaterialApp.router(
       title: 'Run tracker',

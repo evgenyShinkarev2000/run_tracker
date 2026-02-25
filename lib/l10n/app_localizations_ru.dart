@@ -219,4 +219,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get locationPermissionButtonIgnore => 'игнорировать';
+
+  @override
+  String get validationValueMusntBeNull => 'значение не должно быть null';
 }

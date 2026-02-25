@@ -74,5 +74,6 @@
   "locationPermissionMessageDenied": "приложению запрещен доступ к сервисам геолокации",
   "locationPermissionButtonRefresh": "обновить",
   "locationPermissionButtonRequestPermission": "запросить разрешение",
-  "locationPermissionButtonIgnore": "игнорировать"
+  "locationPermissionButtonIgnore": "игнорировать",
+  "validationValueMusntBeNull": "значение не должно быть null"
 }

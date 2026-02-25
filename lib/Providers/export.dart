@@ -4,3 +4,6 @@ export 'PositionProvider.dart';
 export 'LocationPermissionProvider.dart';
 export 'LocationPermissionServiceProvider.dart';
 export 'MapCacheDurationProvider.dart';
+export 'LoggerProvider.dart';
+export 'MessageServiceProvider.dart';
+export 'TalkerProvider.dart';

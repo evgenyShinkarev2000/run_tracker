@@ -505,6 +505,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'ignore'**
   String get locationPermissionButtonIgnore;
+
+  /// No description provided for @validationValueMusntBeNull.
+  ///
+  /// In en, this message translates to:
+  /// **'value musn\'t be null'**
+  String get validationValueMusntBeNull;
 }
 
 class _AppLocalizationsDelegate

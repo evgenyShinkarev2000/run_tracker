@@ -3,12 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:run_tracker/Routing/AppRouterExtension.dart';
 import 'package:run_tracker/Routing/DrawerItemView.dart';
 
-class Draweritem extends StatelessWidget {
+class DrawerItem extends StatelessWidget {
   final String path;
   final int layer;
   final String title;
 
-  const Draweritem({
+  const DrawerItem({
     super.key,
     required this.path,
     required this.title,

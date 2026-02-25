@@ -74,5 +74,6 @@
   "locationPermissionMessageDenied": "the app is denied access to location services",
   "locationPermissionButtonRefresh": "refresh",
   "locationPermissionButtonRequestPermission": "request permission",
-  "locationPermissionButtonIgnore": "ignore"
+  "locationPermissionButtonIgnore": "ignore",
+  "validationValueMusntBeNull": "value musn't be null"
 }

@@ -218,4 +218,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get locationPermissionButtonIgnore => 'ignore';
+
+  @override
+  String get validationValueMusntBeNull => 'value musn\'t be null';
 }

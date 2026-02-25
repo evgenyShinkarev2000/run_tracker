@@ -1,0 +1,8 @@
+services:
+  map:
+    image: nginx
+    volumes:
+      - ./drift:/usr/share/nginx/run_tracker/
+      - ./nginx.example.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "5001:80"
