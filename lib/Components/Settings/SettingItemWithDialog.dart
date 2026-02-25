@@ -37,6 +37,7 @@ class SettingItemWithDialog extends ConsumerWidget {
       name: name,
       content: content,
       onTap: () => _tap(context, ref),
+      isLoading: isLoading,
     );
   }
 

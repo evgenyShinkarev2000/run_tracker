@@ -38,6 +38,7 @@ class _TextSettingState extends State<TextSetting> {
       onReset: widget.onReset,
       onSave: _save,
       onCancel: _updateActualValue,
+      isLoading: widget.isLoading,
     );
   }
 

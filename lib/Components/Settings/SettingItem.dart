@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SettingItem extends StatelessWidget {
@@ -19,7 +20,7 @@ class SettingItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: onTap,
+      onTap: isLoading ? null : onTap,
       leadingAndTrailingTextStyle: Theme.of(context).textTheme.bodyMedium,
       leading: iconData != null ? Icon(iconData) : null,
       title: name != null ? Text(name!) : null,
@@ -28,9 +29,9 @@ class SettingItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           isLoading ? null : content,
-          isLoading ? CircularProgressIndicator() : null,
+          isLoading ? CupertinoActivityIndicator() : null,
           SizedBox(width: 8),
-          Icon(Icons.arrow_forward_ios_outlined),
+          isLoading ? null : Icon(Icons.arrow_forward_ios_outlined),
         ].nonNulls.toList(),
       ),
     );
