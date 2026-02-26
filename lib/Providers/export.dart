@@ -7,3 +7,4 @@ export 'MapCacheDurationProvider.dart';
 export 'LoggerProvider.dart';
 export 'MessageServiceProvider.dart';
 export 'TalkerProvider.dart';
+export 'AppDatabaseProvider.dart';

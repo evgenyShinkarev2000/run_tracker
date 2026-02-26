@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:run_tracker/Components/export.dart';
+import 'package:run_tracker/Pages/Settings/DriftDbPage.dart';
 import 'package:run_tracker/Pages/Settings/TalkerPage.dart';
 import 'package:run_tracker/Providers/export.dart';
 import 'package:run_tracker/Routing/export.dart';
@@ -58,6 +59,11 @@ class SettingsPage extends StatelessWidget {
               onTap: () => _showTalkerPage(context),
               iconData: Icons.warning_amber,
             ),
+            SettingItem(
+              name: "db",
+              onTap: () => _showDbPage(context),
+              iconData: Icons.storage_outlined,
+            ),
           ],
         ),
       ),
@@ -70,9 +76,22 @@ class SettingsPage extends StatelessWidget {
         name: "${context.appRouter.state.path}/talker",
       ),
       context: context,
+      constraints: BoxConstraints.expand(),
       isScrollControlled: true,
       builder: (context) {
         return TalkerPage();
+      },
+    );
+  }
+
+  void _showDbPage(BuildContext context) {
+    showModalBottomSheet(
+      routeSettings: RouteSettings(name: "${context.appRouter.state.path}/db"),
+      context: context,
+      constraints: BoxConstraints.expand(),
+      isScrollControlled: true,
+      builder: (context) {
+        return DriftDbPage();
       },
     );
   }
