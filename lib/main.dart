@@ -54,8 +54,8 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var locale = ref.watch(localeProvider);
-    if (locale.isLoading) {
+    var appLocale = ref.watch(localeProvider);
+    if (appLocale.isLoading) {
       return AppInitLoader();
     }
     var appRouter = ref.watch(appRouterProvider);
@@ -68,8 +68,8 @@ class MyApp extends ConsumerWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      locale: locale.value,
-      supportedLocales: AppLocales.supported,
+      locale: appLocale.value?.locale,
+      supportedLocales: AppLocales.supportedLocales,
       theme: ThemeData(
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
         fontFamily: 'Roboto',

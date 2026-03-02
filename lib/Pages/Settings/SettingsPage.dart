@@ -46,11 +46,33 @@ class SettingsPage extends StatelessWidget {
 
                 return TextSetting(
                   name: "map uri",
-                  iconData: Icons.language_outlined,
+                  iconData: Icons.map_outlined,
                   isLoading: mapUri.isLoading,
                   value: mapUri.value,
                   onSave: save,
                   onReset: reset,
+                );
+              },
+            ),
+            Consumer(
+              builder: (context, ref, child) {
+                final appLocale = ref.watch(localeProvider);
+                final repository = ref.watch(localeRepositoryProvider);
+
+                Future<bool> save(AppLocale? locale) async {
+                  await repository.Set(locale ?? AppLocales.fallback);
+
+                  return true;
+                }
+
+                return SelectVariant<AppLocale>(
+                  name: context.appLocalization.settingsLanguage,
+                  iconData: Icons.language_outlined,
+                  isLoading: appLocale.isLoading,
+                  value: appLocale.value,
+                  items: AppLocales.supported,
+                  onSave: save,
+                  builder: (locale) => Text(locale.displayName),
                 );
               },
             ),

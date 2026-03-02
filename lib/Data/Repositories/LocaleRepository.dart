@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:cancellation_token/cancellation_token.dart';
 import 'package:drift/drift.dart';
@@ -7,13 +6,13 @@ import 'package:run_tracker/Data/AppDatabase.dart';
 import 'package:run_tracker/Data/Contracts/ICommonValueRepository.dart';
 import 'package:run_tracker/localization/export.dart';
 
-abstract class LocaleRepository extends CommonValueRepository<Locale> {}
+abstract class LocaleRepository extends CommonValueRepository<AppLocale> {}
 
 class MemoryLocaleRepository extends LocaleRepository {
-  Locale _currentLocal = AppLocales.ru;
+  AppLocale _currentLocal = AppLocales.ru;
 
   @override
-  Future<Locale> Get([CancellationToken? ct]) {
+  Future<AppLocale> Get([CancellationToken? ct]) {
     ct?.throwIfCancelled();
     return Future.value(_currentLocal);
   }
@@ -35,7 +34,7 @@ class DriftLocaleRepository extends LocaleRepository {
   DriftLocaleRepository(this._database);
 
   @override
-  Future<Locale> Get([CancellationToken? ct]) async {
+  Future<AppLocale> Get([CancellationToken? ct]) async {
     ct?.throwIfCancelled();
     var setting =
         await (_database.settings.select()..where((s) => s.name.equals(key)))
@@ -46,10 +45,10 @@ class DriftLocaleRepository extends LocaleRepository {
   }
 
   @override
-  Future Set(Locale model, [CancellationToken? ct]) async {
+  Future Set(AppLocale model, [CancellationToken? ct]) async {
     ct?.throwIfCancelled();
     await _database.settings.insertOnConflictUpdate(
-      Setting(name: key, value: model.languageCode),
+      Setting(name: key, value: model.locale.languageCode),
     );
     super.Set(model);
   }

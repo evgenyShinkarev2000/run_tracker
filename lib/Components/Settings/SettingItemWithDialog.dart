@@ -49,8 +49,8 @@ class SettingItemWithDialog extends ConsumerWidget {
           title: name,
           content: builder?.call(),
           onCancel: () => _closeDialog(context, ref),
-          onSave: () => _save(context, ref),
-          onReset: () => _reset(context, ref),
+          onSave: onSave == null ? null : () => _save(context, ref),
+          onReset: onReset == null ? null : () => _reset(context, ref),
         );
       },
     );
@@ -89,6 +89,8 @@ class SettingItemWithDialog extends ConsumerWidget {
   void _closeDialog(BuildContext context, WidgetRef ref) async {
     if (onCancel != null) {
       await _invoke(onCancel!, context, ref);
+    } else{
+      context.pop();
     }
   }
 

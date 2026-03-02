@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:run_tracker/Components/LocationPermission/LocationPermissionDialog.dart';
 import 'package:run_tracker/Components/Map/Components/export.dart';
 import 'package:run_tracker/Components/Map/Providers/LocationMarkerHeadingProvider.dart';
 import 'package:run_tracker/Components/Map/Providers/LocationMarkerPositionProvider.dart';

@@ -1,35 +1,59 @@
 import 'dart:ui';
 
 class AppLocales {
-  static const Locale en = Locale('en');
-  static const Locale ru = Locale('ru');
+  static const AppLocale en = AppLocale._(Locale('en'), "english");
+  static const AppLocale ru = AppLocale._(Locale('ru'), "русский");
 
-  static final List<Locale> supported = [en, ru];
+  static final Iterable<AppLocale> supported = List.unmodifiable([en, ru]);
+  static final Iterable<Locale> supportedLocales = List.unmodifiable(
+    supported.map((al) => al.locale),
+  );
 
-  static Locale get fallback {
-    _fallback ??= fromCodeOrNull(PlatformDispatcher.instance.locale.languageCode);
+  static AppLocale get fallback {
+    _fallback ??= fromCodeOrNull(
+      PlatformDispatcher.instance.locale.languageCode,
+    );
 
     return _fallback!;
   }
 
-  static Locale? _fallback;
+  static AppLocale? _fallback;
 
-  static Locale? fromCodeOrNull(String? localeCode) {
+  static AppLocale? fromCodeOrNull(String? localeCode) {
     if (localeCode == null) {
       return null;
     }
     return supported
         .where(
-          (l) => l.languageCode == localeCode || l.countryCode == localeCode,
+          (l) =>
+              l.locale.languageCode == localeCode ||
+              l.locale.countryCode == localeCode,
         )
         .firstOrNull;
   }
 
-  static Locale fromCodeOrFallback(String? localeCode) {
+  static AppLocale fromCodeOrFallback(String? localeCode) {
     if (localeCode == null) {
       return AppLocales.fallback;
     }
 
     return fromCodeOrNull(localeCode) ?? AppLocales.fallback;
+  }
+}
+
+class AppLocale {
+  final Locale locale;
+  final String displayName;
+
+  const AppLocale._(this.locale, this.displayName);
+
+  @override
+  int get hashCode => Object.hash(locale, displayName);
+
+  @override
+  bool operator ==(Object other) {
+    return other is AppLocale &&
+        other.locale == locale &&
+        other.displayName == displayName;
   }
 }
