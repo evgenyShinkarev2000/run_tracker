@@ -6,7 +6,7 @@ import 'package:run_tracker/localization/export.dart';
 final localeRepositoryProvider = Provider<LocaleRepository>((ref) {
   var appDatabase = ref.watch(appDatabaseProvider);
   var repository = DriftLocaleRepository(appDatabase);
-  ref.onDispose(repository.Dispose);
+  ref.onDispose(repository.dispose);
 
   return repository;
 });

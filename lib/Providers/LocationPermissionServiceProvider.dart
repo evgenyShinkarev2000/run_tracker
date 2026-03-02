@@ -5,7 +5,7 @@ final locationPermissionServiceProvider = Provider<LocationPermissionService>((
   ref,
 ) {
   final service = GeolocatorLocationPermissionService();
-  ref.onDispose(service.Dispose);
+  ref.onDispose(service.dispose);
 
   return service;
 });

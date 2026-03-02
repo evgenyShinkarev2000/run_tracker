@@ -452,6 +452,12 @@ abstract class AppLocalizations {
   /// **'dark'**
   String get settingVariantThemeDark;
 
+  /// No description provided for @settingLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'geolocation'**
+  String get settingLocation;
+
   /// No description provided for @historyPageNoRecords.
   ///
   /// In en, this message translates to:
@@ -487,6 +493,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'the app is denied access to location services'**
   String get locationPermissionMessageDenied;
+
+  /// No description provided for @locationPermissionMessageIgnore.
+  ///
+  /// In en, this message translates to:
+  /// **'the application does not use geolocation'**
+  String get locationPermissionMessageIgnore;
 
   /// No description provided for @locationPermissionButtonRefresh.
   ///

@@ -7,7 +7,7 @@ final mapCacheDurationRepositoryProvider = Provider<MapCacheDurationRepository>(
   final appDatabase = ref.watch(appDatabaseProvider);
   final appSettings = ref.watch(appSettingsProvider);
   final repository = DriftMapCacheDurationRepository(appDatabase, appSettings);
-  ref.onDispose(repository.Dispose);
+  ref.onDispose(repository.dispose);
 
   return repository;
 });

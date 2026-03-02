@@ -8,3 +8,7 @@ export 'LoggerProvider.dart';
 export 'MessageServiceProvider.dart';
 export 'TalkerProvider.dart';
 export 'AppDatabaseProvider.dart';
+export 'LocationRequirementRepositoryProvider.dart';
+export 'LocationRequirementProvider.dart';
+export 'AppLocationPermissionServiceProvider.dart';
+export 'AppLocationPermissionProvider.dart';

@@ -3,56 +3,48 @@ import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:run_tracker/Core/export.dart';
 import 'package:run_tracker/Data/export.dart';
+import 'package:rxdart/rxdart.dart';
+
+// Есть баг с неправильным определением LocationPermission в firefox https://github.com/Baseflow/flutter-geolocator/issues/1657
+//TODO pulling статуса геолокации, т.к. в веб нет поддержки стрима, но на карте почему-то работате и без этого.
 
 abstract interface class LocationPermissionService
     implements IStreamProvider<DetailedLocationPermission>, IDisposable {
-  DetailedLocationPermission get State;
-  Future<void> Initialize();
-  Future<void> RequestPermission();
-  Future<void> ConsiderPermited();
+  DetailedLocationPermission get state;
+  Future<void> initialize();
+  Future<void> requestPermission();
 }
 
 class GeolocatorLocationPermissionService extends LocationPermissionService {
   DetailedLocationPermission _state = DetailedLocationPermission.NotInitialized;
   @override
-  DetailedLocationPermission get State => _state;
+  DetailedLocationPermission get state => _state;
   @override
   Stream<DetailedLocationPermission> get stream => _lazyBehaviorSubject.stream;
 
-  late final LazyBehaviorSubject<DetailedLocationPermission>
-  _lazyBehaviorSubject = LazyBehaviorSubject(_getStateFuture);
+  final BehaviorSubject<DetailedLocationPermission> _lazyBehaviorSubject =
+      BehaviorSubject.seeded(DetailedLocationPermission.NotInitialized);
 
   @override
-  void Dispose() {
-    _lazyBehaviorSubject.Dispose();
+  void dispose() {
+    _lazyBehaviorSubject.close();
   }
 
   @override
-  Future<void> Initialize() async {
+  Future<void> initialize() async {
     await _updateLocationState();
   }
 
   @override
-  Future<void> RequestPermission() async {
+  Future<void> requestPermission() async {
     await _updateLocationState();
     final permission = await Geolocator.requestPermission();
     _setStateAndNotify(_geolocatorToApp(permission));
   }
 
-  @override
-  Future<void> ConsiderPermited() {
-    _setStateAndNotify(DetailedLocationPermission.ConsiderPermited);
-
-    return Future.value();
-  }
-
   void _setStateAndNotify(DetailedLocationPermission state) {
     _state = state;
-    _lazyBehaviorSubject.Add(state);
-  }
-
-  Future<DetailedLocationPermission> _getStateFuture() {
-    return Future.value(_state);
+    _lazyBehaviorSubject.add(state);
   }
 
   Future<void> _updateLocationState() async {
@@ -62,7 +54,8 @@ class GeolocatorLocationPermissionService extends LocationPermissionService {
     }
     _setStateAndNotify(DetailedLocationPermission.Loading);
     try {
-      final isLocationEnabled = await Geolocator.isLocationServiceEnabled();
+      final isLocationEnabled =
+          await Geolocator.isLocationServiceEnabled();
       if (!isLocationEnabled) {
         _setStateAndNotify(DetailedLocationPermission.Disabled);
         return;
@@ -77,19 +70,23 @@ class GeolocatorLocationPermissionService extends LocationPermissionService {
   }
 }
 
-DetailedLocationPermission _geolocatorToApp(LocationPermission permission) {
+DetailedLocationPermission _geolocatorToApp(
+  LocationPermission permission,
+) {
   return switch (permission) {
-    LocationPermission.whileInUse => DetailedLocationPermission.PermitedInUse,
+    LocationPermission.whileInUse =>
+      DetailedLocationPermission.PermitedInUse,
     LocationPermission.always => DetailedLocationPermission.Permited,
     LocationPermission.denied => DetailedLocationPermission.Denied,
     LocationPermission.deniedForever =>
       DetailedLocationPermission.DeniedForever,
-    LocationPermission.unableToDetermine => DetailedLocationPermission.Unknown,
+    LocationPermission.unableToDetermine =>
+      DetailedLocationPermission.Unknown,
   };
 }
 
 extension LocationPermissionServiceExtension on LocationPermissionService {
-  SimpleLocationPermission get SimpleState => State.ToSimple();
+  SimpleLocationPermission get SimpleState => state.toSimple();
 }
 
 enum DetailedLocationPermission {
@@ -99,16 +96,14 @@ enum DetailedLocationPermission {
   Disabled,
   Permited,
   PermitedInUse,
-  ConsiderPermited,
   Denied,
   DeniedForever,
-  ConsiderDenied,
 }
 
 enum SimpleLocationPermission { Loading, Denied, Permited }
 
 extension DetailedLocationPermissionExtension on DetailedLocationPermission {
-  SimpleLocationPermission ToSimple() => DetailedToSimple(this);
+  SimpleLocationPermission toSimple() => DetailedToSimple(this);
 
   static SimpleLocationPermission DetailedToSimple(
     DetailedLocationPermission state,
@@ -119,12 +114,10 @@ extension DetailedLocationPermissionExtension on DetailedLocationPermission {
       DetailedLocationPermission.Disabled ||
       DetailedLocationPermission.Unknown ||
       DetailedLocationPermission.Denied ||
-      DetailedLocationPermission.DeniedForever ||
-      DetailedLocationPermission.ConsiderDenied =>
+      DetailedLocationPermission.DeniedForever =>
         SimpleLocationPermission.Denied,
       DetailedLocationPermission.Permited ||
-      DetailedLocationPermission.PermitedInUse ||
-      DetailedLocationPermission.ConsiderPermited =>
+      DetailedLocationPermission.PermitedInUse =>
         SimpleLocationPermission.Permited,
     };
   }

@@ -71,15 +71,16 @@ class _FullMapState extends ConsumerState<FullMap> {
   @override
   Widget build(BuildContext context) {
     final urlTempalte = ref.watch(mapUriTemplateProvider);
-    final locationPermission = ref.watch(locationPermissionProvider);
+    final locationPermission = ref.watch(appLocationPermissionProvider);
     final overrideMapCacheDuration = ref.watch(mapCacheDurationProvider);
 
     if (urlTempalte.isLoading ||
-        overrideMapCacheDuration.isLoading) {
+        overrideMapCacheDuration.isLoading ||
+        locationPermission.isLoading) {
       return AppLoader();
     }
 
-    if (locationPermission.value?.ToSimple() != SimpleLocationPermission.Permited) {
+    if (locationPermission.requireValue.needShowDialog) {
       return LocationPermissionDialog();
     }
     return Stack(

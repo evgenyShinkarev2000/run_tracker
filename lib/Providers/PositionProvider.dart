@@ -3,7 +3,7 @@ import 'package:run_tracker/Data/Providers/export.dart';
 
 final positionDataProvider = Provider<PositionDataProvider>((ref) {
   final provider = GeolocatorPositionDataProvider();
-  ref.onDispose(provider.Dispose);
+  ref.onDispose(provider.dispose);
 
   return provider;
 });

@@ -54,7 +54,7 @@ class GeolocatorPositionDataProvider extends PositionDataProvider
   StreamController<AppPosition>? _streamController;
 
   @override
-  void Dispose() {
+  void dispose() {
     if (_streamController != null) {
       _streamController!.close();
     }

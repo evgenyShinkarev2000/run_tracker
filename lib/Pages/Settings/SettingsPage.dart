@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:run_tracker/Components/export.dart';
 import 'package:run_tracker/Pages/Settings/DriftDbPage.dart';
+import 'package:run_tracker/Pages/Settings/LocationPermissionPage.dart';
 import 'package:run_tracker/Pages/Settings/TalkerPage.dart';
 import 'package:run_tracker/Providers/export.dart';
 import 'package:run_tracker/Routing/export.dart';
@@ -77,6 +78,11 @@ class SettingsPage extends StatelessWidget {
               },
             ),
             SettingItem(
+              name: context.appLocalization.settingLocation,
+              onTap: () => _showGeolocationPage(context),
+              iconData: Icons.location_on_outlined,
+            ),
+            SettingItem(
               name: "talker",
               onTap: () => _showTalkerPage(context),
               iconData: Icons.warning_amber,
@@ -89,6 +95,20 @@ class SettingsPage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _showGeolocationPage(BuildContext context) {
+    showModalBottomSheet(
+      routeSettings: RouteSettings(
+        name: "${context.appRouter.state.path}/geolocation",
+      ),
+      context: context,
+      constraints: BoxConstraints.expand(),
+      isScrollControlled: true,
+      builder: (context) {
+        return LocationPermissionPage();
+      },
     );
   }
 

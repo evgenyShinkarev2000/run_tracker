@@ -190,6 +190,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingVariantThemeDark => 'dark';
 
   @override
+  String get settingLocation => 'geolocation';
+
+  @override
   String get historyPageNoRecords => 'no records';
 
   @override
@@ -209,6 +212,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get locationPermissionMessageDenied =>
       'the app is denied access to location services';
+
+  @override
+  String get locationPermissionMessageIgnore =>
+      'the application does not use geolocation';
 
   @override
   String get locationPermissionButtonRefresh => 'refresh';

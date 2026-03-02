@@ -27,6 +27,7 @@ dependencies:
   talker_flutter: ^5.1.13
   talker_riverpod_logger: ^5.1.13
   drift_db_viewer: ^2.1.0
+  rxdart: ^0.28.0
 
 dev_dependencies:
   flutter_test:

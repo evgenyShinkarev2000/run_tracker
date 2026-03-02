@@ -1,3 +1,3 @@
 abstract interface class IDisposable {
-  void Dispose();
+  void dispose();
 }

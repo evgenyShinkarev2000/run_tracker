@@ -22,14 +22,14 @@ abstract class CommonValueRepository<T> extends ICommonValueRepository<T>
 
   @override
   @mustCallSuper
-  void Dispose() {
-    _lazyBehaviorSubject.Dispose();
+  void dispose() {
+    _lazyBehaviorSubject.dispose();
   }
 
   @override
   @mustCallSuper
   Future Set(T model, [CancellationToken? ct]) {
-    _lazyBehaviorSubject.Add(model);
+    _lazyBehaviorSubject.add(model);
 
     return Future.value();
   }

@@ -190,6 +190,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get settingVariantThemeDark => 'темная';
 
   @override
+  String get settingLocation => 'геолокация';
+
+  @override
   String get historyPageNoRecords => 'нет записей';
 
   @override
@@ -209,6 +212,10 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get locationPermissionMessageDenied =>
       'приложению запрещен доступ к сервисам геолокации';
+
+  @override
+  String get locationPermissionMessageIgnore =>
+      'приложение не использует геолокацию';
 
   @override
   String get locationPermissionButtonRefresh => 'обновить';

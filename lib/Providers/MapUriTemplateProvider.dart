@@ -7,7 +7,7 @@ final mapUriTemplateRepository = Provider<MapUriTemplateRepository>((ref) {
   final appDatabase = ref.watch(appDatabaseProvider);
   final appSettings = ref.watch(appSettingsProvider);
   final repository = DriftMapUriTemplateRepository(appDatabase, appSettings);
-  ref.onDispose(repository.Dispose);
+  ref.onDispose(repository.dispose);
 
   return repository;
 });

@@ -32,7 +32,17 @@ class _TextSettingState extends State<TextSetting> {
     return SettingItemWithDialog(
       name: widget.name,
       iconData: widget.iconData,
-      content: widget.value == null ? null : Text(widget.value!),
+      content: widget.value == null
+          ? null
+          : Container(
+              constraints: BoxConstraints(maxWidth: 150),
+              child: Text(
+                widget.value!,
+                overflow: TextOverflow.fade,
+                maxLines: 1,
+                softWrap: false,
+              ),
+            ),
       builder: () => TextInput(value: value, onChanged: _handleValueChanged),
       onTap: _updateActualValue,
       onReset: widget.onReset,

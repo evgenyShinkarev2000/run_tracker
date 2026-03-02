@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:run_tracker/Components/Loader/export.dart';
+import 'package:run_tracker/Data/export.dart';
 import 'package:run_tracker/Providers/export.dart';
 import 'package:run_tracker/Services/export.dart';
 import 'package:run_tracker/localization/export.dart';
@@ -18,13 +19,16 @@ class _LocationPermissionDialogState
   @override
   void initState() {
     super.initState();
-    ref.read(locationPermissionServiceProvider).Initialize();
+    ref.read(locationPermissionServiceProvider).initialize();
   }
 
   @override
   Widget build(BuildContext context) {
     final locationPermissionService = ref.watch(
       locationPermissionServiceProvider,
+    );
+    final appLocationPermissionService = ref.watch(
+      appLocationPermissionServiceProvider,
     );
     final asyncDetailedLocationPermission = ref.watch(
       locationPermissionProvider,
@@ -40,21 +44,22 @@ class _LocationPermissionDialogState
       children: [
         _getMessageByPermission(
           context,
-          asyncDetailedLocationPermission.requireValue.ToSimple(),
+          asyncDetailedLocationPermission.requireValue.toSimple(),
         ),
-        Text(asyncDetailedLocationPermission.requireValue.toString()),
         TextButton(
-          onPressed: locationPermissionService.Initialize,
+          onPressed: locationPermissionService.initialize,
           child: Text(context.appLocalization.locationPermissionButtonRefresh),
         ),
         TextButton(
-          onPressed: locationPermissionService.RequestPermission,
+          onPressed: locationPermissionService.requestPermission,
           child: Text(
             context.appLocalization.locationPermissionButtonRequestPermission,
           ),
         ),
         TextButton(
-          onPressed: locationPermissionService.ConsiderPermited,
+          onPressed: () => appLocationPermissionService.setLocationRequirement(
+            LocationRequirement.Ignore,
+          ),
           child: Text(context.appLocalization.locationPermissionButtonIgnore),
         ),
       ],
