@@ -162,7 +162,7 @@ class _FullMapState extends ConsumerState<FullMap> {
 
   void _move(AppPosition position) {
     if (position.HasLatLng) {
-      _mapController.move(position.ToLatLng(), defaultZoom);
+      _mapController.move(position.ToLatLng(), _mapController.camera.zoom);
     }
   }
 
@@ -170,13 +170,13 @@ class _FullMapState extends ConsumerState<FullMap> {
     if (position.heading != null && position.HasLatLng) {
       _mapController.moveAndRotate(
         position.ToLatLng(),
-        defaultZoom,
+        _mapController.camera.zoom,
         position.heading!.value,
       );
       return;
     }
     if (position.HasLatLng) {
-      _mapController.move(position.ToLatLng(), defaultZoom);
+      _mapController.move(position.ToLatLng(), _mapController.camera.zoom);
       return;
     }
   }
