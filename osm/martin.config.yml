@@ -1,0 +1,6 @@
+pmtiles:
+  paths: /files
+  sources:
+    russia: /files/russia.pmtiles
+mbtiles: /files
+web_ui: enable-for-all

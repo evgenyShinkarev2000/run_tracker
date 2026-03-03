@@ -1,8 +1,18 @@
 services:
-  map:
+  tileserver-gl:
     image: maptiler/tileserver-gl
     volumes:
-      - ./mbtiles:/data
+      - ./tiles/russia.pmtiles:/data/russia.pmtiles
     ports:
-      - "5002:8080"
-    command: ["--file", "russian-latest.mbtiles"]
+      - 5002:8080
+    command: ["--file", "russia.pmtiles"]
+  martin:
+    image: ghcr.io/maplibre/martin
+    volumes:
+      - ./tiles/russia.pmtiles:/files/russia.pmtiles
+      - ./martin.config.yml:/files/config.yml
+    ports:
+      - 5003:3000
+    command: ["--config", "/files/config.yml"]
+
+    

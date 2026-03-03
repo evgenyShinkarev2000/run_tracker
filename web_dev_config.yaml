@@ -6,11 +6,11 @@ server:
     - name: Cross-Origin-Embedder-Policy
       value: require-corp
   proxy:
-    - target: "http://91.132.59.219:5001/sqlite3.wasm"
+    - target: "http://82.146.34.203:5001/sqlite3.wasm"
       prefix: "/sqlite3.wasm"
-    - target: "http://91.132.59.219:5001/drift_worker.js"
+    - target: "http://82.146.34.203:5001/drift_worker.js"
       prefix: "/drift_worker.dart.js"
       replace: ""
-    - target: "http://91.132.59.219:5002/styles/basic-preview/512/"
+    - target: "http://82.146.34.203:5002/"
       prefix: "/map"
       replace: ""
