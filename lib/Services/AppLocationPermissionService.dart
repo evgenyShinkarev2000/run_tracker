@@ -12,11 +12,17 @@ class AppLocationPermissionService
   Stream<AppLocationPermission> get stream => _behaviorSubject.stream;
   AppLocationPermission get state => _behaviorSubject.value;
 
+  Stream<bool> get needShowDialogStream => _needShowDialogSubject.stream;
+  bool get needShowDialog => _needShowDialogSubject.value;
+
   final LocationPermissionService _locationService;
   final LocationRequirementRepository _locationRequirementRepository;
 
   final BehaviorSubject<AppLocationPermission> _behaviorSubject =
       BehaviorSubject.seeded(AppLocationPermission.Loading);
+  final BehaviorSubject<bool> _needShowDialogSubject = BehaviorSubject.seeded(
+    true,
+  );
 
   late final StreamSubscription<DetailedLocationPermission>
   _permissionSubscription;
@@ -41,6 +47,7 @@ class AppLocationPermissionService
   @override
   @mustCallSuper
   void dispose() {
+    _needShowDialogSubject.close();
     _behaviorSubject.close();
     _permissionSubscription.cancel();
     _requirementSubscription.cancel();
@@ -48,6 +55,13 @@ class AppLocationPermissionService
 
   Future<void> setLocationRequirement(LocationRequirement requirement) async {
     await _locationRequirementRepository.Set(requirement);
+  }
+
+  bool _needShowLocationDialog() {
+    return switch (_lastLocationRequirement) {
+      LocationRequirement.RequireAndUse || null => true,
+      LocationRequirement.SilentUse || LocationRequirement.Ignore => false,
+    };
   }
 
   void _receiveDetailedLocationPermission(
@@ -72,12 +86,10 @@ class AppLocationPermissionService
   void _updateState() {
     switch (_lastLocationRequirement) {
       case LocationRequirement.Ignore:
-        _behaviorSubject.add(AppLocationPermission.Ignore);
+        _behaviorSubject.add(AppLocationPermission.Disabled);
         break;
-      case LocationRequirement.Require:
-        _behaviorSubject.add(
-          _simplePermissionToAppPermission(_lastSimplePermission),
-        );
+      case LocationRequirement.RequireAndUse || LocationRequirement.SilentUse:
+        _behaviorSubject.add(AppLocationPermission.Enabled);
         break;
       case null:
         if (_behaviorSubject.value != AppLocationPermission.Loading) {
@@ -85,24 +97,13 @@ class AppLocationPermissionService
         }
         break;
     }
-  }
 
-  static AppLocationPermission _simplePermissionToAppPermission(
-    SimpleLocationPermission permission,
-  ) {
-    return switch (permission) {
-      SimpleLocationPermission.Loading => AppLocationPermission.Loading,
-      SimpleLocationPermission.Permited => AppLocationPermission.Permited,
-      SimpleLocationPermission.Denied => AppLocationPermission.Denied,
-    };
+    final needShowLocationDialog = _needShowLocationDialog();
+    if (needShowLocationDialog != _needShowDialogSubject.value) {
+      _needShowDialogSubject.add(needShowLocationDialog);
+    }
   }
 }
 
-enum AppLocationPermission { Loading, Denied, Permited, Ignore }
-
-extension AppLocationPermissionExtension on AppLocationPermission {
-  bool get needShowDialog => switch (this) {
-    AppLocationPermission.Loading || AppLocationPermission.Denied => true,
-    AppLocationPermission.Permited || AppLocationPermission.Ignore => false,
-  };
-}
+/// Учитывает настройки приложения
+enum AppLocationPermission { Loading, Enabled, Disabled }

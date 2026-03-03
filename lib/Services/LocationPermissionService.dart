@@ -89,6 +89,7 @@ extension LocationPermissionServiceExtension on LocationPermissionService {
   SimpleLocationPermission get SimpleState => state.toSimple();
 }
 
+/// Только данные от платформы, без учета настроек приложения
 enum DetailedLocationPermission {
   NotInitialized,
   Loading,
@@ -100,6 +101,7 @@ enum DetailedLocationPermission {
   DeniedForever,
 }
 
+/// Только данные от платформы, без учета настроек приложения
 enum SimpleLocationPermission { Loading, Denied, Permited }
 
 extension DetailedLocationPermissionExtension on DetailedLocationPermission {

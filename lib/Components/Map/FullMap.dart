@@ -10,7 +10,6 @@ import 'package:run_tracker/Components/Map/Providers/LocationMarkerPositionProvi
 import 'package:run_tracker/Components/export.dart';
 import 'package:run_tracker/Data/export.dart';
 import 'package:run_tracker/Providers/export.dart';
-import 'package:run_tracker/Services/export.dart';
 
 class FullMap extends ConsumerStatefulWidget {
   const FullMap({super.key});
@@ -71,18 +70,18 @@ class _FullMapState extends ConsumerState<FullMap> {
   @override
   Widget build(BuildContext context) {
     final urlTempalte = ref.watch(mapUriTemplateProvider);
-    final locationPermission = ref.watch(appLocationPermissionProvider);
     final overrideMapCacheDuration = ref.watch(mapCacheDurationProvider);
+    final needShowLocationDialog = ref.watch(needShowLocationDialogProvider);
 
     if (urlTempalte.isLoading ||
-        overrideMapCacheDuration.isLoading ||
-        locationPermission.isLoading) {
+        overrideMapCacheDuration.isLoading) {
       return AppLoader();
     }
 
-    if (locationPermission.requireValue.needShowDialog) {
+    if (needShowLocationDialog) {
       return LocationPermissionDialog();
     }
+
     return Stack(
       children: [
         FlutterMap(

@@ -58,7 +58,7 @@ class _LocationPermissionDialogState
         ),
         TextButton(
           onPressed: () => appLocationPermissionService.setLocationRequirement(
-            LocationRequirement.Ignore,
+            LocationRequirement.SilentUse,
           ),
           child: Text(context.appLocalization.locationPermissionButtonIgnore),
         ),

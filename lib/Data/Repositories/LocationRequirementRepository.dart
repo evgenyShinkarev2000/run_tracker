@@ -6,7 +6,7 @@ abstract class LocationRequirementRepository
     extends CommonValueRepository<LocationRequirement> {}
 
 class DriftLocationRequirementRepository extends LocationRequirementRepository {
-  static const String key = "LocationPermission";
+  static const String key = "LocationRequirement";
 
   final AppDatabase _appDatabase;
   DriftLocationRequirementRepository(this._appDatabase);
@@ -39,7 +39,7 @@ class DriftLocationRequirementRepository extends LocationRequirementRepository {
     await super.Set(model, ct);
   }
 
-  LocationRequirement _getDefault() => LocationRequirement.Require;
+  LocationRequirement _getDefault() => LocationRequirement.RequireAndUse;
 }
 
-enum LocationRequirement { Require, Ignore }
+enum LocationRequirement { RequireAndUse, SilentUse, Ignore }
