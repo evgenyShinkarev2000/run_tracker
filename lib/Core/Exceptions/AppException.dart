@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:run_tracker/Core/export.dart';
 
-class AppException implements Exception {
+class AppException implements Exception, IJsonSerializable {
   final String? message;
   final Map<String, dynamic> data;
   final StackTrace? stackTrace;
@@ -16,6 +17,7 @@ class AppException implements Exception {
   @protected
   String getName() => "AppException";
 
+  @override
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = {"name": getName()};
     if (message != null) {

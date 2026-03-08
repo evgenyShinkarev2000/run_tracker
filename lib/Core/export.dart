@@ -5,3 +5,5 @@ export 'Logging/export.dart';
 export 'CircularBuffer.dart';
 export 'UnknownTypeSerializer.dart';
 export 'Exceptions/export.dart';
+export 'IJsonSerializable.dart';
+export './Units/export.dart';

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cancellation_token/cancellation_token.dart';
 import 'package:geolocator/geolocator.dart';
@@ -44,6 +45,33 @@ class AppPosition {
     this.horizontalAccuracy,
     this.timestamp,
   });
+  
+  double? tryFindDistanceTo(AppPosition position) {
+    if (latitude == null ||
+        longitude == null ||
+        position.latitude == null ||
+        position.longitude == null) {
+      return null;
+    }
+
+    final horizontalDistance = Geolocator.distanceBetween(
+      latitude!.value,
+      longitude!.value,
+      position.latitude!.value,
+      position.longitude!.value,
+    );
+
+    if (altitude == null || position.altitude == null) {
+      return horizontalDistance;
+    }
+
+    final verticalDistance = altitude!.value + position.altitude!.value;
+
+    return sqrt(
+      horizontalDistance * horizontalDistance +
+          verticalDistance * verticalDistance,
+    );
+  }
 }
 
 abstract class PositionDataProvider

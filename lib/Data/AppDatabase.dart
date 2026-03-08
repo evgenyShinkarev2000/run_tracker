@@ -13,7 +13,45 @@ class Settings extends Table {
   Set<Column<Object>> get primaryKey => {name};
 }
 
-@DriftDatabase(tables: [Settings])
+class TrackRecords extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  DateTimeColumn get createdAt => dateTime()();
+  BoolColumn get isCompleted => boolean()();
+}
+
+class TrackRecordPositionPoints extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get trackRecordId => integer().references(TrackRecords, #id)();
+  DateTimeColumn get createdAt => dateTime()();
+
+  /// From the equator. The latitude of this position in degrees normalized to the interval -90.0
+  /// to +90.0 (both inclusive).
+  RealColumn get latitude => real().nullable()();
+
+  /// From the Greenwich meridian. The longitude of the position in degrees normalized to the interval -180
+  /// (exclusive) to +180 (inclusive).
+  RealColumn get longitude => real().nullable()();
+
+  /// The altitude of the device in meters.
+  RealColumn get altitude => real().nullable()();
+}
+
+class TrackRecordPoints extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get trackRecordId => integer().references(TrackRecords, #id)();
+  DateTimeColumn get createdAt => dateTime()();
+  TextColumn get discriminator => text()();
+  TextColumn get paylod => text().nullable()();
+}
+
+@DriftDatabase(
+  tables: [
+    Settings,
+    TrackRecords,
+    TrackRecordPositionPoints,
+    TrackRecordPoints,
+  ],
+)
 class AppDatabase extends _$AppDatabase {
   static DriftWebOptions? webOptions;
 
