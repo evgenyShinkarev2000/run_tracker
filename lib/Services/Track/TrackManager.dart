@@ -28,13 +28,14 @@ class TrackManager
       _commandStreamController.stream;
   final StreamController<TrackControllerCommand> _commandStreamController =
       StreamController.broadcast();
+  TrackDashboardParameters get dashboard => _dashboard;
 
   bool _isInitialized = false;
   bool _isDisposed = false;
 
   TrackRecord? _processedTrack;
   TrackRecorder? _recorder;
-  TrackDashboardParameters? _dashboard;
+  late final TrackDashboardParameters _dashboard;
 
   final TrackRecordRepository _trackRecordRepository;
   final TrackRecordPointsRepository _trackRecordPointsRepository;
@@ -44,7 +45,12 @@ class TrackManager
     this._trackRecordRepository,
     this._trackRecordPointsRepository,
     this._positionDataProvider,
-  );
+  ) {
+    _dashboard = TrackDashboardParameters(
+      this,
+      positionProvider: _positionDataProvider,
+    );
+  }
 
   @override
   void dispose() {
@@ -52,7 +58,7 @@ class TrackManager
     _stateSubject.close();
     _commandStreamController.close();
     _recorder?.dispose();
-    _dashboard?.dispose();
+    _dashboard.dispose();
   }
 
   Future<void> initialize() async {
@@ -104,7 +110,6 @@ class TrackManager
       ),
     );
     if (_isDisposed) {
-      dispose();
       await _trackRecordRepository.remove(_processedTrack!.id);
       return;
     }
@@ -116,10 +121,6 @@ class TrackManager
     _recorder = TrackRecorder(
       writer,
       stateProvider: this,
-      positionProvider: _positionDataProvider,
-    );
-    _dashboard = TrackDashboardParameters(
-      this,
       positionProvider: _positionDataProvider,
     );
 

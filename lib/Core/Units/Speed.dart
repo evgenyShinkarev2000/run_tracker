@@ -16,7 +16,7 @@ class Speed {
   @override
   int get hashCode => metersPerSecond.hashCode;
 
-  Pace toPase() {
+  Pace toPace() {
     return Pace(
       (50 / 3) / metersPerSecond,
     ); // 1 / (metersPerSecond / 1000 * 60)

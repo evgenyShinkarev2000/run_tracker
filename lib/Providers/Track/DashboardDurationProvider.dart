@@ -3,4 +3,4 @@ import 'package:run_tracker/Providers/Track/TrackDashboardParametersProvider.dar
 
 final dashboardDurationProvider = StreamProvider((ref) {
   return ref.watch(trackDashboardParametersProvider).duration;
-});
+}, dependencies: [trackDashboardParametersProvider]);

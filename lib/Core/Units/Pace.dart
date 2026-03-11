@@ -20,4 +20,12 @@ class Pace {
       (50 / 3) / minutesPerKilometer,
     ); // 1 / (minutesPerKilometer * 60 / 1000)
   }
+
+  Duration? tryConvertToDuration() {
+    if (minutesPerKilometer.isInfinite) {
+      return null;
+    }
+    
+    return Duration(microseconds: (minutesPerKilometer * 6e7).round());
+  }
 }

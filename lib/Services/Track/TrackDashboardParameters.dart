@@ -42,6 +42,15 @@ class TrackDashboardParameters implements IDisposable {
     _timer?.cancel();
   }
 
+  void setParameters({Duration? duration, Distance? distance = Distance.zero}) {
+    if (duration != null) {
+      _durationSubject.add(duration);
+    }
+    if (distance != null) {
+      _distanceSubject.add(distance);
+    }
+  }
+
   void _listenPosition(AppPosition position) {
     if (_trackStateProvider.state == TrackState.Running &&
         _lastPosition != null) {
