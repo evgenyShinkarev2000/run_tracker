@@ -1,8 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:run_tracker/Data/Providers/export.dart';
+import 'package:run_tracker/Providers/export.dart';
 
 final positionDataProvider = Provider<PositionDataProvider>((ref) {
-  final provider = GeolocatorPositionDataProvider();
+  final provider = GeolocatorPositionDataProvider(ref.watch(loggerProvider));
   ref.onDispose(provider.dispose);
 
   return provider;

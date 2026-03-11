@@ -27,7 +27,7 @@ class AppException implements Exception, IJsonSerializable {
       map["data"] = data;
     }
     if (stackTrace != null) {
-      map["stackTrace"] = stackTrace;
+      map["stackTrace"] = stackTrace.toString();
     }
     if (innerException != null) {
       map["innerException"] = innerException!.toJson();

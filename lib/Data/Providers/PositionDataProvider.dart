@@ -45,7 +45,7 @@ class AppPosition {
     this.horizontalAccuracy,
     this.timestamp,
   });
-  
+
   double? tryFindDistanceTo(AppPosition position) {
     if (latitude == null ||
         longitude == null ||
@@ -81,6 +81,10 @@ class GeolocatorPositionDataProvider extends PositionDataProvider
     implements IDisposable {
   StreamController<AppPosition>? _streamController;
 
+  final ILogger _logger;
+
+  GeolocatorPositionDataProvider(this._logger);
+
   @override
   void dispose() {
     if (_streamController != null) {
@@ -101,7 +105,15 @@ class GeolocatorPositionDataProvider extends PositionDataProvider
     if (_streamController == null) {
       _streamController = StreamController.broadcast();
       _streamController!.addStream(
-        Geolocator.getPositionStream().map(_fromGeolocatorPosition),
+        Geolocator.getPositionStream()
+            .handleError((Object e, StackTrace s) {
+              //TODO пока игнорируем, потом нужно создать отдельный сервис, который бы учитывал настройки геолокации.
+              _logger.logWarning(
+                "Exception thrown in GeolocatorPositionDataProvider in Geolocator.getPositionStream().handleError",
+                appException: DartExceptionWrapper(e, stackTrace: s),
+              );
+            })
+            .map(_fromGeolocatorPosition),
       );
     }
 

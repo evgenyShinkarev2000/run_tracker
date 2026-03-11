@@ -16,11 +16,10 @@ class TalkerLoggerAdapter with LoggerWithLogMethods implements ILogger {
     Map<String, dynamic>? data,
   }) {
     final Map<String, dynamic> map = {};
-    if (message != null && message.isNotEmpty) {
-      map["message"] = message;
-    }
     if (appException != null) {
-      map["exception"] = appException.toJson();
+      final exceptionMap = appException.toJson();
+      exceptionMap.remove("message");
+      map["exception"] = exceptionMap;
     }
     if (data != null) {
       map["data"] = data;
@@ -29,7 +28,13 @@ class TalkerLoggerAdapter with LoggerWithLogMethods implements ILogger {
       map,
       toEncodable: UnknownTypeSerializer.Default.visit,
     );
-    _talker.log(serialized, logLevel: mapLogLevel(logLevel));
+    final formatedMessage = [
+      message,
+      appException?.message,
+      serialized,
+    ].nonNulls.join(" | ");
+
+    _talker.log(formatedMessage, logLevel: mapLogLevel(logLevel));
   }
 
   static talk.LogLevel mapLogLevel(LogLevel logLevel) {

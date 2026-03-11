@@ -59,7 +59,13 @@ class AppLocationPermissionService
 
   bool _needShowLocationDialog() {
     return switch (_lastLocationRequirement) {
-      LocationRequirement.RequireAndUse || null => true,
+      null => true,
+      LocationRequirement.RequireAndUse =>
+        switch (_locationService.SimpleState) {
+          SimpleLocationPermission.Denied ||
+          SimpleLocationPermission.Loading => true,
+          SimpleLocationPermission.Permited => false,
+        },
       LocationRequirement.SilentUse || LocationRequirement.Ignore => false,
     };
   }
