@@ -15,20 +15,16 @@ class RightPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            NavigationButton(
-              state: navigationState,
-              onStateChange: onNavigationStateChange,
-              isLoading: isNavigationLoading,
-            ),
-          ],
+    return Container(
+      padding: EdgeInsets.only(right: 8),
+      child: Align(
+        alignment: AlignmentGeometry.centerRight,
+        child: NavigationButton(
+          state: navigationState,
+          onStateChange: onNavigationStateChange,
+          isLoading: isNavigationLoading,
         ),
-      ],
+      ),
     );
   }
 }

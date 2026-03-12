@@ -16,16 +16,12 @@ class NavigationButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton.outlined(
       onPressed: _onPressed,
+      iconSize: 32,
       icon: isLoading
-          ? Container(
-              width: 24,
-              height: 24,
-              padding: const EdgeInsets.all(2.0),
-              child: const CircularProgressIndicator(
-                color: Colors.white,
-                strokeWidth: 3,
-              ),
-            )
+          ? const CircularProgressIndicator(
+            color: Colors.white,
+            strokeWidth: 3,
+          )
           : _getIconByState(),
     );
   }

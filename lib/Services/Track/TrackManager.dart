@@ -69,7 +69,7 @@ class TrackManager
 
     final lastTrack = await _trackRecordRepository.getLast();
     if (lastTrack == null || lastTrack.isCompleted) {
-      await _initializeNewTrack();
+      _initializeNewTrack();
       return;
     }
     _initializeExistingTrack(lastTrack);
@@ -79,6 +79,27 @@ class TrackManager
     if (_stateSubject.value != TrackState.Ready) {
       throw StateError("must be in state ${TrackState.Ready}");
     }
+
+    _processedTrack = await _trackRecordRepository.create(
+      TrackRecordsCompanion.insert(
+        createdAt: DateTime.now(),
+        isCompleted: false,
+      ),
+    );
+    if (_isDisposed) {
+      await _trackRecordRepository.remove(_processedTrack!.id);
+      return;
+    }
+
+    final writer = ExistingTrackRecordWriter(
+      _processedTrack!.id,
+      _trackRecordPointsRepository,
+    );
+    _recorder = TrackRecorder(
+      writer,
+      stateProvider: this,
+      positionProvider: _positionDataProvider,
+    );
 
     _stateSubject.add(TrackState.Running);
   }
@@ -102,28 +123,19 @@ class TrackManager
     _initializeNewTrack();
   }
 
-  Future<void> _initializeNewTrack() async {
-    _processedTrack = await _trackRecordRepository.create(
-      TrackRecordsCompanion.insert(
-        createdAt: DateTime.now(),
-        isCompleted: false,
-      ),
-    );
-    if (_isDisposed) {
-      await _trackRecordRepository.remove(_processedTrack!.id);
-      return;
-    }
+  Future<void> pause() {
+    throw UnimplementedError();
+  }
 
-    final writer = ExistingTrackRecordWriter(
-      _processedTrack!.id,
-      _trackRecordPointsRepository,
-    );
-    _recorder = TrackRecorder(
-      writer,
-      stateProvider: this,
-      positionProvider: _positionDataProvider,
-    );
+  Future<void> complete() {
+    throw UnimplementedError();
+  }
 
+  Future<void> resume() {
+    throw UnimplementedError();
+  }
+
+  void _initializeNewTrack() {
     _stateSubject.add(TrackState.Ready);
   }
 

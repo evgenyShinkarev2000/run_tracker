@@ -6,6 +6,6 @@ class TopDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dashboard();
+    return Align(alignment: AlignmentGeometry.topCenter, child: Dashboard());
   }
 }

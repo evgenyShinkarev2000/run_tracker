@@ -39,9 +39,7 @@ class _MapScopeState extends ConsumerState<MapScope> {
   @override
   Widget build(BuildContext context) {
     return ProviderScope(
-      overrides: [
-        trackDashboardParametersProvider.overrideWithValue(_manager.dashboard),
-      ],
+      overrides: [trackManagerProvider.overrideWithValue(_manager)],
       child: widget.mapWidget,
     );
   }
