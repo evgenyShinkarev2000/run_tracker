@@ -18,6 +18,7 @@ class DriftTrackRecordRepository extends TrackRecordRepository {
   Future<TrackRecord?> getLast() async {
     final selectStatement = _appDatabase.trackRecords.select();
     selectStatement.orderBy([(t) => OrderingTerm.desc(t.id)]);
+    selectStatement.limit(1);
 
     return await selectStatement.getSingleOrNull();
   }

@@ -1,16 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:run_tracker/Data/Contracts/export.dart';
 import 'package:run_tracker/Data/Repositories/TrackRecord/BasePoint.dart';
 import 'package:run_tracker/Data/Repositories/TrackRecord/ITrackRecordPointVisitor.dart';
 
 part "ResumePoint.g.dart";
 
 @JsonSerializable()
-class ResumePoint extends BasePoint implements IDiscriminator {
-  static const String Discriminator = "ResumePoint";
-  @override
-  String get discriminator => Discriminator;
-
+class ResumePoint extends BasePoint {
   @override
   final int id;
   @override

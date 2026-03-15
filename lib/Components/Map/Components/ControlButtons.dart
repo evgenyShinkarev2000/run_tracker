@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:run_tracker/Components/Loader/export.dart';
 import 'package:run_tracker/Providers/Track/export.dart';
 import 'package:run_tracker/Services/Track/export.dart';
 
@@ -17,7 +19,7 @@ class _ControlButtonsState extends ConsumerState<ControlButtons> {
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      spacing: 8,
+      spacing: 32,
       children: _buildButtons(trackState),
     );
   }
@@ -25,7 +27,9 @@ class _ControlButtonsState extends ConsumerState<ControlButtons> {
   List<Widget> _buildButtons(TrackState state) {
     switch (state) {
       case TrackState.Loading || TrackState.Aborted || TrackState.Completed:
-        return const [];
+        return [
+          const ButtonLoader(),
+        ];
       case TrackState.Ready:
         return [_buildButton(_start, Icons.play_arrow_outlined)];
       case TrackState.Running:
@@ -36,7 +40,7 @@ class _ControlButtonsState extends ConsumerState<ControlButtons> {
         ];
       case TrackState.Paused:
         return [
-          _buildButton(_stop, Icons.stop_circle_outlined),
+          _buildButton(_stop, Icons.stop),
           _buildButton(_resume, Icons.play_arrow_outlined),
           _buildButton(_pulse, Icons.monitor_heart_outlined),
         ];
@@ -52,7 +56,7 @@ class _ControlButtonsState extends ConsumerState<ControlButtons> {
   }
 
   void _start() async {
-    await ref.read(trackManagerProvider).startNew();
+    await ref.read(trackManagerProvider).start();
   }
 
   void _pause() async {
@@ -65,6 +69,7 @@ class _ControlButtonsState extends ConsumerState<ControlButtons> {
 
   void _stop() async {
     await ref.read(trackManagerProvider).complete();
+    //TODO переход к треку
   }
 
   void _pulse() {}

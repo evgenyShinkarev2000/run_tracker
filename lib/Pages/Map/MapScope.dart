@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:run_tracker/Core/Exceptions/DartExceptionWrapper.dart';
 import 'package:run_tracker/Providers/PositionProvider.dart';
 import 'package:run_tracker/Providers/Repositories/export.dart';
 import 'package:run_tracker/Providers/Track/export.dart';
+import 'package:run_tracker/Providers/export.dart';
 import 'package:run_tracker/Services/Track/export.dart';
 
 class MapScope extends ConsumerStatefulWidget {
@@ -26,7 +28,11 @@ class _MapScopeState extends ConsumerState<MapScope> {
       ref.read(trackRecordPointsRepositoryProvider),
       ref.read(positionDataProvider),
     );
-    _manager.initialize();
+    final logger = ref.read(loggerProvider);
+    _manager.initialize().catchError((e, s){
+      logger.logError("Can't initialize TrackManager", appException: DartExceptionWrapper(e, stackTrace: s));
+      throw e;
+    });
   }
 
   @override

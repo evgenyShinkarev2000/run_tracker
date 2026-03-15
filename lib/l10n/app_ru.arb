@@ -49,7 +49,8 @@
   "nounWeek": "неделя",
   "nounMonth": "месяц",
   "nounYear": "год",
-  "verbCanfirm": "подтвердить",
+  "verbConfirm": "подтвердить",
+  "verbContinue": "продолжить",
   "verbCancel": "отменить",
   "verbSave": "сохранить",
   "verbRemove": "удалить",
@@ -77,5 +78,6 @@
   "locationPermissionButtonRefresh": "обновить",
   "locationPermissionButtonRequestPermission": "запросить разрешение",
   "locationPermissionButtonIgnore": "игнорировать",
-  "validationValueMusntBeNull": "значение не должно быть null"
+  "validationValueMusntBeNull": "значение не должно быть null",
+  "trackRecordAbortDialogContent": "запись была прервана"
 }

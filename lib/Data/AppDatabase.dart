@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:run_tracker/Data/Repositories/TrackRecord/export.dart';
 
 part 'AppDatabase.g.dart';
 
@@ -40,7 +41,7 @@ class TrackRecordPoints extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get trackRecordId => integer().references(TrackRecords, #id)();
   DateTimeColumn get createdAt => dateTime()();
-  TextColumn get discriminator => text()();
+  TextColumn get discriminator => textEnum<PointType>()();
   TextColumn get paylod => text().nullable()();
 }
 

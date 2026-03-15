@@ -35,6 +35,7 @@ class TrackManager
 
   TrackRecord? _processedTrack;
   TrackRecorder? _recorder;
+  TrackRecordWriter? _writer;
   late final TrackDashboardParameters _dashboard;
 
   final TrackRecordRepository _trackRecordRepository;
@@ -69,16 +70,17 @@ class TrackManager
 
     final lastTrack = await _trackRecordRepository.getLast();
     if (lastTrack == null || lastTrack.isCompleted) {
-      _initializeNewTrack();
+      _stateSubject.add(TrackState.Ready);
       return;
     }
-    _initializeExistingTrack(lastTrack);
+    _processedTrack = lastTrack;
+    _stateSubject.add(TrackState.Aborted);
   }
 
-  Future<void> startNew() async {
-    if (_stateSubject.value != TrackState.Ready) {
-      throw StateError("must be in state ${TrackState.Ready}");
-    }
+  Future<void> start() async {
+    _ensureState(TrackState.Ready);
+
+    _stateSubject.add(TrackState.Running);
 
     _processedTrack = await _trackRecordRepository.create(
       TrackRecordsCompanion.insert(
@@ -90,57 +92,105 @@ class TrackManager
       await _trackRecordRepository.remove(_processedTrack!.id);
       return;
     }
-
-    final writer = ExistingTrackRecordWriter(
-      _processedTrack!.id,
-      _trackRecordPointsRepository,
-    );
-    _recorder = TrackRecorder(
-      writer,
-      stateProvider: this,
-      positionProvider: _positionDataProvider,
-    );
-
-    _stateSubject.add(TrackState.Running);
+    await _initializeInternal();
   }
 
-  Future<void> continueAborted() {
-    if (_stateSubject.value != TrackState.Aborted) {
-      throw StateError("must be in state ${TrackState.Aborted}");
-    }
-    //TODO доделать
-    throw UnimplementedError();
+  Future<void> continueAborted() async {
+    _ensureState(TrackState.Aborted);
+
+    await _normilizeAborted();
+    await _initializeInternal();
+
+    _stateSubject.add(TrackState.Paused);
   }
 
   Future<void> dropAborted() async {
-    if (_stateSubject.value != TrackState.Aborted) {
-      throw StateError("must be in state ${TrackState.Aborted}");
-    }
+    _ensureState(TrackState.Aborted);
 
     await _trackRecordRepository.update(
       _processedTrack!.copyWith(isCompleted: true),
     );
-    _initializeNewTrack();
-  }
-
-  Future<void> pause() {
-    throw UnimplementedError();
-  }
-
-  Future<void> complete() {
-    throw UnimplementedError();
-  }
-
-  Future<void> resume() {
-    throw UnimplementedError();
-  }
-
-  void _initializeNewTrack() {
     _stateSubject.add(TrackState.Ready);
   }
 
-  void _initializeExistingTrack(TrackRecord trackRecord) {
-    _processedTrack = trackRecord;
-    _stateSubject.add(TrackState.Aborted);
+  Future<void> pause() async {
+    _ensureState(TrackState.Running);
+    _stateSubject.add(TrackState.Paused);
+    await _writer!.writePause();
+  }
+
+  Future<void> complete() async {
+    switch (_stateSubject.value) {
+      case TrackState.Running || TrackState.Paused:
+        _stateSubject.add(TrackState.Completed);
+        await _writer!.stopWrite();
+        await _trackRecordRepository.update(
+          _processedTrack!.copyWith(isCompleted: true),
+        );
+        break;
+      default:
+        _throwStateMustBeOneOfError([TrackState.Running, TrackState.Paused]);
+    }
+  }
+
+  Future<void> resume() async {
+    _ensureState(TrackState.Paused);
+    _stateSubject.add(TrackState.Running);
+    _writer!.writeResume();
+  }
+
+  Future<void> _normilizeAborted() async {
+    //TODO рассчитывать длительность и дистанцию
+    final lastPoint = await _trackRecordPointsRepository.getLastPoint(
+      _processedTrack!.id,
+    );
+    if (lastPoint != null) {
+      final pointType = CheckPointTypeVisitor.determineType(lastPoint);
+      switch (pointType) {
+        case PointType.Pause:
+          break;
+        case PointType.Resume || PointType.Position:
+          if (pointType == PointType.Resume) {
+            await _trackRecordPointsRepository.removePoint(lastPoint);
+          }
+          await _trackRecordPointsRepository.addPausePoint(
+            PausePoint.insert(
+              trackRecordId: lastPoint.trackRecordId,
+              createdAt: lastPoint.createdAt,
+            ),
+          );
+          break;
+      }
+    }
+  }
+
+  Future<void> _initializeInternal() async {
+    _writer = ExistingTrackRecordWriter(
+      _processedTrack!.id,
+      _trackRecordPointsRepository,
+    );
+    _recorder = TrackRecorder(
+      _writer!,
+      stateProvider: this,
+      positionProvider: _positionDataProvider,
+    );
+  }
+
+  void _ensureState(TrackState state) {
+    if (_stateSubject.value != state) {
+      _throwStateMustBeError(state);
+    }
+  }
+
+  void _throwStateMustBeError(TrackState state) {
+    throw StateError(
+      "TrackManager must be in state $state, current state ${_stateSubject.value}",
+    );
+  }
+
+  void _throwStateMustBeOneOfError(List<TrackState> states) {
+    throw StateError(
+      "TrackManager must be in one of states ${states.join(", ")}, current state ${_stateSubject.value}",
+    );
   }
 }

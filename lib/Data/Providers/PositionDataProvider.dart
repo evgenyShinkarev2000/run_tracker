@@ -100,6 +100,7 @@ class GeolocatorPositionDataProvider extends PositionDataProvider
     return _fromGeolocatorPosition(position);
   }
 
+  //TODO при получении разрешения нужно брать новый getPositionStream
   @override
   Stream<AppPosition> get stream {
     if (_streamController == null) {
@@ -131,7 +132,7 @@ class GeolocatorPositionDataProvider extends PositionDataProvider
       heading: AppPositionComponent(position.heading, position.headingAccuracy),
       horizontalAccuracy: position.accuracy,
       speed: AppPositionComponent(position.speed, position.speedAccuracy),
-      timestamp: position.timestamp,
+      timestamp: position.timestamp.toUtc(),
     );
   }
 }

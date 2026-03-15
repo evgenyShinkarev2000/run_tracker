@@ -1,5 +1,8 @@
+export 'BasePoint.dart';
 export 'ResumePoint.dart';
 export 'PausePoint.dart';
 export 'PositionPoint.dart';
 export 'TrackRecordPointsRepository.dart';
 export 'TrackRecordRepository.dart';
+export 'ITrackRecordPointVisitor.dart';
+export 'CheckPointTypeVisitor.dart';

@@ -350,11 +350,17 @@ abstract class AppLocalizations {
   /// **'year'**
   String get nounYear;
 
-  /// No description provided for @verbCanfirm.
+  /// No description provided for @verbConfirm.
   ///
   /// In en, this message translates to:
   /// **'confirm'**
-  String get verbCanfirm;
+  String get verbConfirm;
+
+  /// No description provided for @verbContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'continue'**
+  String get verbContinue;
 
   /// No description provided for @verbCancel.
   ///
@@ -523,6 +529,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'value musn\'t be null'**
   String get validationValueMusntBeNull;
+
+  /// No description provided for @trackRecordAbortDialogContent.
+  ///
+  /// In en, this message translates to:
+  /// **'the recording was interrupted'**
+  String get trackRecordAbortDialogContent;
 }
 
 class _AppLocalizationsDelegate

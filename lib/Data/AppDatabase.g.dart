@@ -939,17 +939,17 @@ class $TrackRecordPointsTable extends TrackRecordPoints
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _discriminatorMeta = const VerificationMeta(
-    'discriminator',
-  );
   @override
-  late final GeneratedColumn<String> discriminator = GeneratedColumn<String>(
-    'discriminator',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<PointType, String> discriminator =
+      GeneratedColumn<String>(
+        'discriminator',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<PointType>(
+        $TrackRecordPointsTable.$converterdiscriminator,
+      );
   static const VerificationMeta _paylodMeta = const VerificationMeta('paylod');
   @override
   late final GeneratedColumn<String> paylod = GeneratedColumn<String>(
@@ -1001,17 +1001,6 @@ class $TrackRecordPointsTable extends TrackRecordPoints
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
-    if (data.containsKey('discriminator')) {
-      context.handle(
-        _discriminatorMeta,
-        discriminator.isAcceptableOrUnknown(
-          data['discriminator']!,
-          _discriminatorMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_discriminatorMeta);
-    }
     if (data.containsKey('paylod')) {
       context.handle(
         _paylodMeta,
@@ -1039,10 +1028,12 @@ class $TrackRecordPointsTable extends TrackRecordPoints
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       )!,
-      discriminator: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}discriminator'],
-      )!,
+      discriminator: $TrackRecordPointsTable.$converterdiscriminator.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}discriminator'],
+        )!,
+      ),
       paylod: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}paylod'],
@@ -1054,6 +1045,9 @@ class $TrackRecordPointsTable extends TrackRecordPoints
   $TrackRecordPointsTable createAlias(String alias) {
     return $TrackRecordPointsTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<PointType, String, String> $converterdiscriminator =
+      const EnumNameConverter<PointType>(PointType.values);
 }
 
 class TrackRecordPoint extends DataClass
@@ -1061,7 +1055,7 @@ class TrackRecordPoint extends DataClass
   final int id;
   final int trackRecordId;
   final DateTime createdAt;
-  final String discriminator;
+  final PointType discriminator;
   final String? paylod;
   const TrackRecordPoint({
     required this.id,
@@ -1076,7 +1070,11 @@ class TrackRecordPoint extends DataClass
     map['id'] = Variable<int>(id);
     map['track_record_id'] = Variable<int>(trackRecordId);
     map['created_at'] = Variable<DateTime>(createdAt);
-    map['discriminator'] = Variable<String>(discriminator);
+    {
+      map['discriminator'] = Variable<String>(
+        $TrackRecordPointsTable.$converterdiscriminator.toSql(discriminator),
+      );
+    }
     if (!nullToAbsent || paylod != null) {
       map['paylod'] = Variable<String>(paylod);
     }
@@ -1104,7 +1102,9 @@ class TrackRecordPoint extends DataClass
       id: serializer.fromJson<int>(json['id']),
       trackRecordId: serializer.fromJson<int>(json['trackRecordId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      discriminator: serializer.fromJson<String>(json['discriminator']),
+      discriminator: $TrackRecordPointsTable.$converterdiscriminator.fromJson(
+        serializer.fromJson<String>(json['discriminator']),
+      ),
       paylod: serializer.fromJson<String?>(json['paylod']),
     );
   }
@@ -1115,7 +1115,9 @@ class TrackRecordPoint extends DataClass
       'id': serializer.toJson<int>(id),
       'trackRecordId': serializer.toJson<int>(trackRecordId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
-      'discriminator': serializer.toJson<String>(discriminator),
+      'discriminator': serializer.toJson<String>(
+        $TrackRecordPointsTable.$converterdiscriminator.toJson(discriminator),
+      ),
       'paylod': serializer.toJson<String?>(paylod),
     };
   }
@@ -1124,7 +1126,7 @@ class TrackRecordPoint extends DataClass
     int? id,
     int? trackRecordId,
     DateTime? createdAt,
-    String? discriminator,
+    PointType? discriminator,
     Value<String?> paylod = const Value.absent(),
   }) => TrackRecordPoint(
     id: id ?? this.id,
@@ -1177,7 +1179,7 @@ class TrackRecordPointsCompanion extends UpdateCompanion<TrackRecordPoint> {
   final Value<int> id;
   final Value<int> trackRecordId;
   final Value<DateTime> createdAt;
-  final Value<String> discriminator;
+  final Value<PointType> discriminator;
   final Value<String?> paylod;
   const TrackRecordPointsCompanion({
     this.id = const Value.absent(),
@@ -1190,7 +1192,7 @@ class TrackRecordPointsCompanion extends UpdateCompanion<TrackRecordPoint> {
     this.id = const Value.absent(),
     required int trackRecordId,
     required DateTime createdAt,
-    required String discriminator,
+    required PointType discriminator,
     this.paylod = const Value.absent(),
   }) : trackRecordId = Value(trackRecordId),
        createdAt = Value(createdAt),
@@ -1215,7 +1217,7 @@ class TrackRecordPointsCompanion extends UpdateCompanion<TrackRecordPoint> {
     Value<int>? id,
     Value<int>? trackRecordId,
     Value<DateTime>? createdAt,
-    Value<String>? discriminator,
+    Value<PointType>? discriminator,
     Value<String?>? paylod,
   }) {
     return TrackRecordPointsCompanion(
@@ -1240,7 +1242,11 @@ class TrackRecordPointsCompanion extends UpdateCompanion<TrackRecordPoint> {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
     if (discriminator.present) {
-      map['discriminator'] = Variable<String>(discriminator.value);
+      map['discriminator'] = Variable<String>(
+        $TrackRecordPointsTable.$converterdiscriminator.toSql(
+          discriminator.value,
+        ),
+      );
     }
     if (paylod.present) {
       map['paylod'] = Variable<String>(paylod.value);
@@ -2165,7 +2171,7 @@ typedef $$TrackRecordPointsTableCreateCompanionBuilder =
       Value<int> id,
       required int trackRecordId,
       required DateTime createdAt,
-      required String discriminator,
+      required PointType discriminator,
       Value<String?> paylod,
     });
 typedef $$TrackRecordPointsTableUpdateCompanionBuilder =
@@ -2173,7 +2179,7 @@ typedef $$TrackRecordPointsTableUpdateCompanionBuilder =
       Value<int> id,
       Value<int> trackRecordId,
       Value<DateTime> createdAt,
-      Value<String> discriminator,
+      Value<PointType> discriminator,
       Value<String?> paylod,
     });
 
@@ -2232,9 +2238,10 @@ class $$TrackRecordPointsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get discriminator => $composableBuilder(
+  ColumnWithTypeConverterFilters<PointType, PointType, String>
+  get discriminator => $composableBuilder(
     column: $table.discriminator,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   ColumnFilters<String> get paylod => $composableBuilder(
@@ -2334,10 +2341,11 @@ class $$TrackRecordPointsTableAnnotationComposer
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
-  GeneratedColumn<String> get discriminator => $composableBuilder(
-    column: $table.discriminator,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<PointType, String> get discriminator =>
+      $composableBuilder(
+        column: $table.discriminator,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<String> get paylod =>
       $composableBuilder(column: $table.paylod, builder: (column) => column);
@@ -2402,7 +2410,7 @@ class $$TrackRecordPointsTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<int> trackRecordId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
-                Value<String> discriminator = const Value.absent(),
+                Value<PointType> discriminator = const Value.absent(),
                 Value<String?> paylod = const Value.absent(),
               }) => TrackRecordPointsCompanion(
                 id: id,
@@ -2416,7 +2424,7 @@ class $$TrackRecordPointsTableTableManager
                 Value<int> id = const Value.absent(),
                 required int trackRecordId,
                 required DateTime createdAt,
-                required String discriminator,
+                required PointType discriminator,
                 Value<String?> paylod = const Value.absent(),
               }) => TrackRecordPointsCompanion.insert(
                 id: id,

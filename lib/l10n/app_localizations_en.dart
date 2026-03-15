@@ -137,7 +137,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nounYear => 'year';
 
   @override
-  String get verbCanfirm => 'confirm';
+  String get verbConfirm => 'confirm';
+
+  @override
+  String get verbContinue => 'continue';
 
   @override
   String get verbCancel => 'cancel';
@@ -228,4 +231,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get validationValueMusntBeNull => 'value musn\'t be null';
+
+  @override
+  String get trackRecordAbortDialogContent => 'the recording was interrupted';
 }

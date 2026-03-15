@@ -2,10 +2,7 @@ import 'package:cancellation_token/cancellation_token.dart';
 import 'package:drift/drift.dart';
 import 'package:run_tracker/Core/export.dart';
 import 'package:run_tracker/Data/AppDatabase.dart';
-import 'package:run_tracker/Data/Repositories/TrackRecord/BasePoint.dart';
-import 'package:run_tracker/Data/Repositories/TrackRecord/PausePoint.dart';
-import 'package:run_tracker/Data/Repositories/TrackRecord/PositionPoint.dart';
-import 'package:run_tracker/Data/Repositories/TrackRecord/ResumePoint.dart';
+import 'package:run_tracker/Data/Repositories/TrackRecord/export.dart';
 
 abstract class TrackRecordPointsRepository {
   Future<int> addResumePoint(ResumePoint point);
@@ -15,6 +12,8 @@ abstract class TrackRecordPointsRepository {
     int trackRecordId, [
     CancellationToken? ct,
   ]);
+  Future<BasePoint?> getLastPoint(int trackRecordId);
+  Future<void> removePoint(BasePoint point);
 }
 
 class DriftTrackRecordPointsRepository extends TrackRecordPointsRepository {
@@ -26,7 +25,7 @@ class DriftTrackRecordPointsRepository extends TrackRecordPointsRepository {
     final insertModel = TrackRecordPointsCompanion.insert(
       trackRecordId: point.trackRecordId,
       createdAt: point.createdAt,
-      discriminator: ResumePoint.Discriminator,
+      discriminator: PointType.Resume,
     );
 
     return await _appDatabase.trackRecordPoints.insertOne(insertModel);
@@ -37,7 +36,7 @@ class DriftTrackRecordPointsRepository extends TrackRecordPointsRepository {
     final insertModel = TrackRecordPointsCompanion.insert(
       trackRecordId: point.trackRecordId,
       createdAt: point.createdAt,
-      discriminator: PausePoint.Discriminator,
+      discriminator: PointType.Resume,
     );
 
     return await _appDatabase.trackRecordPoints.insertOne(insertModel);
@@ -80,6 +79,54 @@ class DriftTrackRecordPointsRepository extends TrackRecordPointsRepository {
     return points;
   }
 
+  @override
+  Future<BasePoint?> getLastPoint(int trackRecordId) async {
+    final selectPointStatement = _appDatabase.trackRecordPoints.select();
+    selectPointStatement.where((p) => p.trackRecordId.equals(trackRecordId));
+    selectPointStatement.orderBy([(t) => OrderingTerm.desc(t.createdAt)]);
+    selectPointStatement.limit(1);
+    final point = await selectPointStatement.getSingleOrNull();
+
+    final selectPositionPointStatement = _appDatabase.trackRecordPositionPoints
+        .select();
+    selectPositionPointStatement.where(
+      (p) => p.trackRecordId.equals(trackRecordId),
+    );
+    selectPositionPointStatement.orderBy([
+      (p) => OrderingTerm.desc(p.createdAt),
+    ]);
+    selectPositionPointStatement.limit(1);
+    final positionPoint = await selectPositionPointStatement.getSingleOrNull();
+
+    if (positionPoint != null &&
+        (point == null || positionPoint.createdAt.isAfter(point.createdAt))) {
+      return _mapTrackRecordPositionPoint(positionPoint);
+    }
+    if (point != null &&
+        (positionPoint == null ||
+            point.createdAt.isAfter(positionPoint.createdAt))) {
+      return _mapTrackRecordPoint(point);
+    }
+
+    return null;
+  }
+
+  @override
+  Future<void> removePoint(BasePoint point) async {
+    switch (CheckPointTypeVisitor.determineType(point)) {
+      case PointType.Position:
+        await _appDatabase.trackRecordPositionPoints.deleteWhere(
+          (p) => p.id.equals(point.id),
+        );
+        break;
+      case PointType.Resume || PointType.Pause:
+        await _appDatabase.trackRecordPoints.deleteWhere(
+          (p) => p.id.equals(point.id),
+        );
+        break;
+    }
+  }
+
   Future<List<BasePoint>> _getTrackRecordPoints(
     SimpleSelectStatement<$TrackRecordPointsTable, TrackRecordPoint>
     selectStatement,
@@ -118,12 +165,12 @@ class DriftTrackRecordPointsRepository extends TrackRecordPointsRepository {
 
   BasePoint _mapTrackRecordPoint(TrackRecordPoint point) {
     return switch (point.discriminator) {
-      PausePoint.Discriminator => PausePoint(
+      PointType.Pause => PausePoint(
         id: point.id,
         trackRecordId: point.trackRecordId,
         createdAt: point.createdAt,
       ),
-      ResumePoint.Discriminator => ResumePoint(
+      PointType.Resume => ResumePoint(
         id: point.id,
         trackRecordId: point.trackRecordId,
         createdAt: point.createdAt,

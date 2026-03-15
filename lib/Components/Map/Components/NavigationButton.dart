@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:run_tracker/Components/Loader/ButtonLoader.dart';
 
 class NavigationButton extends StatelessWidget {
   final bool isLoading;
@@ -17,12 +18,7 @@ class NavigationButton extends StatelessWidget {
     return IconButton.outlined(
       onPressed: _onPressed,
       iconSize: 32,
-      icon: isLoading
-          ? const CircularProgressIndicator(
-            color: Colors.white,
-            strokeWidth: 3,
-          )
-          : _getIconByState(),
+      icon: isLoading ? const ButtonLoader() : _getIconByState(),
     );
   }
 

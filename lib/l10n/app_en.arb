@@ -49,7 +49,8 @@
   "nounWeek": "week",
   "nounMonth": "month",
   "nounYear": "year",
-  "verbCanfirm": "confirm",
+  "verbConfirm": "confirm",
+  "verbContinue": "continue",
   "verbCancel": "cancel",
   "verbSave": "save",
   "verbRemove": "remove",
@@ -77,5 +78,6 @@
   "locationPermissionButtonRefresh": "refresh",
   "locationPermissionButtonRequestPermission": "request permission",
   "locationPermissionButtonIgnore": "ignore",
-  "validationValueMusntBeNull": "value musn't be null"
+  "validationValueMusntBeNull": "value musn't be null",
+  "trackRecordAbortDialogContent": "the recording was interrupted"
 }

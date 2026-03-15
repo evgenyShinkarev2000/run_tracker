@@ -137,7 +137,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get nounYear => 'год';
 
   @override
-  String get verbCanfirm => 'подтвердить';
+  String get verbConfirm => 'подтвердить';
+
+  @override
+  String get verbContinue => 'продолжить';
 
   @override
   String get verbCancel => 'отменить';
@@ -229,4 +232,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get validationValueMusntBeNull => 'значение не должно быть null';
+
+  @override
+  String get trackRecordAbortDialogContent => 'запись была прервана';
 }

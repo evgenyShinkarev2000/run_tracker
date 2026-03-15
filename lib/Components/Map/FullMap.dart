@@ -5,13 +5,16 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:run_tracker/Components/Map/Components/BottomButtons.dart';
+import 'package:run_tracker/Components/Map/Components/CheckAbortedTrackDialog.dart';
 import 'package:run_tracker/Components/Map/Components/TopDashboard.dart';
 import 'package:run_tracker/Components/Map/Components/export.dart';
 import 'package:run_tracker/Components/Map/Providers/LocationMarkerHeadingProvider.dart';
 import 'package:run_tracker/Components/Map/Providers/LocationMarkerPositionProvider.dart';
 import 'package:run_tracker/Components/export.dart';
 import 'package:run_tracker/Data/export.dart';
+import 'package:run_tracker/Providers/Track/export.dart';
 import 'package:run_tracker/Providers/export.dart';
+import 'package:run_tracker/Services/Track/export.dart';
 
 class FullMap extends ConsumerStatefulWidget {
   const FullMap({super.key});
@@ -75,15 +78,16 @@ class _FullMapState extends ConsumerState<FullMap> {
     final overrideMapCacheDuration = ref.watch(mapCacheDurationProvider);
     final needShowLocationDialog = ref.watch(needShowLocationDialogProvider);
 
-    if (urlTempalte.isLoading ||
-        overrideMapCacheDuration.isLoading) {
+    if (urlTempalte.isLoading || overrideMapCacheDuration.isLoading) {
       return AppLoader();
     }
 
     if (needShowLocationDialog) {
       return LocationPermissionDialog();
     }
-    
+
+    final trackState = ref.watch(trackStateProvider);
+
     return Stack(
       children: [
         FlutterMap(
@@ -112,7 +116,8 @@ class _FullMapState extends ConsumerState<FullMap> {
         ),
         TopDashboard(),
         BottomButtons(),
-      ],
+        trackState == TrackState.Aborted ? SizedBox.expand(child: CheckAbortedTrackDialog(),) : null
+      ].nonNulls.toList(),
     );
   }
 
