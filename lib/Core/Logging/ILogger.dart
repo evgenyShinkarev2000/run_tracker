@@ -1,5 +1,6 @@
 import 'package:run_tracker/Core/Exceptions/export.dart';
 
+//TODO источник логов, от кого
 abstract interface class ILogger {
   void logTrace(
     String? message, {

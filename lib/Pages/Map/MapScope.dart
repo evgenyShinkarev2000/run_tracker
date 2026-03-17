@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:run_tracker/Core/Exceptions/DartExceptionWrapper.dart';
-import 'package:run_tracker/Providers/PositionProvider.dart';
-import 'package:run_tracker/Providers/Repositories/TrackRecordSummaryRepositoryProvider.dart';
 import 'package:run_tracker/Providers/Repositories/export.dart';
 import 'package:run_tracker/Providers/Track/export.dart';
 import 'package:run_tracker/Providers/export.dart';
@@ -27,9 +25,8 @@ class _MapScopeState extends ConsumerState<MapScope> {
     _manager = TrackManager(
       ref.read(trackRecordRepositoryProvider),
       ref.read(trackRecordPointsRepositoryProvider),
-      ref.read(trackRecordSummaryRepositoryProvider),
+      ref.read(trackServiceProvider),
       ref.read(positionDataProvider),
-      TrackSummaryCalculator(),
     );
     final logger = ref.read(loggerProvider);
     _manager.initialize().catchError((e, s){

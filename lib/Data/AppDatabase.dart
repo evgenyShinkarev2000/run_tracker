@@ -48,20 +48,15 @@ class TrackRecordPoints extends Table {
 }
 
 class TrackRecordSummaries extends Table {
-  IntColumn get id => integer().autoIncrement()();
   IntColumn get trackRecordId => integer().references(TrackRecords, #id)();
-  /*  
-  final DateTime? start;
-  final DateTime? end;
-  final Duration? activeDuration;
-  final Distance? activeDistance;
-  final Duration? activePositioningDuration; 
-  */
   DateTimeColumn? get start => dateTime().nullable()();
   DateTimeColumn? get end => dateTime().nullable()();
   IntColumn? get activeDuration => integer().map(const DurationConverter()).nullable()();
   RealColumn? get activeDistance => real().map(const DistanceConverter()).nullable()();
   IntColumn? get activePositioningDuration => integer().map(const DurationConverter()).nullable()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {trackRecordId};
 }
 
 @DriftDatabase(

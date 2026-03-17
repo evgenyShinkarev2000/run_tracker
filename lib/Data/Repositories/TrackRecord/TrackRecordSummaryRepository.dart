@@ -3,6 +3,7 @@ import 'package:run_tracker/Data/Exceptions/export.dart';
 import 'package:run_tracker/Data/export.dart';
 
 abstract class TrackRecordSummaryRepository {
+  Future<TrackRecordSummary?> getById(int trackRecordId);
   Future<int> addOrUpdate(TrackRecordSummariesCompanion trackRecordSummary);
   Future<TrackRecordSummary> update(TrackRecordSummary trackRecordSummary);
 }
@@ -13,8 +14,21 @@ class DriftTrackRecordSummaryRepository extends TrackRecordSummaryRepository {
   DriftTrackRecordSummaryRepository(this._appDatabase);
 
   @override
-  Future<int> addOrUpdate(TrackRecordSummariesCompanion trackRecordSummary) async {
-    return await _appDatabase.trackRecordSummaries.insertOnConflictUpdate(trackRecordSummary);
+  Future<TrackRecordSummary?> getById(int trackRecordId) async {
+    final selectStatement = _appDatabase.trackRecordSummaries.select();
+    selectStatement.where((s) => s.trackRecordId.equals(trackRecordId));
+    selectStatement.limit(1);
+
+    return await selectStatement.getSingleOrNull();
+  }
+
+  @override
+  Future<int> addOrUpdate(
+    TrackRecordSummariesCompanion trackRecordSummary,
+  ) async {
+    return await _appDatabase.trackRecordSummaries.insertOnConflictUpdate(
+      trackRecordSummary,
+    );
   }
 
   @override
@@ -27,7 +41,7 @@ class DriftTrackRecordSummaryRepository extends TrackRecordSummaryRepository {
     if (result.isEmpty) {
       throw EntityNotFoundException.fromTypeAndPrimaryKey(
         "TrackRecordSummary",
-        trackRecordSummary.id.toString(),
+        trackRecordSummary.trackRecordId.toString(),
       );
     }
 

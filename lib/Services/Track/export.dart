@@ -5,3 +5,4 @@ export 'TrackRecorder.dart';
 export 'TrackState.dart';
 export 'TrackWriter.dart';
 export 'TrackSummary.dart';
+export 'TrackService.dart';

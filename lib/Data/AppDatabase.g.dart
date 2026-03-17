@@ -1273,19 +1273,6 @@ class $TrackRecordSummariesTable extends TrackRecordSummaries
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $TrackRecordSummariesTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
   static const VerificationMeta _trackRecordIdMeta = const VerificationMeta(
     'trackRecordId',
   );
@@ -1295,7 +1282,7 @@ class $TrackRecordSummariesTable extends TrackRecordSummaries
     aliasedName,
     false,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'REFERENCES track_records (id)',
     ),
@@ -1355,7 +1342,6 @@ class $TrackRecordSummariesTable extends TrackRecordSummaries
       );
   @override
   List<GeneratedColumn> get $columns => [
-    id,
     trackRecordId,
     start,
     end,
@@ -1375,9 +1361,6 @@ class $TrackRecordSummariesTable extends TrackRecordSummaries
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
     if (data.containsKey('track_record_id')) {
       context.handle(
         _trackRecordIdMeta,
@@ -1386,8 +1369,6 @@ class $TrackRecordSummariesTable extends TrackRecordSummaries
           _trackRecordIdMeta,
         ),
       );
-    } else if (isInserting) {
-      context.missing(_trackRecordIdMeta);
     }
     if (data.containsKey('start')) {
       context.handle(
@@ -1405,15 +1386,11 @@ class $TrackRecordSummariesTable extends TrackRecordSummaries
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {trackRecordId};
   @override
   TrackRecordSummary map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return TrackRecordSummary(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
       trackRecordId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}track_record_id'],
@@ -1472,7 +1449,6 @@ class $TrackRecordSummariesTable extends TrackRecordSummaries
 
 class TrackRecordSummary extends DataClass
     implements Insertable<TrackRecordSummary> {
-  final int id;
   final int trackRecordId;
   final DateTime? start;
   final DateTime? end;
@@ -1480,7 +1456,6 @@ class TrackRecordSummary extends DataClass
   final Distance? activeDistance;
   final Duration? activePositioningDuration;
   const TrackRecordSummary({
-    required this.id,
     required this.trackRecordId,
     this.start,
     this.end,
@@ -1491,7 +1466,6 @@ class TrackRecordSummary extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
     map['track_record_id'] = Variable<int>(trackRecordId);
     if (!nullToAbsent || start != null) {
       map['start'] = Variable<DateTime>(start);
@@ -1525,7 +1499,6 @@ class TrackRecordSummary extends DataClass
 
   TrackRecordSummariesCompanion toCompanion(bool nullToAbsent) {
     return TrackRecordSummariesCompanion(
-      id: Value(id),
       trackRecordId: Value(trackRecordId),
       start: start == null && nullToAbsent
           ? const Value.absent()
@@ -1550,7 +1523,6 @@ class TrackRecordSummary extends DataClass
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return TrackRecordSummary(
-      id: serializer.fromJson<int>(json['id']),
       trackRecordId: serializer.fromJson<int>(json['trackRecordId']),
       start: serializer.fromJson<DateTime?>(json['start']),
       end: serializer.fromJson<DateTime?>(json['end']),
@@ -1565,7 +1537,6 @@ class TrackRecordSummary extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
       'trackRecordId': serializer.toJson<int>(trackRecordId),
       'start': serializer.toJson<DateTime?>(start),
       'end': serializer.toJson<DateTime?>(end),
@@ -1578,7 +1549,6 @@ class TrackRecordSummary extends DataClass
   }
 
   TrackRecordSummary copyWith({
-    int? id,
     int? trackRecordId,
     Value<DateTime?> start = const Value.absent(),
     Value<DateTime?> end = const Value.absent(),
@@ -1586,7 +1556,6 @@ class TrackRecordSummary extends DataClass
     Value<Distance?> activeDistance = const Value.absent(),
     Value<Duration?> activePositioningDuration = const Value.absent(),
   }) => TrackRecordSummary(
-    id: id ?? this.id,
     trackRecordId: trackRecordId ?? this.trackRecordId,
     start: start.present ? start.value : this.start,
     end: end.present ? end.value : this.end,
@@ -1602,7 +1571,6 @@ class TrackRecordSummary extends DataClass
   );
   TrackRecordSummary copyWithCompanion(TrackRecordSummariesCompanion data) {
     return TrackRecordSummary(
-      id: data.id.present ? data.id.value : this.id,
       trackRecordId: data.trackRecordId.present
           ? data.trackRecordId.value
           : this.trackRecordId,
@@ -1623,7 +1591,6 @@ class TrackRecordSummary extends DataClass
   @override
   String toString() {
     return (StringBuffer('TrackRecordSummary(')
-          ..write('id: $id, ')
           ..write('trackRecordId: $trackRecordId, ')
           ..write('start: $start, ')
           ..write('end: $end, ')
@@ -1636,7 +1603,6 @@ class TrackRecordSummary extends DataClass
 
   @override
   int get hashCode => Object.hash(
-    id,
     trackRecordId,
     start,
     end,
@@ -1648,7 +1614,6 @@ class TrackRecordSummary extends DataClass
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is TrackRecordSummary &&
-          other.id == this.id &&
           other.trackRecordId == this.trackRecordId &&
           other.start == this.start &&
           other.end == this.end &&
@@ -1659,7 +1624,6 @@ class TrackRecordSummary extends DataClass
 
 class TrackRecordSummariesCompanion
     extends UpdateCompanion<TrackRecordSummary> {
-  final Value<int> id;
   final Value<int> trackRecordId;
   final Value<DateTime?> start;
   final Value<DateTime?> end;
@@ -1667,7 +1631,6 @@ class TrackRecordSummariesCompanion
   final Value<Distance?> activeDistance;
   final Value<Duration?> activePositioningDuration;
   const TrackRecordSummariesCompanion({
-    this.id = const Value.absent(),
     this.trackRecordId = const Value.absent(),
     this.start = const Value.absent(),
     this.end = const Value.absent(),
@@ -1676,16 +1639,14 @@ class TrackRecordSummariesCompanion
     this.activePositioningDuration = const Value.absent(),
   });
   TrackRecordSummariesCompanion.insert({
-    this.id = const Value.absent(),
-    required int trackRecordId,
+    this.trackRecordId = const Value.absent(),
     this.start = const Value.absent(),
     this.end = const Value.absent(),
     this.activeDuration = const Value.absent(),
     this.activeDistance = const Value.absent(),
     this.activePositioningDuration = const Value.absent(),
-  }) : trackRecordId = Value(trackRecordId);
+  });
   static Insertable<TrackRecordSummary> custom({
-    Expression<int>? id,
     Expression<int>? trackRecordId,
     Expression<DateTime>? start,
     Expression<DateTime>? end,
@@ -1694,7 +1655,6 @@ class TrackRecordSummariesCompanion
     Expression<int>? activePositioningDuration,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
       if (trackRecordId != null) 'track_record_id': trackRecordId,
       if (start != null) 'start': start,
       if (end != null) 'end': end,
@@ -1706,7 +1666,6 @@ class TrackRecordSummariesCompanion
   }
 
   TrackRecordSummariesCompanion copyWith({
-    Value<int>? id,
     Value<int>? trackRecordId,
     Value<DateTime?>? start,
     Value<DateTime?>? end,
@@ -1715,7 +1674,6 @@ class TrackRecordSummariesCompanion
     Value<Duration?>? activePositioningDuration,
   }) {
     return TrackRecordSummariesCompanion(
-      id: id ?? this.id,
       trackRecordId: trackRecordId ?? this.trackRecordId,
       start: start ?? this.start,
       end: end ?? this.end,
@@ -1729,9 +1687,6 @@ class TrackRecordSummariesCompanion
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
     if (trackRecordId.present) {
       map['track_record_id'] = Variable<int>(trackRecordId.value);
     }
@@ -1768,7 +1723,6 @@ class TrackRecordSummariesCompanion
   @override
   String toString() {
     return (StringBuffer('TrackRecordSummariesCompanion(')
-          ..write('id: $id, ')
           ..write('trackRecordId: $trackRecordId, ')
           ..write('start: $start, ')
           ..write('end: $end, ')
@@ -3124,8 +3078,7 @@ typedef $$TrackRecordPointsTableProcessedTableManager =
     >;
 typedef $$TrackRecordSummariesTableCreateCompanionBuilder =
     TrackRecordSummariesCompanion Function({
-      Value<int> id,
-      required int trackRecordId,
+      Value<int> trackRecordId,
       Value<DateTime?> start,
       Value<DateTime?> end,
       Value<Duration?> activeDuration,
@@ -3134,7 +3087,6 @@ typedef $$TrackRecordSummariesTableCreateCompanionBuilder =
     });
 typedef $$TrackRecordSummariesTableUpdateCompanionBuilder =
     TrackRecordSummariesCompanion Function({
-      Value<int> id,
       Value<int> trackRecordId,
       Value<DateTime?> start,
       Value<DateTime?> end,
@@ -3188,11 +3140,6 @@ class $$TrackRecordSummariesTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<DateTime> get start => $composableBuilder(
     column: $table.start,
     builder: (column) => ColumnFilters(column),
@@ -3254,11 +3201,6 @@ class $$TrackRecordSummariesTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<DateTime> get start => $composableBuilder(
     column: $table.start,
     builder: (column) => ColumnOrderings(column),
@@ -3317,9 +3259,6 @@ class $$TrackRecordSummariesTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
   GeneratedColumn<DateTime> get start =>
       $composableBuilder(column: $table.start, builder: (column) => column);
 
@@ -3404,7 +3343,6 @@ class $$TrackRecordSummariesTableTableManager
               ),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 Value<int> trackRecordId = const Value.absent(),
                 Value<DateTime?> start = const Value.absent(),
                 Value<DateTime?> end = const Value.absent(),
@@ -3413,7 +3351,6 @@ class $$TrackRecordSummariesTableTableManager
                 Value<Duration?> activePositioningDuration =
                     const Value.absent(),
               }) => TrackRecordSummariesCompanion(
-                id: id,
                 trackRecordId: trackRecordId,
                 start: start,
                 end: end,
@@ -3423,8 +3360,7 @@ class $$TrackRecordSummariesTableTableManager
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
-                required int trackRecordId,
+                Value<int> trackRecordId = const Value.absent(),
                 Value<DateTime?> start = const Value.absent(),
                 Value<DateTime?> end = const Value.absent(),
                 Value<Duration?> activeDuration = const Value.absent(),
@@ -3432,7 +3368,6 @@ class $$TrackRecordSummariesTableTableManager
                 Value<Duration?> activePositioningDuration =
                     const Value.absent(),
               }) => TrackRecordSummariesCompanion.insert(
-                id: id,
                 trackRecordId: trackRecordId,
                 start: start,
                 end: end,

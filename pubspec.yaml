@@ -29,6 +29,7 @@ dependencies:
   drift_db_viewer: ^2.1.0
   rxdart: ^0.28.0
   json_annotation: ^4.9.0
+  infinite_scroll_pagination: ^5.1.1
 
 dev_dependencies:
   flutter_test:
