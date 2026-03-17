@@ -44,6 +44,7 @@ class TrackDashboardParameters implements IDisposable {
 
   void setParameters({Duration? duration, Distance? distance = Distance.zero}) {
     if (duration != null) {
+      _lastTick = DateTime.timestamp();
       _durationSubject.add(duration);
     }
     if (distance != null) {

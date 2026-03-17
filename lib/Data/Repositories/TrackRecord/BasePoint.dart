@@ -5,5 +5,5 @@ abstract class BasePoint {
   int get trackRecordId;
   DateTime get createdAt;
 
-  TResult accept<TResult>(ITrackRrecordPointVisitor<TResult> visitor);
+  TResult accept<TResult>(ITrackRecordPointVisitor<TResult> visitor);
 }

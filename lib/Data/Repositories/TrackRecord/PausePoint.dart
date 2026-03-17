@@ -30,7 +30,7 @@ class PausePoint extends BasePoint {
   Map<String, dynamic> toJson() => _$PausePointToJson(this);
 
   @override
-  TResult accept<TResult>(ITrackRrecordPointVisitor<TResult> visitor) {
+  TResult accept<TResult>(ITrackRecordPointVisitor<TResult> visitor) {
     return visitor.visitPausePoint(this);
   }
 }

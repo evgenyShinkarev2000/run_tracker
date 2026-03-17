@@ -1267,6 +1267,519 @@ class TrackRecordPointsCompanion extends UpdateCompanion<TrackRecordPoint> {
   }
 }
 
+class $TrackRecordSummariesTable extends TrackRecordSummaries
+    with TableInfo<$TrackRecordSummariesTable, TrackRecordSummary> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TrackRecordSummariesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _trackRecordIdMeta = const VerificationMeta(
+    'trackRecordId',
+  );
+  @override
+  late final GeneratedColumn<int> trackRecordId = GeneratedColumn<int>(
+    'track_record_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES track_records (id)',
+    ),
+  );
+  static const VerificationMeta _startMeta = const VerificationMeta('start');
+  @override
+  late final GeneratedColumn<DateTime> start = GeneratedColumn<DateTime>(
+    'start',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _endMeta = const VerificationMeta('end');
+  @override
+  late final GeneratedColumn<DateTime> end = GeneratedColumn<DateTime>(
+    'end',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<Duration?, int> activeDuration =
+      GeneratedColumn<int>(
+        'active_duration',
+        aliasedName,
+        true,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+      ).withConverter<Duration?>(
+        $TrackRecordSummariesTable.$converteractiveDurationn,
+      );
+  @override
+  late final GeneratedColumnWithTypeConverter<Distance?, double>
+  activeDistance =
+      GeneratedColumn<double>(
+        'active_distance',
+        aliasedName,
+        true,
+        type: DriftSqlType.double,
+        requiredDuringInsert: false,
+      ).withConverter<Distance?>(
+        $TrackRecordSummariesTable.$converteractiveDistancen,
+      );
+  @override
+  late final GeneratedColumnWithTypeConverter<Duration?, int>
+  activePositioningDuration =
+      GeneratedColumn<int>(
+        'active_positioning_duration',
+        aliasedName,
+        true,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+      ).withConverter<Duration?>(
+        $TrackRecordSummariesTable.$converteractivePositioningDurationn,
+      );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    trackRecordId,
+    start,
+    end,
+    activeDuration,
+    activeDistance,
+    activePositioningDuration,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'track_record_summaries';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TrackRecordSummary> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('track_record_id')) {
+      context.handle(
+        _trackRecordIdMeta,
+        trackRecordId.isAcceptableOrUnknown(
+          data['track_record_id']!,
+          _trackRecordIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_trackRecordIdMeta);
+    }
+    if (data.containsKey('start')) {
+      context.handle(
+        _startMeta,
+        start.isAcceptableOrUnknown(data['start']!, _startMeta),
+      );
+    }
+    if (data.containsKey('end')) {
+      context.handle(
+        _endMeta,
+        end.isAcceptableOrUnknown(data['end']!, _endMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TrackRecordSummary map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TrackRecordSummary(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      trackRecordId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}track_record_id'],
+      )!,
+      start: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}start'],
+      ),
+      end: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}end'],
+      ),
+      activeDuration: $TrackRecordSummariesTable.$converteractiveDurationn
+          .fromSql(
+            attachedDatabase.typeMapping.read(
+              DriftSqlType.int,
+              data['${effectivePrefix}active_duration'],
+            ),
+          ),
+      activeDistance: $TrackRecordSummariesTable.$converteractiveDistancen
+          .fromSql(
+            attachedDatabase.typeMapping.read(
+              DriftSqlType.double,
+              data['${effectivePrefix}active_distance'],
+            ),
+          ),
+      activePositioningDuration: $TrackRecordSummariesTable
+          .$converteractivePositioningDurationn
+          .fromSql(
+            attachedDatabase.typeMapping.read(
+              DriftSqlType.int,
+              data['${effectivePrefix}active_positioning_duration'],
+            ),
+          ),
+    );
+  }
+
+  @override
+  $TrackRecordSummariesTable createAlias(String alias) {
+    return $TrackRecordSummariesTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<Duration, int> $converteractiveDuration =
+      const DurationConverter();
+  static TypeConverter<Duration?, int?> $converteractiveDurationn =
+      NullAwareTypeConverter.wrap($converteractiveDuration);
+  static TypeConverter<Distance, double> $converteractiveDistance =
+      const DistanceConverter();
+  static TypeConverter<Distance?, double?> $converteractiveDistancen =
+      NullAwareTypeConverter.wrap($converteractiveDistance);
+  static TypeConverter<Duration, int> $converteractivePositioningDuration =
+      const DurationConverter();
+  static TypeConverter<Duration?, int?> $converteractivePositioningDurationn =
+      NullAwareTypeConverter.wrap($converteractivePositioningDuration);
+}
+
+class TrackRecordSummary extends DataClass
+    implements Insertable<TrackRecordSummary> {
+  final int id;
+  final int trackRecordId;
+  final DateTime? start;
+  final DateTime? end;
+  final Duration? activeDuration;
+  final Distance? activeDistance;
+  final Duration? activePositioningDuration;
+  const TrackRecordSummary({
+    required this.id,
+    required this.trackRecordId,
+    this.start,
+    this.end,
+    this.activeDuration,
+    this.activeDistance,
+    this.activePositioningDuration,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['track_record_id'] = Variable<int>(trackRecordId);
+    if (!nullToAbsent || start != null) {
+      map['start'] = Variable<DateTime>(start);
+    }
+    if (!nullToAbsent || end != null) {
+      map['end'] = Variable<DateTime>(end);
+    }
+    if (!nullToAbsent || activeDuration != null) {
+      map['active_duration'] = Variable<int>(
+        $TrackRecordSummariesTable.$converteractiveDurationn.toSql(
+          activeDuration,
+        ),
+      );
+    }
+    if (!nullToAbsent || activeDistance != null) {
+      map['active_distance'] = Variable<double>(
+        $TrackRecordSummariesTable.$converteractiveDistancen.toSql(
+          activeDistance,
+        ),
+      );
+    }
+    if (!nullToAbsent || activePositioningDuration != null) {
+      map['active_positioning_duration'] = Variable<int>(
+        $TrackRecordSummariesTable.$converteractivePositioningDurationn.toSql(
+          activePositioningDuration,
+        ),
+      );
+    }
+    return map;
+  }
+
+  TrackRecordSummariesCompanion toCompanion(bool nullToAbsent) {
+    return TrackRecordSummariesCompanion(
+      id: Value(id),
+      trackRecordId: Value(trackRecordId),
+      start: start == null && nullToAbsent
+          ? const Value.absent()
+          : Value(start),
+      end: end == null && nullToAbsent ? const Value.absent() : Value(end),
+      activeDuration: activeDuration == null && nullToAbsent
+          ? const Value.absent()
+          : Value(activeDuration),
+      activeDistance: activeDistance == null && nullToAbsent
+          ? const Value.absent()
+          : Value(activeDistance),
+      activePositioningDuration:
+          activePositioningDuration == null && nullToAbsent
+          ? const Value.absent()
+          : Value(activePositioningDuration),
+    );
+  }
+
+  factory TrackRecordSummary.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TrackRecordSummary(
+      id: serializer.fromJson<int>(json['id']),
+      trackRecordId: serializer.fromJson<int>(json['trackRecordId']),
+      start: serializer.fromJson<DateTime?>(json['start']),
+      end: serializer.fromJson<DateTime?>(json['end']),
+      activeDuration: serializer.fromJson<Duration?>(json['activeDuration']),
+      activeDistance: serializer.fromJson<Distance?>(json['activeDistance']),
+      activePositioningDuration: serializer.fromJson<Duration?>(
+        json['activePositioningDuration'],
+      ),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'trackRecordId': serializer.toJson<int>(trackRecordId),
+      'start': serializer.toJson<DateTime?>(start),
+      'end': serializer.toJson<DateTime?>(end),
+      'activeDuration': serializer.toJson<Duration?>(activeDuration),
+      'activeDistance': serializer.toJson<Distance?>(activeDistance),
+      'activePositioningDuration': serializer.toJson<Duration?>(
+        activePositioningDuration,
+      ),
+    };
+  }
+
+  TrackRecordSummary copyWith({
+    int? id,
+    int? trackRecordId,
+    Value<DateTime?> start = const Value.absent(),
+    Value<DateTime?> end = const Value.absent(),
+    Value<Duration?> activeDuration = const Value.absent(),
+    Value<Distance?> activeDistance = const Value.absent(),
+    Value<Duration?> activePositioningDuration = const Value.absent(),
+  }) => TrackRecordSummary(
+    id: id ?? this.id,
+    trackRecordId: trackRecordId ?? this.trackRecordId,
+    start: start.present ? start.value : this.start,
+    end: end.present ? end.value : this.end,
+    activeDuration: activeDuration.present
+        ? activeDuration.value
+        : this.activeDuration,
+    activeDistance: activeDistance.present
+        ? activeDistance.value
+        : this.activeDistance,
+    activePositioningDuration: activePositioningDuration.present
+        ? activePositioningDuration.value
+        : this.activePositioningDuration,
+  );
+  TrackRecordSummary copyWithCompanion(TrackRecordSummariesCompanion data) {
+    return TrackRecordSummary(
+      id: data.id.present ? data.id.value : this.id,
+      trackRecordId: data.trackRecordId.present
+          ? data.trackRecordId.value
+          : this.trackRecordId,
+      start: data.start.present ? data.start.value : this.start,
+      end: data.end.present ? data.end.value : this.end,
+      activeDuration: data.activeDuration.present
+          ? data.activeDuration.value
+          : this.activeDuration,
+      activeDistance: data.activeDistance.present
+          ? data.activeDistance.value
+          : this.activeDistance,
+      activePositioningDuration: data.activePositioningDuration.present
+          ? data.activePositioningDuration.value
+          : this.activePositioningDuration,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TrackRecordSummary(')
+          ..write('id: $id, ')
+          ..write('trackRecordId: $trackRecordId, ')
+          ..write('start: $start, ')
+          ..write('end: $end, ')
+          ..write('activeDuration: $activeDuration, ')
+          ..write('activeDistance: $activeDistance, ')
+          ..write('activePositioningDuration: $activePositioningDuration')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    trackRecordId,
+    start,
+    end,
+    activeDuration,
+    activeDistance,
+    activePositioningDuration,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TrackRecordSummary &&
+          other.id == this.id &&
+          other.trackRecordId == this.trackRecordId &&
+          other.start == this.start &&
+          other.end == this.end &&
+          other.activeDuration == this.activeDuration &&
+          other.activeDistance == this.activeDistance &&
+          other.activePositioningDuration == this.activePositioningDuration);
+}
+
+class TrackRecordSummariesCompanion
+    extends UpdateCompanion<TrackRecordSummary> {
+  final Value<int> id;
+  final Value<int> trackRecordId;
+  final Value<DateTime?> start;
+  final Value<DateTime?> end;
+  final Value<Duration?> activeDuration;
+  final Value<Distance?> activeDistance;
+  final Value<Duration?> activePositioningDuration;
+  const TrackRecordSummariesCompanion({
+    this.id = const Value.absent(),
+    this.trackRecordId = const Value.absent(),
+    this.start = const Value.absent(),
+    this.end = const Value.absent(),
+    this.activeDuration = const Value.absent(),
+    this.activeDistance = const Value.absent(),
+    this.activePositioningDuration = const Value.absent(),
+  });
+  TrackRecordSummariesCompanion.insert({
+    this.id = const Value.absent(),
+    required int trackRecordId,
+    this.start = const Value.absent(),
+    this.end = const Value.absent(),
+    this.activeDuration = const Value.absent(),
+    this.activeDistance = const Value.absent(),
+    this.activePositioningDuration = const Value.absent(),
+  }) : trackRecordId = Value(trackRecordId);
+  static Insertable<TrackRecordSummary> custom({
+    Expression<int>? id,
+    Expression<int>? trackRecordId,
+    Expression<DateTime>? start,
+    Expression<DateTime>? end,
+    Expression<int>? activeDuration,
+    Expression<double>? activeDistance,
+    Expression<int>? activePositioningDuration,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (trackRecordId != null) 'track_record_id': trackRecordId,
+      if (start != null) 'start': start,
+      if (end != null) 'end': end,
+      if (activeDuration != null) 'active_duration': activeDuration,
+      if (activeDistance != null) 'active_distance': activeDistance,
+      if (activePositioningDuration != null)
+        'active_positioning_duration': activePositioningDuration,
+    });
+  }
+
+  TrackRecordSummariesCompanion copyWith({
+    Value<int>? id,
+    Value<int>? trackRecordId,
+    Value<DateTime?>? start,
+    Value<DateTime?>? end,
+    Value<Duration?>? activeDuration,
+    Value<Distance?>? activeDistance,
+    Value<Duration?>? activePositioningDuration,
+  }) {
+    return TrackRecordSummariesCompanion(
+      id: id ?? this.id,
+      trackRecordId: trackRecordId ?? this.trackRecordId,
+      start: start ?? this.start,
+      end: end ?? this.end,
+      activeDuration: activeDuration ?? this.activeDuration,
+      activeDistance: activeDistance ?? this.activeDistance,
+      activePositioningDuration:
+          activePositioningDuration ?? this.activePositioningDuration,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (trackRecordId.present) {
+      map['track_record_id'] = Variable<int>(trackRecordId.value);
+    }
+    if (start.present) {
+      map['start'] = Variable<DateTime>(start.value);
+    }
+    if (end.present) {
+      map['end'] = Variable<DateTime>(end.value);
+    }
+    if (activeDuration.present) {
+      map['active_duration'] = Variable<int>(
+        $TrackRecordSummariesTable.$converteractiveDurationn.toSql(
+          activeDuration.value,
+        ),
+      );
+    }
+    if (activeDistance.present) {
+      map['active_distance'] = Variable<double>(
+        $TrackRecordSummariesTable.$converteractiveDistancen.toSql(
+          activeDistance.value,
+        ),
+      );
+    }
+    if (activePositioningDuration.present) {
+      map['active_positioning_duration'] = Variable<int>(
+        $TrackRecordSummariesTable.$converteractivePositioningDurationn.toSql(
+          activePositioningDuration.value,
+        ),
+      );
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TrackRecordSummariesCompanion(')
+          ..write('id: $id, ')
+          ..write('trackRecordId: $trackRecordId, ')
+          ..write('start: $start, ')
+          ..write('end: $end, ')
+          ..write('activeDuration: $activeDuration, ')
+          ..write('activeDistance: $activeDistance, ')
+          ..write('activePositioningDuration: $activePositioningDuration')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -1276,6 +1789,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $TrackRecordPositionPointsTable(this);
   late final $TrackRecordPointsTable trackRecordPoints =
       $TrackRecordPointsTable(this);
+  late final $TrackRecordSummariesTable trackRecordSummaries =
+      $TrackRecordSummariesTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1285,6 +1800,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     trackRecords,
     trackRecordPositionPoints,
     trackRecordPoints,
+    trackRecordSummaries,
   ];
 }
 
@@ -1489,6 +2005,34 @@ final class $$TrackRecordsTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<
+    $TrackRecordSummariesTable,
+    List<TrackRecordSummary>
+  >
+  _trackRecordSummariesRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.trackRecordSummaries,
+        aliasName: $_aliasNameGenerator(
+          db.trackRecords.id,
+          db.trackRecordSummaries.trackRecordId,
+        ),
+      );
+
+  $$TrackRecordSummariesTableProcessedTableManager
+  get trackRecordSummariesRefs {
+    final manager = $$TrackRecordSummariesTableTableManager(
+      $_db,
+      $_db.trackRecordSummaries,
+    ).filter((f) => f.trackRecordId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _trackRecordSummariesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$TrackRecordsTableFilterComposer
@@ -1558,6 +2102,31 @@ class $$TrackRecordsTableFilterComposer
           }) => $$TrackRecordPointsTableFilterComposer(
             $db: $db,
             $table: $db.trackRecordPoints,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> trackRecordSummariesRefs(
+    Expression<bool> Function($$TrackRecordSummariesTableFilterComposer f) f,
+  ) {
+    final $$TrackRecordSummariesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.trackRecordSummaries,
+      getReferencedColumn: (t) => t.trackRecordId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TrackRecordSummariesTableFilterComposer(
+            $db: $db,
+            $table: $db.trackRecordSummaries,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -1665,6 +2234,32 @@ class $$TrackRecordsTableAnnotationComposer
         );
     return f(composer);
   }
+
+  Expression<T> trackRecordSummariesRefs<T extends Object>(
+    Expression<T> Function($$TrackRecordSummariesTableAnnotationComposer a) f,
+  ) {
+    final $$TrackRecordSummariesTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.trackRecordSummaries,
+          getReferencedColumn: (t) => t.trackRecordId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$TrackRecordSummariesTableAnnotationComposer(
+                $db: $db,
+                $table: $db.trackRecordSummaries,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$TrackRecordsTableTableManager
@@ -1683,6 +2278,7 @@ class $$TrackRecordsTableTableManager
           PrefetchHooks Function({
             bool trackRecordPositionPointsRefs,
             bool trackRecordPointsRefs,
+            bool trackRecordSummariesRefs,
           })
         > {
   $$TrackRecordsTableTableManager(_$AppDatabase db, $TrackRecordsTable table)
@@ -1728,6 +2324,7 @@ class $$TrackRecordsTableTableManager
               ({
                 trackRecordPositionPointsRefs = false,
                 trackRecordPointsRefs = false,
+                trackRecordSummariesRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -1735,6 +2332,7 @@ class $$TrackRecordsTableTableManager
                     if (trackRecordPositionPointsRefs)
                       db.trackRecordPositionPoints,
                     if (trackRecordPointsRefs) db.trackRecordPoints,
+                    if (trackRecordSummariesRefs) db.trackRecordSummaries,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -1781,6 +2379,27 @@ class $$TrackRecordsTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (trackRecordSummariesRefs)
+                        await $_getPrefetchedData<
+                          TrackRecord,
+                          $TrackRecordsTable,
+                          TrackRecordSummary
+                        >(
+                          currentTable: table,
+                          referencedTable: $$TrackRecordsTableReferences
+                              ._trackRecordSummariesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$TrackRecordsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).trackRecordSummariesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.trackRecordId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -1804,6 +2423,7 @@ typedef $$TrackRecordsTableProcessedTableManager =
       PrefetchHooks Function({
         bool trackRecordPositionPointsRefs,
         bool trackRecordPointsRefs,
+        bool trackRecordSummariesRefs,
       })
     >;
 typedef $$TrackRecordPositionPointsTableCreateCompanionBuilder =
@@ -2502,6 +3122,393 @@ typedef $$TrackRecordPointsTableProcessedTableManager =
       TrackRecordPoint,
       PrefetchHooks Function({bool trackRecordId})
     >;
+typedef $$TrackRecordSummariesTableCreateCompanionBuilder =
+    TrackRecordSummariesCompanion Function({
+      Value<int> id,
+      required int trackRecordId,
+      Value<DateTime?> start,
+      Value<DateTime?> end,
+      Value<Duration?> activeDuration,
+      Value<Distance?> activeDistance,
+      Value<Duration?> activePositioningDuration,
+    });
+typedef $$TrackRecordSummariesTableUpdateCompanionBuilder =
+    TrackRecordSummariesCompanion Function({
+      Value<int> id,
+      Value<int> trackRecordId,
+      Value<DateTime?> start,
+      Value<DateTime?> end,
+      Value<Duration?> activeDuration,
+      Value<Distance?> activeDistance,
+      Value<Duration?> activePositioningDuration,
+    });
+
+final class $$TrackRecordSummariesTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $TrackRecordSummariesTable,
+          TrackRecordSummary
+        > {
+  $$TrackRecordSummariesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $TrackRecordsTable _trackRecordIdTable(_$AppDatabase db) =>
+      db.trackRecords.createAlias(
+        $_aliasNameGenerator(
+          db.trackRecordSummaries.trackRecordId,
+          db.trackRecords.id,
+        ),
+      );
+
+  $$TrackRecordsTableProcessedTableManager get trackRecordId {
+    final $_column = $_itemColumn<int>('track_record_id')!;
+
+    final manager = $$TrackRecordsTableTableManager(
+      $_db,
+      $_db.trackRecords,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_trackRecordIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$TrackRecordSummariesTableFilterComposer
+    extends Composer<_$AppDatabase, $TrackRecordSummariesTable> {
+  $$TrackRecordSummariesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get start => $composableBuilder(
+    column: $table.start,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get end => $composableBuilder(
+    column: $table.end,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<Duration?, Duration, int> get activeDuration =>
+      $composableBuilder(
+        column: $table.activeDuration,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnWithTypeConverterFilters<Distance?, Distance, double>
+  get activeDistance => $composableBuilder(
+    column: $table.activeDistance,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<Duration?, Duration, int>
+  get activePositioningDuration => $composableBuilder(
+    column: $table.activePositioningDuration,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  $$TrackRecordsTableFilterComposer get trackRecordId {
+    final $$TrackRecordsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.trackRecordId,
+      referencedTable: $db.trackRecords,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TrackRecordsTableFilterComposer(
+            $db: $db,
+            $table: $db.trackRecords,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TrackRecordSummariesTableOrderingComposer
+    extends Composer<_$AppDatabase, $TrackRecordSummariesTable> {
+  $$TrackRecordSummariesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get start => $composableBuilder(
+    column: $table.start,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get end => $composableBuilder(
+    column: $table.end,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get activeDuration => $composableBuilder(
+    column: $table.activeDuration,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get activeDistance => $composableBuilder(
+    column: $table.activeDistance,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get activePositioningDuration => $composableBuilder(
+    column: $table.activePositioningDuration,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$TrackRecordsTableOrderingComposer get trackRecordId {
+    final $$TrackRecordsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.trackRecordId,
+      referencedTable: $db.trackRecords,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TrackRecordsTableOrderingComposer(
+            $db: $db,
+            $table: $db.trackRecords,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TrackRecordSummariesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TrackRecordSummariesTable> {
+  $$TrackRecordSummariesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get start =>
+      $composableBuilder(column: $table.start, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get end =>
+      $composableBuilder(column: $table.end, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<Duration?, int> get activeDuration =>
+      $composableBuilder(
+        column: $table.activeDuration,
+        builder: (column) => column,
+      );
+
+  GeneratedColumnWithTypeConverter<Distance?, double> get activeDistance =>
+      $composableBuilder(
+        column: $table.activeDistance,
+        builder: (column) => column,
+      );
+
+  GeneratedColumnWithTypeConverter<Duration?, int>
+  get activePositioningDuration => $composableBuilder(
+    column: $table.activePositioningDuration,
+    builder: (column) => column,
+  );
+
+  $$TrackRecordsTableAnnotationComposer get trackRecordId {
+    final $$TrackRecordsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.trackRecordId,
+      referencedTable: $db.trackRecords,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TrackRecordsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.trackRecords,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TrackRecordSummariesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $TrackRecordSummariesTable,
+          TrackRecordSummary,
+          $$TrackRecordSummariesTableFilterComposer,
+          $$TrackRecordSummariesTableOrderingComposer,
+          $$TrackRecordSummariesTableAnnotationComposer,
+          $$TrackRecordSummariesTableCreateCompanionBuilder,
+          $$TrackRecordSummariesTableUpdateCompanionBuilder,
+          (TrackRecordSummary, $$TrackRecordSummariesTableReferences),
+          TrackRecordSummary,
+          PrefetchHooks Function({bool trackRecordId})
+        > {
+  $$TrackRecordSummariesTableTableManager(
+    _$AppDatabase db,
+    $TrackRecordSummariesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TrackRecordSummariesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TrackRecordSummariesTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$TrackRecordSummariesTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> trackRecordId = const Value.absent(),
+                Value<DateTime?> start = const Value.absent(),
+                Value<DateTime?> end = const Value.absent(),
+                Value<Duration?> activeDuration = const Value.absent(),
+                Value<Distance?> activeDistance = const Value.absent(),
+                Value<Duration?> activePositioningDuration =
+                    const Value.absent(),
+              }) => TrackRecordSummariesCompanion(
+                id: id,
+                trackRecordId: trackRecordId,
+                start: start,
+                end: end,
+                activeDuration: activeDuration,
+                activeDistance: activeDistance,
+                activePositioningDuration: activePositioningDuration,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int trackRecordId,
+                Value<DateTime?> start = const Value.absent(),
+                Value<DateTime?> end = const Value.absent(),
+                Value<Duration?> activeDuration = const Value.absent(),
+                Value<Distance?> activeDistance = const Value.absent(),
+                Value<Duration?> activePositioningDuration =
+                    const Value.absent(),
+              }) => TrackRecordSummariesCompanion.insert(
+                id: id,
+                trackRecordId: trackRecordId,
+                start: start,
+                end: end,
+                activeDuration: activeDuration,
+                activeDistance: activeDistance,
+                activePositioningDuration: activePositioningDuration,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$TrackRecordSummariesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({trackRecordId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (trackRecordId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.trackRecordId,
+                                referencedTable:
+                                    $$TrackRecordSummariesTableReferences
+                                        ._trackRecordIdTable(db),
+                                referencedColumn:
+                                    $$TrackRecordSummariesTableReferences
+                                        ._trackRecordIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$TrackRecordSummariesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $TrackRecordSummariesTable,
+      TrackRecordSummary,
+      $$TrackRecordSummariesTableFilterComposer,
+      $$TrackRecordSummariesTableOrderingComposer,
+      $$TrackRecordSummariesTableAnnotationComposer,
+      $$TrackRecordSummariesTableCreateCompanionBuilder,
+      $$TrackRecordSummariesTableUpdateCompanionBuilder,
+      (TrackRecordSummary, $$TrackRecordSummariesTableReferences),
+      TrackRecordSummary,
+      PrefetchHooks Function({bool trackRecordId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -2517,4 +3524,6 @@ class $AppDatabaseManager {
       );
   $$TrackRecordPointsTableTableManager get trackRecordPoints =>
       $$TrackRecordPointsTableTableManager(_db, _db.trackRecordPoints);
+  $$TrackRecordSummariesTableTableManager get trackRecordSummaries =>
+      $$TrackRecordSummariesTableTableManager(_db, _db.trackRecordSummaries);
 }

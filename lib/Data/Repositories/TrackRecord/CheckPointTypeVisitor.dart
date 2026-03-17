@@ -1,6 +1,6 @@
 import 'package:run_tracker/Data/Repositories/TrackRecord/export.dart';
 
-class CheckPointTypeVisitor implements ITrackRrecordPointVisitor<PointType> {
+class CheckPointTypeVisitor implements ITrackRecordPointVisitor<PointType> {
   static final CheckPointTypeVisitor instance = CheckPointTypeVisitor();
 
   static PointType determineType(BasePoint point) => point.accept(instance);

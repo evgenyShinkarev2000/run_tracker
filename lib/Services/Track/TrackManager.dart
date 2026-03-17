@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:drift/drift.dart';
 import 'package:run_tracker/Core/export.dart';
 import 'package:run_tracker/Data/export.dart';
 import 'package:run_tracker/Services/Track/export.dart';
@@ -40,12 +41,16 @@ class TrackManager
 
   final TrackRecordRepository _trackRecordRepository;
   final TrackRecordPointsRepository _trackRecordPointsRepository;
+  final TrackRecordSummaryRepository _trackRecordSummaryRepository;
   final PositionDataProvider _positionDataProvider;
+  final TrackSummaryCalculator _trackSummaryCalculator;
 
   TrackManager(
     this._trackRecordRepository,
     this._trackRecordPointsRepository,
+    this._trackRecordSummaryRepository,
     this._positionDataProvider,
+    this._trackSummaryCalculator,
   ) {
     _dashboard = TrackDashboardParameters(
       this,
@@ -127,6 +132,21 @@ class TrackManager
         await _trackRecordRepository.update(
           _processedTrack!.copyWith(isCompleted: true),
         );
+        final points = await _trackRecordPointsRepository
+            .getPointsByTrackRecordId(_processedTrack!.id);
+        final summary = _trackSummaryCalculator.calculateSummary(
+          points.toList(),
+        );
+        await _trackRecordSummaryRepository.addOrUpdate(
+          TrackRecordSummariesCompanion.insert(
+            trackRecordId: _processedTrack!.id,
+            start: Value(summary.start),
+            end: Value(summary.end),
+            activeDistance: Value(summary.activeDistance),
+            activeDuration: Value(summary.activeDuration),
+            activePositioningDuration: Value(summary.activePositioningDuration),
+          ),
+        );
         break;
       default:
         _throwStateMustBeOneOfError([TrackState.Running, TrackState.Paused]);
@@ -140,7 +160,6 @@ class TrackManager
   }
 
   Future<void> _normilizeAborted() async {
-    //TODO рассчитывать длительность и дистанцию
     final lastPoint = await _trackRecordPointsRepository.getLastPoint(
       _processedTrack!.id,
     );
@@ -161,6 +180,9 @@ class TrackManager
           );
           break;
       }
+      final points = await _trackRecordPointsRepository.getPointsByTrackRecordId(_processedTrack!.id);
+      final summary = _trackSummaryCalculator.calculateSummary(points.toList());
+      _dashboard.setParameters(duration: summary.activeDuration, distance: summary.activeDistance);
     }
   }
 

@@ -46,32 +46,49 @@ class AppPosition {
     this.timestamp,
   });
 
-  double? tryFindDistanceTo(AppPosition position) {
-    if (latitude == null ||
-        longitude == null ||
-        position.latitude == null ||
-        position.longitude == null) {
+  static double? tryFindDistanceByCoordinates(
+    double? startLatitude,
+    double? startLongitude,
+    double? startAltitude,
+    double? endLatitude,
+    double? endLongitude,
+    double? endAltitude,
+  ) {
+    if (startLatitude == null ||
+        startLongitude == null ||
+        endLatitude == null ||
+        endLongitude == null) {
       return null;
     }
 
     final horizontalDistance = Geolocator.distanceBetween(
-      latitude!.value,
-      longitude!.value,
-      position.latitude!.value,
-      position.longitude!.value,
+      startLatitude,
+      startLongitude,
+      endLatitude,
+      endLongitude,
     );
 
-    if (altitude == null || position.altitude == null) {
+    if (startAltitude == null || endAltitude == null) {
       return horizontalDistance;
     }
 
-    final verticalDistance = altitude!.value + position.altitude!.value;
+    final verticalDistance = startAltitude + endAltitude;
 
     return sqrt(
       horizontalDistance * horizontalDistance +
           verticalDistance * verticalDistance,
     );
   }
+
+  double? tryFindDistanceTo(AppPosition position) =>
+      AppPosition.tryFindDistanceByCoordinates(
+        latitude?.value,
+        longitude?.value,
+        altitude?.value,
+        position.latitude?.value,
+        position.longitude?.value,
+        position.altitude?.value,
+      );
 }
 
 abstract class PositionDataProvider

@@ -4,3 +4,4 @@ export 'TrackManager.dart';
 export 'TrackRecorder.dart';
 export 'TrackState.dart';
 export 'TrackWriter.dart';
+export 'TrackSummary.dart';

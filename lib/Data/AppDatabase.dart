@@ -2,7 +2,9 @@ import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:run_tracker/Core/Units/export.dart';
 import 'package:run_tracker/Data/Repositories/TrackRecord/export.dart';
+import 'package:run_tracker/Data/TypeConverters/export.dart';
 
 part 'AppDatabase.g.dart';
 
@@ -45,12 +47,30 @@ class TrackRecordPoints extends Table {
   TextColumn get paylod => text().nullable()();
 }
 
+class TrackRecordSummaries extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get trackRecordId => integer().references(TrackRecords, #id)();
+  /*  
+  final DateTime? start;
+  final DateTime? end;
+  final Duration? activeDuration;
+  final Distance? activeDistance;
+  final Duration? activePositioningDuration; 
+  */
+  DateTimeColumn? get start => dateTime().nullable()();
+  DateTimeColumn? get end => dateTime().nullable()();
+  IntColumn? get activeDuration => integer().map(const DurationConverter()).nullable()();
+  RealColumn? get activeDistance => real().map(const DistanceConverter()).nullable()();
+  IntColumn? get activePositioningDuration => integer().map(const DurationConverter()).nullable()();
+}
+
 @DriftDatabase(
   tables: [
     Settings,
     TrackRecords,
     TrackRecordPositionPoints,
     TrackRecordPoints,
+    TrackRecordSummaries,
   ],
 )
 class AppDatabase extends _$AppDatabase {

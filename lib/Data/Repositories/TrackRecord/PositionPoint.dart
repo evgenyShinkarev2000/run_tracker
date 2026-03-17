@@ -45,7 +45,7 @@ class PositionPoint extends BasePoint {
   );
 
   @override
-  TResult accept<TResult>(ITrackRrecordPointVisitor<TResult> visitor) {
+  TResult accept<TResult>(ITrackRecordPointVisitor<TResult> visitor) {
     return visitor.visitPositionPoint(this);
   }
 }
