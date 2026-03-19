@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:run_tracker/Core/export.dart';
 import 'package:run_tracker/Data/export.dart';
+import 'package:run_tracker/Services/Position/export.dart';
 import 'package:run_tracker/Services/Track/export.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -40,7 +41,7 @@ class TrackManager
 
   final TrackRecordRepository _trackRecordRepository;
   final TrackRecordPointsRepository _trackRecordPointsRepository;
-  final PositionDataProvider _positionDataProvider;
+  final PositionProvider _positionDataProvider;
   final TrackService _trackService;
 
   TrackManager(

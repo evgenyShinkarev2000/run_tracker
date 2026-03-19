@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:run_tracker/Pages/TrackHistory/TrackHistoryList.dart';
 import 'package:run_tracker/Routing/export.dart';
 import 'package:run_tracker/Theme/export.dart';
 import 'package:run_tracker/localization/export.dart';
@@ -14,6 +15,7 @@ class TrackHistoryPage extends StatelessWidget {
         title: Text(context.appLocalization.menuHistory),
       ),
       drawer: AppMainDrawer(),
+      body: TrackHistoryList(),
     );
   }
 }

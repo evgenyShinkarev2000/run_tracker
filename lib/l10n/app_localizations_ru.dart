@@ -199,6 +199,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get historyPageNoRecords => 'нет записей';
 
   @override
+  String get historyPageCreateRecord => 'записать трек';
+
+  @override
   String get runRecordPageShare => 'поделиться';
 
   @override

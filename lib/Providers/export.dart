@@ -1,12 +1,11 @@
 export 'LocaleProvider.dart';
 export 'MapUriTemplateProvider.dart';
 export 'PositionProvider.dart';
-export 'LocationPermissionProvider.dart';
+export 'PositionServiceProvider.dart';
 export 'MapCacheDurationProvider.dart';
 export 'LoggerProvider.dart';
 export 'MessageServiceProvider.dart';
 export 'TalkerProvider.dart';
 export 'AppDatabaseProvider.dart';
 export 'LocationRequirementProvider.dart';
-export 'AppLocationPermissionServiceProvider.dart';
 export 'AppLocationPermissionProvider.dart';

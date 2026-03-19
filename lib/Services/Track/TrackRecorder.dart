@@ -1,13 +1,11 @@
 import 'dart:async';
 
 import 'package:run_tracker/Core/export.dart';
-import 'package:run_tracker/Data/export.dart';
-import 'package:run_tracker/Services/Track/TrackManager.dart';
-import 'package:run_tracker/Services/Track/TrackState.dart';
-import 'package:run_tracker/Services/Track/TrackWriter.dart';
+import 'package:run_tracker/Services/Position/export.dart';
+import 'package:run_tracker/Services/Track/export.dart';
 
 class TrackRecorder implements IDisposable {
-  final PositionDataProvider? _positionProvider;
+  final PositionProvider? _positionProvider;
   final TrackRecordWriter _writer;
   final TrackStateProvider _stateProvider;
 
@@ -16,7 +14,7 @@ class TrackRecorder implements IDisposable {
   TrackRecorder(
     this._writer, {
     required TrackStateProvider stateProvider,
-    PositionDataProvider? positionProvider
+    PositionProvider? positionProvider
   }) : _positionProvider = positionProvider,
        _stateProvider = stateProvider {
     _positionSubscription = _positionProvider?.stream.listen(_listenPosition);

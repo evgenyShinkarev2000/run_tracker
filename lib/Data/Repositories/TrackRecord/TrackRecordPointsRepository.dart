@@ -12,6 +12,10 @@ abstract class TrackRecordPointsRepository {
     int trackRecordId, [
     CancellationToken? ct,
   ]);
+  Future<Map<int, List<BasePoint>>> getTrackRecordPointsByIds(
+    List<int> trackRecordIds, [
+    CancellationToken? ct,
+  ]);
   Future<BasePoint?> getLastPoint(int trackRecordId);
   Future<void> removePoint(BasePoint point);
 }
@@ -36,7 +40,7 @@ class DriftTrackRecordPointsRepository extends TrackRecordPointsRepository {
     final insertModel = TrackRecordPointsCompanion.insert(
       trackRecordId: point.trackRecordId,
       createdAt: point.createdAt,
-      discriminator: PointType.Resume,
+      discriminator: PointType.Pause,
     );
 
     return await _appDatabase.trackRecordPoints.insertOne(insertModel);
@@ -77,6 +81,42 @@ class DriftTrackRecordPointsRepository extends TrackRecordPointsRepository {
     points.addAll(trackRecordPoints);
 
     return points;
+  }
+
+  @override
+  Future<Map<int, List<BasePoint>>> getTrackRecordPointsByIds(
+    List<int> trackRecordIds, [
+    CancellationToken? ct,
+  ]) async {
+    ct?.throwIfCancelled();
+    final positionSelectStatement = _appDatabase.trackRecordPositionPoints
+        .select();
+    positionSelectStatement.where((p) => p.trackRecordId.isIn(trackRecordIds));
+    final positionPoints = await _getTrackRecordPositionPoints(
+      positionSelectStatement,
+      ct,
+    );
+
+    ct?.throwIfCancelled();
+    final selectStatement = _appDatabase.trackRecordPoints.select();
+    selectStatement.where((p) => p.trackRecordId.isIn(trackRecordIds));
+    final dynamicPoints = await _getTrackRecordPoints(selectStatement, ct);
+
+    ct?.throwIfCancelled();
+    final Map<int, List<BasePoint>> map = Map.fromIterable(
+      trackRecordIds,
+      value: (_) => [],
+    );
+
+    try {
+      _fillMap(map, positionPoints);
+      _fillMap(map, dynamicPoints);
+    } on AppException catch (ex) {
+      ex.data["trackRecordIds"] = trackRecordIds;
+      rethrow;
+    }
+
+    return map;
   }
 
   @override
@@ -156,11 +196,27 @@ class DriftTrackRecordPointsRepository extends TrackRecordPointsRepository {
     return PositionPoint(
       id: point.id,
       trackRecordId: point.trackRecordId,
-      createdAt: point.createdAt,
+      createdAt: point.createdAt.toUtc(),
       latitude: point.latitude,
       longitude: point.longitude,
       altitude: point.altitude,
     );
+  }
+
+  void _fillMap(Map<int, List<BasePoint>> map, List<BasePoint> points) {
+    for (var point in points) {
+      final list = map[point.trackRecordId];
+      if (list == null) {
+        throw AppException(
+          message: "Got point not suitable for query",
+          data: {
+            "pointId": point.id,
+            "pointType": CheckPointTypeVisitor.determineType(point),
+          },
+        );
+      }
+      list.add(point);
+    }
   }
 
   BasePoint _mapTrackRecordPoint(TrackRecordPoint point) {
@@ -168,12 +224,12 @@ class DriftTrackRecordPointsRepository extends TrackRecordPointsRepository {
       PointType.Pause => PausePoint(
         id: point.id,
         trackRecordId: point.trackRecordId,
-        createdAt: point.createdAt,
+        createdAt: point.createdAt.toUtc(),
       ),
       PointType.Resume => ResumePoint(
         id: point.id,
         trackRecordId: point.trackRecordId,
-        createdAt: point.createdAt,
+        createdAt: point.createdAt.toUtc(),
       ),
       _ => throw NotSupportedException(
         message: "Discriminator ${point.discriminator} not supported",

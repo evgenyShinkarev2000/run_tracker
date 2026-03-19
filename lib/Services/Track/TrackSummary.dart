@@ -1,5 +1,6 @@
 import 'package:run_tracker/Core/export.dart';
 import 'package:run_tracker/Data/export.dart';
+import 'package:run_tracker/Services/Position/export.dart';
 
 class TrackSummary {
   static final TrackSummary empty = TrackSummary();

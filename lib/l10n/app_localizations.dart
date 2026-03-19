@@ -470,6 +470,12 @@ abstract class AppLocalizations {
   /// **'no records'**
   String get historyPageNoRecords;
 
+  /// No description provided for @historyPageCreateRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'record a track'**
+  String get historyPageCreateRecord;
+
   /// No description provided for @runRecordPageShare.
   ///
   /// In en, this message translates to:

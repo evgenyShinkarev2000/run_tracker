@@ -7,3 +7,4 @@ export 'UnknownTypeSerializer.dart';
 export 'Exceptions/export.dart';
 export 'IJsonSerializable.dart';
 export './Units/export.dart';
+export 'OptionalValue.dart';

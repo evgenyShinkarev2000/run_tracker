@@ -199,6 +199,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get historyPageNoRecords => 'no records';
 
   @override
+  String get historyPageCreateRecord => 'record a track';
+
+  @override
   String get runRecordPageShare => 'share';
 
   @override

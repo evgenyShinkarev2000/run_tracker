@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:run_tracker/Core/export.dart';
-import 'package:run_tracker/Data/export.dart';
-import 'package:run_tracker/Services/Track/TrackManager.dart';
-import 'package:run_tracker/Services/Track/TrackState.dart';
+import 'package:run_tracker/Services/Position/export.dart';
+import 'package:run_tracker/Services/Track/export.dart';
 import 'package:rxdart/rxdart.dart';
 
 class TrackDashboardParameters implements IDisposable {
@@ -24,7 +23,7 @@ class TrackDashboardParameters implements IDisposable {
 
   TrackDashboardParameters(
     TrackStateProvider trackStateProvider, {
-    PositionDataProvider? positionProvider,
+    PositionProvider? positionProvider,
     Duration initialDuration = Duration.zero,
     Distance initialDistance = Distance.zero,
   }) : _trackStateProvider = trackStateProvider,

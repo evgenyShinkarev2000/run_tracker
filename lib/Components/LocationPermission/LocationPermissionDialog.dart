@@ -19,13 +19,13 @@ class _LocationPermissionDialogState
   @override
   void initState() {
     super.initState();
-    ref.read(locationPermissionServiceProvider).initialize();
+    ref.read(positionServiceProvider).initializePermission();
   }
 
   @override
   Widget build(BuildContext context) {
     final locationPermissionService = ref.watch(
-      locationPermissionServiceProvider,
+      positionServiceProvider,
     );
     final appLocationPermissionService = ref.watch(
       appLocationPermissionServiceProvider,
@@ -47,7 +47,7 @@ class _LocationPermissionDialogState
           asyncDetailedLocationPermission.requireValue.toSimple(),
         ),
         TextButton(
-          onPressed: locationPermissionService.initialize,
+          onPressed: locationPermissionService.initializePermission,
           child: Text(context.appLocalization.locationPermissionButtonRefresh),
         ),
         TextButton(

@@ -69,6 +69,7 @@
   "settingVariantThemeDark": "темная",
   "settingLocation": "геолокация",
   "historyPageNoRecords": "нет записей",
+  "historyPageCreateRecord": "записать трек",
   "runRecordPageShare": "поделиться",
   "runRecordPageShareError": "сервис недоступен",
   "locationPermissionMessageLoading": "получение статуса сервисов геолокации",

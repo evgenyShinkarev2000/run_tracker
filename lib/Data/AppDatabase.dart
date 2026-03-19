@@ -16,6 +16,7 @@ class Settings extends Table {
   Set<Column<Object>> get primaryKey => {name};
 }
 
+@TableIndex(name: "TrackRecord_CreatedAt_Index", columns: {#createdAt})
 class TrackRecords extends Table {
   IntColumn get id => integer().autoIncrement()();
   DateTimeColumn get createdAt => dateTime()();
@@ -51,9 +52,12 @@ class TrackRecordSummaries extends Table {
   IntColumn get trackRecordId => integer().references(TrackRecords, #id)();
   DateTimeColumn? get start => dateTime().nullable()();
   DateTimeColumn? get end => dateTime().nullable()();
-  IntColumn? get activeDuration => integer().map(const DurationConverter()).nullable()();
-  RealColumn? get activeDistance => real().map(const DistanceConverter()).nullable()();
-  IntColumn? get activePositioningDuration => integer().map(const DurationConverter()).nullable()();
+  IntColumn? get activeDuration =>
+      integer().map(const DurationConverter()).nullable()();
+  RealColumn? get activeDistance =>
+      real().map(const DistanceConverter()).nullable()();
+  IntColumn? get activePositioningDuration =>
+      integer().map(const DurationConverter()).nullable()();
 
   @override
   Set<Column<Object>> get primaryKey => {trackRecordId};

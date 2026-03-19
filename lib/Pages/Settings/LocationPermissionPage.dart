@@ -25,7 +25,7 @@ class LocationPermissionPage extends StatelessWidget {
               }
 
               final locationService = ref.watch(
-                locationPermissionServiceProvider,
+                positionServiceProvider,
               );
               final appLocationService = ref.watch(
                 appLocationPermissionServiceProvider,
@@ -66,7 +66,7 @@ class LocationPermissionPage extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextButton(
-                        onPressed: locationService.initialize,
+                        onPressed: locationService.initializePermission,
                         child: Text(
                           context
                               .appLocalization

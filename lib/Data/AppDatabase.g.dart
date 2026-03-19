@@ -1745,6 +1745,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $TrackRecordPointsTable(this);
   late final $TrackRecordSummariesTable trackRecordSummaries =
       $TrackRecordSummariesTable(this);
+  late final Index trackRecordCreatedAtIndex = Index(
+    'TrackRecord_CreatedAt_Index',
+    'CREATE INDEX TrackRecord_CreatedAt_Index ON track_records (created_at)',
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1755,6 +1759,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     trackRecordPositionPoints,
     trackRecordPoints,
     trackRecordSummaries,
+    trackRecordCreatedAtIndex,
   ];
 }
 

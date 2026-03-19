@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:run_tracker/Core/IDisposable.dart';
+import 'package:run_tracker/Core/export.dart';
 import 'package:rxdart/rxdart.dart';
 
 class LazyBehaviorSubject<T> implements IDisposable {
-  Stream<T> get stream => _behaviorSubject.stream;
+  Stream<T> get stream => behaviorSubject.stream;
 
-  late final BehaviorSubject<T> _behaviorSubject = BehaviorSubject(
+  late final BehaviorSubject<T> behaviorSubject = BehaviorSubject(
     onListen: _listen,
   );
   late final Future<T> Function() _getInitialValue;
@@ -18,15 +18,15 @@ class LazyBehaviorSubject<T> implements IDisposable {
 
   @override
   void dispose() {
-    _behaviorSubject.close();
+    behaviorSubject.close();
   }
 
   void add(T value) {
-    _behaviorSubject.add(value);
+    behaviorSubject.add(value);
   }
 
   void _listen() async {
-    if (_behaviorSubject.hasValue || _isLoading) {
+    if (behaviorSubject.hasValue || _isLoading) {
       return;
     }
 
@@ -39,9 +39,59 @@ class LazyBehaviorSubject<T> implements IDisposable {
       _isLoading = false;
     }
 
-    if (_behaviorSubject.hasValue) {
+    if (behaviorSubject.hasValue) {
       return;
     }
-    _behaviorSubject.add(value!);
+    behaviorSubject.add(value!);
+  }
+}
+
+class OptionalLazyBehaviorSubject<T> implements IDisposable {
+  Stream<T> get stream => behaviorSubject.stream;
+
+  late final BehaviorSubject<T> behaviorSubject = BehaviorSubject(
+    onListen: _listen,
+  );
+  late final Future<OptionalValue<T>> Function() _getInitialValue;
+  bool _isLoading = false;
+  bool _isSkipped = false;
+
+  OptionalLazyBehaviorSubject(
+    Future<OptionalValue<T>> Function() getInitialValue,
+  ) {
+    _getInitialValue = getInitialValue;
+  }
+
+  @override
+  void dispose() {
+    behaviorSubject.close();
+  }
+
+  void add(T value) {
+    behaviorSubject.add(value);
+  }
+
+  void _listen() async {
+    if (behaviorSubject.hasValue || _isLoading || _isSkipped) {
+      return;
+    }
+
+    _isLoading = true;
+    OptionalValue<T> optionalValue;
+
+    try {
+      optionalValue = await _getInitialValue();
+    } finally {
+      _isLoading = false;
+    }
+
+    if (!optionalValue.hasValue) {
+      _isSkipped = true;
+      return;
+    }
+    if (behaviorSubject.hasValue) {
+      return;
+    }
+    behaviorSubject.add(optionalValue.value as T);
   }
 }

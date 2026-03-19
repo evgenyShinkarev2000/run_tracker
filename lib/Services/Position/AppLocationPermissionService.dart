@@ -15,7 +15,7 @@ class AppLocationPermissionService
   Stream<bool> get needShowDialogStream => _needShowDialogSubject.stream;
   bool get needShowDialog => _needShowDialogSubject.value;
 
-  final LocationPermissionService _locationService;
+  final PositionService _locationService;
   final LocationRequirementRepository _locationRequirementRepository;
 
   final BehaviorSubject<AppLocationPermission> _behaviorSubject =
@@ -36,7 +36,7 @@ class AppLocationPermissionService
     this._locationService,
     this._locationRequirementRepository,
   ) {
-    _permissionSubscription = _locationService.stream.listen(
+    _permissionSubscription = _locationService.permissionStream.listen(
       _receiveDetailedLocationPermission,
     );
     _requirementSubscription = _locationRequirementRepository.stream.listen(
@@ -61,7 +61,7 @@ class AppLocationPermissionService
     return switch (_lastLocationRequirement) {
       null => true,
       LocationRequirement.RequireAndUse =>
-        switch (_locationService.SimpleState) {
+        switch (_locationService.simpleState) {
           SimpleLocationPermission.Denied ||
           SimpleLocationPermission.Loading => true,
           SimpleLocationPermission.Permited => false,

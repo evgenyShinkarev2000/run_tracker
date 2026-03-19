@@ -11,6 +11,38 @@ class TrackRecordWithSummary {
   TrackRecordWithSummary({required this.track, required this.summary});
 }
 
+class TrackRecordWithSummaryAndPoints extends TrackRecordWithSummary {
+  final List<BasePoint> orderedPoints;
+
+  TrackRecordWithSummaryAndPoints({
+    required super.track,
+    required super.summary,
+    required this.orderedPoints,
+  });
+
+  Iterable<List<PositionPoint>> splitPath() sync* {
+    List<PositionPoint> positionPoints = [];
+    for (var point in orderedPoints) {
+      switch (CheckPointTypeVisitor.determineType(point)) {
+        case PointType.Pause:
+          if (positionPoints.isNotEmpty) {
+            yield positionPoints;
+            positionPoints = [];
+          }
+          break;
+        case PointType.Position:
+          positionPoints.add(point as PositionPoint);
+          break;
+        case PointType.Resume:
+          break;
+      }
+    }
+    if (positionPoints.isNotEmpty) {
+      yield positionPoints;
+    }
+  }
+}
+
 class TrackService {
   final TrackRecordRepository _trackRecordRepository;
   final TrackRecordPointsRepository _trackRecordPointsRepository;
@@ -24,24 +56,50 @@ class TrackService {
     this._trackSummaryCalculator,
   );
 
-  Future<List<TrackRecordWithSummary>> getTrackRecordWithSummariesOrGenerate(
-    TrackRecordWithSummaryQueryModel query, [
+  Future<List<TrackRecordWithSummary>> getTrackRecordWithSummaryOrGenerate(
+    TrackRecordQueryModel query, [
     CancellationToken? ct,
   ]) async {
     ct?.throwIfCancelled();
-
     final models = await _trackRecordRepository
         .getTrackRecordsWithSummaryByQuery(query, ct);
     final result = List<TrackRecordWithSummary>.empty(growable: true);
+
     for (var model in models) {
       ct?.throwIfCancelled();
-
       result.add(
         TrackRecordWithSummary(
           track: model.trackRecord,
           summary:
               model.trackRecordSummary ??
               await generateOrUpdateAndGetSummary(model.trackRecord.id, ct),
+        ),
+      );
+    }
+
+    return result;
+  }
+
+  Future<List<TrackRecordWithSummaryAndPoints>>
+  getTrackRecordWithSummaryAndPointsOrGenerate(
+    TrackRecordQueryModel queryModel, [
+    CancellationToken? ct,
+  ]) async {
+    ct?.throwIfCancelled();
+    final models = await _trackRecordRepository
+        .getTrackRecordsWithSummaryAndPointsByQuery(queryModel, ct);
+    final List<TrackRecordWithSummaryAndPoints> result = [];
+
+    for (var model in models) {
+      ct?.throwIfCancelled();
+      model.points.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+      result.add(
+        TrackRecordWithSummaryAndPoints(
+          track: model.track,
+          summary:
+              model.summary ??
+              await generateOrUpdateAndGetSummary(model.track.id),
+          orderedPoints: model.points,
         ),
       );
     }

@@ -1,5 +1,6 @@
 import 'package:cancellation_token/cancellation_token.dart';
 import 'package:drift/drift.dart';
+import 'package:run_tracker/Core/Exceptions/AppException.dart';
 import 'package:run_tracker/Data/DriftExtension/export.dart';
 import 'package:run_tracker/Data/Exceptions/export.dart';
 import 'package:run_tracker/Data/export.dart';
@@ -10,7 +11,12 @@ abstract class TrackRecordRepository {
     int trackRecordId,
   );
   Future<List<TrackRecordLeftJoinSummary>> getTrackRecordsWithSummaryByQuery(
-    TrackRecordWithSummaryQueryModel queryModel, [
+    TrackRecordQueryModel queryModel, [
+    CancellationToken? ct,
+  ]);
+  Future<List<TrackRecordLeftJoinSummaryAndPoints>>
+  getTrackRecordsWithSummaryAndPointsByQuery(
+    TrackRecordQueryModel queryModel, [
     CancellationToken? ct,
   ]);
   Future<TrackRecord> update(TrackRecord trackRecord);
@@ -40,13 +46,25 @@ class TrackRecordLeftJoinSummary {
   }
 }
 
-class TrackRecordWithSummaryQueryModel {
+class TrackRecordLeftJoinSummaryAndPoints {
+  final TrackRecord track;
+  final TrackRecordSummary? summary;
+  final List<BasePoint> points;
+
+  TrackRecordLeftJoinSummaryAndPoints({
+    required this.track,
+    required this.summary,
+    required this.points,
+  });
+}
+
+class TrackRecordQueryModel {
   final PaginationModel? pagination;
   final SortDirection? trackCreatedAtSort;
   final DateTime? trackCreatedAtStart;
   final DateTime? trackCreatedAtEnd;
 
-  TrackRecordWithSummaryQueryModel({
+  TrackRecordQueryModel({
     this.pagination,
     this.trackCreatedAtSort,
     this.trackCreatedAtStart,
@@ -56,8 +74,12 @@ class TrackRecordWithSummaryQueryModel {
 
 class DriftTrackRecordRepository extends TrackRecordRepository {
   final AppDatabase _appDatabase;
+  final TrackRecordPointsRepository _trackRecordPointsRepository;
 
-  DriftTrackRecordRepository(this._appDatabase);
+  DriftTrackRecordRepository(
+    this._appDatabase,
+    this._trackRecordPointsRepository,
+  );
 
   @override
   Future<TrackRecord?> getLast() async {
@@ -69,62 +91,46 @@ class DriftTrackRecordRepository extends TrackRecordRepository {
   }
 
   @override
-  Future<List<TrackRecordLeftJoinSummary>> getTrackRecordsWithSummaryByQuery(
-    TrackRecordWithSummaryQueryModel queryModel, [
+  Future<List<TrackRecordLeftJoinSummaryAndPoints>>
+  getTrackRecordsWithSummaryAndPointsByQuery(
+    TrackRecordQueryModel queryModel, [
     CancellationToken? ct,
   ]) async {
     ct?.throwIfCancelled();
 
-    final selectStatement = _appDatabase.trackRecords.select().join([
-      leftOuterJoin(
-        _appDatabase.trackRecordSummaries,
-        _appDatabase.trackRecordSummaries.trackRecordId.equalsExp(
-          _appDatabase.trackRecords.id,
-        ),
-      ),
-    ]);
+    final joined = await getTrackRecordsWithSummaryByQuery(queryModel, ct);
+    final groupedPoints = await _trackRecordPointsRepository
+        .getTrackRecordPointsByIds(
+          joined.map((j) => j.trackRecord.id).toList(),
+          ct,
+        );
 
-    final predicateBuilder = PredicateBuilder();
-    if (queryModel.trackCreatedAtStart != null) {
-      predicateBuilder.and(
-        _appDatabase.trackRecords.createdAt.isBiggerThanValue(
-          queryModel.trackCreatedAtStart!,
-        ),
+    return joined.map((j) {
+      final points = groupedPoints[j.trackRecord.id];
+      if (points == null) {
+        throw AppException(
+          message: "Missed group for trackRecord with id ${j.trackRecord.id}",
+        );
+      }
+
+      return TrackRecordLeftJoinSummaryAndPoints(
+        track: j.trackRecord,
+        summary: j.trackRecordSummary,
+        points: points,
       );
-    }
-    if (queryModel.trackCreatedAtEnd != null) {
-      predicateBuilder.and(
-        _appDatabase.trackRecords.createdAt.isSmallerOrEqualValue(
-          queryModel.trackCreatedAtEnd!,
-        ),
-      );
-    }
-    if (predicateBuilder.predicate != null) {
-      selectStatement.where(predicateBuilder.predicate!);
-    }
+    }).toList();
+  }
 
-    if (queryModel.trackCreatedAtSort != null) {
-      final orderingMode = queryModel.trackCreatedAtSort!.drift;
-      selectStatement.orderBy([
-        OrderingTerm(
-          expression: _appDatabase.trackRecords.createdAt,
-          mode: orderingMode,
-        ),
-        OrderingTerm(
-          expression: _appDatabase.trackRecords.id,
-          mode: orderingMode,
-        ),
-      ]);
-    }
+  @override
+  Future<List<TrackRecordLeftJoinSummary>> getTrackRecordsWithSummaryByQuery(
+    TrackRecordQueryModel queryModel, [
+    CancellationToken? ct,
+  ]) async {
+    ct?.throwIfCancelled();
 
-    if (queryModel.pagination != null) {
-      selectStatement.limit(
-        queryModel.pagination!.take,
-        offset: queryModel.pagination!.skip,
-      );
-    }
-
-    final result = await selectStatement.get();
+    final result = await _selectRecordLeftJoinSummaryWithQuery(
+      queryModel,
+    ).get();
 
     return result
         .map((r) => TrackRecordLeftJoinSummary.fromJoin(_appDatabase, r))
@@ -180,5 +186,60 @@ class DriftTrackRecordRepository extends TrackRecordRepository {
     await _appDatabase.trackRecords.deleteWhere(
       (tr) => tr.id.equals(trackRecordId),
     );
+  }
+
+  JoinedSelectStatement _selectRecordLeftJoinSummaryWithQuery(
+    TrackRecordQueryModel queryModel,
+  ) {
+    final selectStatement = _appDatabase.trackRecords.select().join([
+      leftOuterJoin(
+        _appDatabase.trackRecordSummaries,
+        _appDatabase.trackRecordSummaries.trackRecordId.equalsExp(
+          _appDatabase.trackRecords.id,
+        ),
+      ),
+    ]);
+
+    final predicateBuilder = PredicateBuilder();
+    if (queryModel.trackCreatedAtStart != null) {
+      predicateBuilder.and(
+        _appDatabase.trackRecords.createdAt.isBiggerThanValue(
+          queryModel.trackCreatedAtStart!,
+        ),
+      );
+    }
+    if (queryModel.trackCreatedAtEnd != null) {
+      predicateBuilder.and(
+        _appDatabase.trackRecords.createdAt.isSmallerOrEqualValue(
+          queryModel.trackCreatedAtEnd!,
+        ),
+      );
+    }
+    if (predicateBuilder.predicate != null) {
+      selectStatement.where(predicateBuilder.predicate!);
+    }
+
+    if (queryModel.trackCreatedAtSort != null) {
+      final orderingMode = queryModel.trackCreatedAtSort!.drift;
+      selectStatement.orderBy([
+        OrderingTerm(
+          expression: _appDatabase.trackRecords.createdAt,
+          mode: orderingMode,
+        ),
+        OrderingTerm(
+          expression: _appDatabase.trackRecords.id,
+          mode: orderingMode,
+        ),
+      ]);
+    }
+
+    if (queryModel.pagination != null) {
+      selectStatement.limit(
+        queryModel.pagination!.take,
+        offset: queryModel.pagination!.skip,
+      );
+    }
+
+    return selectStatement;
   }
 }

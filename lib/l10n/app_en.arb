@@ -69,6 +69,7 @@
   "settingVariantThemeDark": "dark",
   "settingLocation": "geolocation",
   "historyPageNoRecords": "no records",
+  "historyPageCreateRecord": "record a track",
   "runRecordPageShare": "share",
   "runRecordPageShareError": "service is unavailable",
   "locationPermissionMessageLoading": "obtaining the status of geolocation services",

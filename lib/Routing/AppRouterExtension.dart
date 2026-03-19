@@ -9,4 +9,5 @@ extension BuildContextExtension on BuildContext {
 extension GoRouterExtension on GoRouter {
   void goHome() => go("/");
   void goMap() => go(AppRoutes.Map);
+  void goHistory() => go(AppRoutes.History);
 }

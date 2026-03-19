@@ -14,6 +14,7 @@ import 'package:run_tracker/Components/export.dart';
 import 'package:run_tracker/Data/export.dart';
 import 'package:run_tracker/Providers/Track/export.dart';
 import 'package:run_tracker/Providers/export.dart';
+import 'package:run_tracker/Services/Position/export.dart';
 import 'package:run_tracker/Services/Track/export.dart';
 
 class FullMap extends ConsumerStatefulWidget {
@@ -31,7 +32,9 @@ class _FullMapState extends ConsumerState<FullMap> {
   final StreamController<LocationMarkerHeading>
   _locationMarkerHeadingController = StreamController.broadcast();
   final MapController _mapController = MapController();
+
   late final StreamSubscription<MapEvent> _mapEventStreamSubscription;
+  late final Future<AppPosition?> _initialPositionFuture;
 
   ProviderSubscription<AsyncValue<AppPosition>>? _positionSubscription;
 
@@ -41,6 +44,10 @@ class _FullMapState extends ConsumerState<FullMap> {
   @override
   void initState() {
     super.initState();
+
+    _initialPositionFuture = ref
+        .read(positionServiceProvider)
+        .tryGetLastPosition();
 
     _mapEventStreamSubscription = _mapController.mapEventStream.listen((
       mapEvent,
@@ -90,24 +97,32 @@ class _FullMapState extends ConsumerState<FullMap> {
 
     return Stack(
       children: [
-        FlutterMap(
-          mapController: _mapController,
-          options: MapOptions(initialZoom: defaultZoom),
-          children: [
-            TileLayer(
-              urlTemplate: urlTempalte.value,
-              userAgentPackageName: "run_tracker",
-              tileProvider: NetworkTileProvider(
-                cachingProvider: BuiltInMapCachingProvider.getOrCreateInstance(
-                  overrideFreshAge: overrideMapCacheDuration.requireValue,
+        FutureBuilder(
+          future: _initialPositionFuture,
+          builder: (context, state) => switch (state.connectionState) {
+            ConnectionState.waiting => AppLoader(),
+            _ => FlutterMap(
+              mapController: _mapController,
+              options: MapOptions(initialZoom: defaultZoom),
+              children: [
+                TileLayer(
+                  urlTemplate: urlTempalte.value,
+                  userAgentPackageName: "run_tracker",
+                  tileProvider: NetworkTileProvider(
+                    cachingProvider:
+                        BuiltInMapCachingProvider.getOrCreateInstance(
+                          overrideFreshAge:
+                              overrideMapCacheDuration.requireValue,
+                        ),
+                  ),
                 ),
-              ),
+                CurrentLocationLayer(
+                  positionStream: _locationMarkerPositionController.stream,
+                  headingStream: _locationMarkerHeadingController.stream,
+                ),
+              ],
             ),
-            CurrentLocationLayer(
-              positionStream: _locationMarkerPositionController.stream,
-              headingStream: _locationMarkerHeadingController.stream,
-            ),
-          ],
+          },
         ),
         RightPanel(
           isNavigationLoading: _isNavigationLoading,
@@ -116,7 +131,9 @@ class _FullMapState extends ConsumerState<FullMap> {
         ),
         TopDashboard(),
         BottomButtons(),
-        trackState == TrackState.Aborted ? SizedBox.expand(child: CheckAbortedTrackDialog(),) : null
+        trackState == TrackState.Aborted
+            ? SizedBox.expand(child: CheckAbortedTrackDialog())
+            : null,
       ].nonNulls.toList(),
     );
   }
@@ -170,22 +187,22 @@ class _FullMapState extends ConsumerState<FullMap> {
   }
 
   void _move(AppPosition position) {
-    if (position.HasLatLng) {
-      _mapController.move(position.ToLatLng(), _mapController.camera.zoom);
+    if (position.hasLatLng) {
+      _mapController.move(position.toLatLng(), _mapController.camera.zoom);
     }
   }
 
   void _moveAndRotate(AppPosition position) {
-    if (position.heading != null && position.HasLatLng) {
+    if (position.heading != null && position.hasLatLng) {
       _mapController.moveAndRotate(
-        position.ToLatLng(),
+        position.toLatLng(),
         _mapController.camera.zoom,
         position.heading!.value,
       );
       return;
     }
-    if (position.HasLatLng) {
-      _mapController.move(position.ToLatLng(), _mapController.camera.zoom);
+    if (position.hasLatLng) {
+      _mapController.move(position.toLatLng(), _mapController.camera.zoom);
       return;
     }
   }
