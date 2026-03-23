@@ -17,8 +17,10 @@ class Speed {
   int get hashCode => metersPerSecond.hashCode;
 
   Pace toPace() {
-    return Pace(
-      (50 / 3) / metersPerSecond,
-    ); // 1 / (metersPerSecond / 1000 * 60)
+    return Pace(metersPerSecondToMinutesPerKilometer(metersPerSecond));
+  }
+
+  static double metersPerSecondToMinutesPerKilometer(double metersPerSecond) {
+    return (50 / 3) / metersPerSecond; // 1 / (metersPerSecond / 1000 * 60)
   }
 }

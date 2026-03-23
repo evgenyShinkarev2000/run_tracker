@@ -9,3 +9,4 @@ export 'TalkerProvider.dart';
 export 'AppDatabaseProvider.dart';
 export 'LocationRequirementProvider.dart';
 export 'AppLocationPermissionProvider.dart';
+export 'AppDateTimeFormatProvider.dart';

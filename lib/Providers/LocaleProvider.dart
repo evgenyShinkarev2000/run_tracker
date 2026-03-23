@@ -15,4 +15,4 @@ final localeProvider = StreamProvider<AppLocale>((ref) {
   var repo = ref.watch(localeRepositoryProvider);
 
   return repo.stream;
-}, dependencies: [localeRepositoryProvider]);
+});

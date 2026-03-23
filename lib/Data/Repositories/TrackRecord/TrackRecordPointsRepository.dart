@@ -196,7 +196,7 @@ class DriftTrackRecordPointsRepository extends TrackRecordPointsRepository {
     return PositionPoint(
       id: point.id,
       trackRecordId: point.trackRecordId,
-      createdAt: point.createdAt.toUtc(),
+      createdAt: point.createdAt,
       latitude: point.latitude,
       longitude: point.longitude,
       altitude: point.altitude,
@@ -224,12 +224,12 @@ class DriftTrackRecordPointsRepository extends TrackRecordPointsRepository {
       PointType.Pause => PausePoint(
         id: point.id,
         trackRecordId: point.trackRecordId,
-        createdAt: point.createdAt.toUtc(),
+        createdAt: point.createdAt,
       ),
       PointType.Resume => ResumePoint(
         id: point.id,
         trackRecordId: point.trackRecordId,
-        createdAt: point.createdAt.toUtc(),
+        createdAt: point.createdAt,
       ),
       _ => throw NotSupportedException(
         message: "Discriminator ${point.discriminator} not supported",

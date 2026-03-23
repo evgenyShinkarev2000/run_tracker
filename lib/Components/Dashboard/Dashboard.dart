@@ -24,12 +24,13 @@ class Dashboard extends StatelessWidget {
                   children: [
                     Consumer(
                       builder: (context, ref, child) {
-                        final asyncDuration = ref.watch(dashboardDurationProvider);
+                        final asyncDuration = ref.watch(
+                          dashboardDurationProvider,
+                        );
                         final duration = asyncDuration.value ?? Duration.zero;
-                
+
                         return SmallDash(
-                          value:
-                              "${duration.inHours.toString().padLeft(2, "0")}:${duration.inMinutes.toString().padLeft(2, "0")}:${duration.inSeconds.toString().padLeft(2, "0")}",
+                          value: duration.HHmmss,
                           label: context.appLocalization.runCardCoverDuration,
                         );
                       },
@@ -37,9 +38,11 @@ class Dashboard extends StatelessWidget {
                     Divider(),
                     Consumer(
                       builder: (context, ref, child) {
-                        final asyncDistance = ref.watch(dashboardDistanceProvider);
+                        final asyncDistance = ref.watch(
+                          dashboardDistanceProvider,
+                        );
                         final distance = asyncDistance.value ?? Distance.zero;
-                
+
                         return SmallDash(
                           value: distance.meters.round().toString(),
                           label:
@@ -51,16 +54,14 @@ class Dashboard extends StatelessWidget {
                 ),
               ),
             ),
-            VerticalDivider(width: 0,),
+            VerticalDivider(width: 0),
             Consumer(
               builder: (context, ref, child) {
                 final asyncSpeed = ref.watch(dashboardSpeedProvider);
                 final speed = asyncSpeed.value ?? Speed.zero;
                 final pace = speed.toPace().tryConvertToDuration();
-                final paceString = pace == null
-                    ? "00:00"
-                    : "${pace.inMinutes.toString().padLeft(2, "0")}:${(pace.inSeconds % 60).toString().padLeft(2, "0")}";
-        
+                final paceString = pace == null ? "00:00" : pace.mmss;
+
                 return Expanded(
                   child: Container(
                     padding: EdgeInsetsDirectional.symmetric(vertical: 8),

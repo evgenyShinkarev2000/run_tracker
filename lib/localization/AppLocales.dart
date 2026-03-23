@@ -12,7 +12,7 @@ class AppLocales {
   static AppLocale get fallback {
     _fallback ??= fromCodeOrNull(
       PlatformDispatcher.instance.locale.languageCode,
-    );
+    ) ?? en;
 
     return _fallback!;
   }

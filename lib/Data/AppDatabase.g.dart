@@ -1761,6 +1761,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     trackRecordSummaries,
     trackRecordCreatedAtIndex,
   ];
+  @override
+  DriftDatabaseOptions get options =>
+      const DriftDatabaseOptions(storeDateTimeAsText: true);
 }
 
 typedef $$SettingsTableCreateCompanionBuilder =

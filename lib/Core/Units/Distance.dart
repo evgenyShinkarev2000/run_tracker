@@ -1,3 +1,5 @@
+import 'package:run_tracker/Core/Units/export.dart';
+
 class Distance {
   static const Distance zero = Distance(0);
 
@@ -16,6 +18,10 @@ class Distance {
   @override
   bool operator ==(Object other) {
     return other is Distance && other.meters == meters;
+  }
+
+  Speed operator /(Duration duration) {
+    return Speed(meters / duration.inMicroseconds * 1_000_000);
   }
 
   @override
