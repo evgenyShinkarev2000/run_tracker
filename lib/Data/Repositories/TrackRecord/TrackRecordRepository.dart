@@ -19,6 +19,11 @@ abstract class TrackRecordRepository {
     TrackRecordQueryModel queryModel, [
     CancellationToken? ct,
   ]);
+  Future<TrackRecordLeftJoinSummaryAndPoints?>
+  getTrackRecordsWithSummaryAndPointsById(
+    int trackRecordId, [
+    CancellationToken? ct,
+  ]);
   Future<TrackRecord> update(TrackRecord trackRecord);
   Future<TrackRecord> create(TrackRecordsCompanion insertModel);
   Future<void> remove(int trackRecordId);
@@ -56,6 +61,18 @@ class TrackRecordLeftJoinSummaryAndPoints {
     required this.summary,
     required this.points,
   });
+
+  factory TrackRecordLeftJoinSummaryAndPoints.fromJoinAndPoints(
+    AppDatabase appDatabase,
+    TypedResult result,
+    List<BasePoint> points,
+  ) {
+    return TrackRecordLeftJoinSummaryAndPoints(
+      track: result.readTable(appDatabase.trackRecords),
+      summary: result.readTableOrNull(appDatabase.trackRecordSummaries),
+      points: points,
+    );
+  }
 }
 
 class TrackRecordQueryModel {
@@ -141,23 +158,37 @@ class DriftTrackRecordRepository extends TrackRecordRepository {
   Future<TrackRecordLeftJoinSummary?> getTrackRecordWithSummaryById(
     int trackRecordId,
   ) async {
-    final selectStatement = _appDatabase.trackRecords.select().join([
-      leftOuterJoin(
-        _appDatabase.trackRecordSummaries,
-        _appDatabase.trackRecordSummaries.trackRecordId.equalsExp(
-          _appDatabase.trackRecords.id,
-        ),
-      ),
-    ]);
-    selectStatement.where(_appDatabase.trackRecords.id.equals(trackRecordId));
-    selectStatement.limit(1);
-
-    final result = await selectStatement.getSingleOrNull();
+    final result = await _getTrackRecordWithSummaryResultById(trackRecordId);
     if (result == null) {
       return null;
     }
 
     return TrackRecordLeftJoinSummary.fromJoin(_appDatabase, result);
+  }
+
+  @override
+  Future<TrackRecordLeftJoinSummaryAndPoints?>
+  getTrackRecordsWithSummaryAndPointsById(
+    int trackRecordId, [
+    CancellationToken? ct,
+  ]) async {
+    ct?.throwIfCancelled();
+    final result = await _getTrackRecordWithSummaryResultById(trackRecordId);
+    if (result == null) {
+      return null;
+    }
+
+    ct?.throwIfCancelled();
+    final points = await _trackRecordPointsRepository.getPointsByTrackRecordId(
+      trackRecordId,
+      ct,
+    );
+
+    return TrackRecordLeftJoinSummaryAndPoints.fromJoinAndPoints(
+      _appDatabase,
+      result,
+      points.toList(),
+    );
   }
 
   @override
@@ -188,10 +219,8 @@ class DriftTrackRecordRepository extends TrackRecordRepository {
     );
   }
 
-  JoinedSelectStatement _selectRecordLeftJoinSummaryWithQuery(
-    TrackRecordQueryModel queryModel,
-  ) {
-    final selectStatement = _appDatabase.trackRecords.select().join([
+  JoinedSelectStatement _selectRecordLeftJoinSummary() {
+    return _appDatabase.trackRecords.select().join([
       leftOuterJoin(
         _appDatabase.trackRecordSummaries,
         _appDatabase.trackRecordSummaries.trackRecordId.equalsExp(
@@ -199,6 +228,22 @@ class DriftTrackRecordRepository extends TrackRecordRepository {
         ),
       ),
     ]);
+  }
+
+  Future<TypedResult?> _getTrackRecordWithSummaryResultById(
+    int trackRecordId,
+  ) async {
+    final selectStatement = _selectRecordLeftJoinSummary();
+    selectStatement.where(_appDatabase.trackRecords.id.equals(trackRecordId));
+    selectStatement.limit(1);
+
+    return await selectStatement.getSingleOrNull();
+  }
+
+  JoinedSelectStatement _selectRecordLeftJoinSummaryWithQuery(
+    TrackRecordQueryModel queryModel,
+  ) {
+    final selectStatement = _selectRecordLeftJoinSummary();
 
     final predicateBuilder = PredicateBuilder();
     if (queryModel.trackCreatedAtStart != null) {

@@ -35,6 +35,7 @@ class _TrackHistoryListState extends ConsumerState<TrackHistoryList> {
   void dispose() {
     ct.cancel();
     _controller.dispose();
+    
     super.dispose();
   }
 

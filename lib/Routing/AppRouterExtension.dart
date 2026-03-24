@@ -10,4 +10,5 @@ extension GoRouterExtension on GoRouter {
   void goHome() => go("/");
   void goMap() => go(AppRoutes.Map);
   void goHistory() => go(AppRoutes.History);
+  void goTrackRecord(int trackRecordId) => go("${AppRoutes.TrackRecord}/$trackRecordId");
 }

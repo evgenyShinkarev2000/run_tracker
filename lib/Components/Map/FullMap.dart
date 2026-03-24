@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:run_tracker/Components/Map/Components/BottomButtons.dart';
 import 'package:run_tracker/Components/Map/Components/CheckAbortedTrackDialog.dart';
 import 'package:run_tracker/Components/Map/Components/TopDashboard.dart';
@@ -99,10 +100,14 @@ class _FullMapState extends ConsumerState<FullMap> {
         FutureBuilder(
           future: _initialPositionFuture,
           builder: (context, state) => switch (state.connectionState) {
-            ConnectionState.waiting => AppLoader(),
+            ConnectionState.waiting || ConnectionState.active => AppLoader(),
             _ => FlutterMap(
               mapController: _mapController,
-              options: MapOptions(initialZoom: defaultZoom),
+              options: MapOptions(
+                initialZoom: defaultZoom,
+                initialCenter:
+                    state.data?.toLatLng() ?? const LatLng(50.5, 30.51),
+              ),
               children: [
                 TileLayer(
                   urlTemplate: urlTempalte.value,

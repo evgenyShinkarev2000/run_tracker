@@ -107,6 +107,30 @@ class TrackService {
     return result;
   }
 
+  Future<TrackRecordWithSummaryAndPoints?>
+  getTrackRecordWithSummaryAndPointsOrGenerateById(
+    int trackRecordId, [
+    CancellationToken? ct,
+  ]) async {
+    ct?.throwIfCancelled();
+
+    final result = await _trackRecordRepository
+        .getTrackRecordsWithSummaryAndPointsById(trackRecordId, ct);
+    if (result == null) {
+      return null;
+    }
+
+    result.points.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+
+    return TrackRecordWithSummaryAndPoints(
+      track: result.track,
+      summary: result.summary == null
+          ? await generateOrUpdateAndGetSummary(trackRecordId)
+          : result.summary!,
+      orderedPoints: result.points,
+    );
+  }
+
   Future<TrackSummary> calculateSummary(int trackRecordId) async {
     final points = await _trackRecordPointsRepository.getPointsByTrackRecordId(
       trackRecordId,

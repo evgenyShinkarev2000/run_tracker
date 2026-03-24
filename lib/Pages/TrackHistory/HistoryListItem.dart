@@ -6,6 +6,7 @@ import 'package:run_tracker/Core/export.dart';
 import 'package:run_tracker/Data/Extensions/export.dart';
 import 'package:run_tracker/Pages/TrackHistory/ListItemText.dart';
 import 'package:run_tracker/Providers/export.dart';
+import 'package:run_tracker/Routing/export.dart';
 import 'package:run_tracker/Services/Track/export.dart';
 import 'package:run_tracker/Theme/export.dart';
 import 'package:run_tracker/localization/BuildContextExtension.dart';
@@ -34,6 +35,7 @@ class _HistoryListItemState extends ConsumerState<HistoryListItem> {
     final dateTimeFormat = ref.watch(appDateTimeFormatProvider);
 
     return InkWell(
+      onTap: () => context.appRouter.goTrackRecord(widget.item.track.id),
       child: Container(
         height: 150,
         width: double.infinity,
@@ -83,7 +85,7 @@ class _HistoryListItemState extends ConsumerState<HistoryListItem> {
                   ListItemText(
                     title: context.appLocalization.runCardCoverPace,
                     content:
-                        "${widget.item.summary.pace?.minutesPerKilometer.toStringAsFixed(1)} ${context.appLocalization.unitShortMinPerKm}",
+                        "${widget.item.summary.pace?.tryConvertToDuration()?.mmss} ${context.appLocalization.unitShortMinPerKm}",
                   ),
                   //TODO add pulse
                   ListItemText(
