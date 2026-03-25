@@ -48,6 +48,9 @@ flutter:
     - family: Roboto
       fonts:
         - asset: assets/fonts/Roboto-Regular.ttf
+    - family: CustomIcons
+      fonts:
+        - asset: assets/icons/place_no_dot.ttf
 
   assets:
     - appsettings.json

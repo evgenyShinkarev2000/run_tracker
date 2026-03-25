@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:run_tracker/Components/Map/MapIcon.dart';
 import 'package:run_tracker/Components/export.dart';
 import 'package:run_tracker/Data/export.dart';
 import 'package:run_tracker/Providers/export.dart';
@@ -49,13 +50,13 @@ class _TrackRecordMapState extends ConsumerState<TrackRecordMap> {
           linePoints.add(latLng);
           if (needAddResume) {
             markers.add(
-              Marker(point: latLng, child: _buildMarker(Icons.play_arrow)),
+              Marker(point: latLng, child: MapIcon(Icons.play_arrow)),
             );
             needAddResume = false;
           }
           if (prevLatLng == null) {
             markers.add(
-              Marker(point: latLng, child: _buildMarker(Icons.start)),
+              Marker(point: latLng, child: MapIcon(Icons.play_arrow)),
             );
           }
           prevLatLng = latLng;
@@ -67,9 +68,7 @@ class _TrackRecordMapState extends ConsumerState<TrackRecordMap> {
             linePoints = [];
           }
           if (prevLatLng != null) {
-            markers.add(
-              Marker(point: prevLatLng, child: _buildMarker(Icons.pause)),
-            );
+            markers.add(Marker(point: prevLatLng, child: MapIcon(Icons.pause)));
             prevLatLng = null;
           }
           break;
@@ -83,7 +82,7 @@ class _TrackRecordMapState extends ConsumerState<TrackRecordMap> {
       return;
     }
 
-    markers.add(Marker(point: points.last, child: _buildMarker(Icons.stop)));
+    markers.add(Marker(point: points.last, child: MapIcon(Icons.stop)));
     for (var points in lines) {
       polylines.add(Polyline(points: points));
     }
@@ -103,7 +102,10 @@ class _TrackRecordMapState extends ConsumerState<TrackRecordMap> {
 
     return FlutterMap(
       options: MapOptions(
-        initialCameraFit: CameraFit.coordinates(coordinates: points, padding: EdgeInsets.all(32)),
+        initialCameraFit: CameraFit.coordinates(
+          coordinates: points,
+          padding: EdgeInsets.all(32),
+        ),
       ),
       children: [
         TileLayer(
@@ -116,19 +118,8 @@ class _TrackRecordMapState extends ConsumerState<TrackRecordMap> {
           ),
         ),
         PolylineLayer(polylines: polylines, simplificationTolerance: 1),
-        MarkerLayer(markers: markers),
+        MarkerLayer(markers: markers, alignment: Alignment.topCenter),
       ],
-    );
-  }
-
-  //TODO красивые маркеры позиций
-  Widget _buildMarker(IconData iconData) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(double.infinity)),
-        border: BoxBorder.all(),
-      ),
-      child: Icon(iconData),
     );
   }
 }
