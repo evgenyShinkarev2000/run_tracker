@@ -182,6 +182,12 @@ abstract class AppLocalizations {
   /// **'begin'**
   String get runCardCoverBeginDateTime;
 
+  /// No description provided for @runCardCoverEndDateTime.
+  ///
+  /// In en, this message translates to:
+  /// **'end'**
+  String get runCardCoverEndDateTime;
+
   /// No description provided for @runCardCoverDuration.
   ///
   /// In en, this message translates to:

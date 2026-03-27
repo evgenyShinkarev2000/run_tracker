@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+@Deprecated("use UserTimeConverterProvider")
 class UserDateTime<T extends DateTime?> extends StatelessWidget {
   final DateTime? utcDateTime;
   final Widget Function(BuildContext context, T userDateTime) builder;

@@ -51,6 +51,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get runCardCoverBeginDateTime => 'начало';
 
   @override
+  String get runCardCoverEndDateTime => 'конец';
+
+  @override
   String get runCardCoverDuration => 'длительность';
 
   @override

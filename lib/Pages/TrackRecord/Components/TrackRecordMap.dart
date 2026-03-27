@@ -9,7 +9,7 @@ import 'package:run_tracker/Providers/export.dart';
 import 'package:run_tracker/localization/export.dart';
 
 class TrackRecordMap extends ConsumerStatefulWidget {
-  final List<BasePoint> orderedPoints;
+  final Iterable<BasePoint> orderedPoints;
 
   const TrackRecordMap({super.key, required this.orderedPoints})
     : assert(orderedPoints.length > 0);
@@ -106,6 +106,7 @@ class _TrackRecordMapState extends ConsumerState<TrackRecordMap> {
           coordinates: points,
           padding: EdgeInsets.all(32),
         ),
+        interactionOptions: const InteractionOptions(flags: InteractiveFlag.none),
       ),
       children: [
         TileLayer(

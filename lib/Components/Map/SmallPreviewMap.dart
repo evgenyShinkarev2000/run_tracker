@@ -21,7 +21,12 @@ class SmallPeviewMap extends ConsumerWidget {
     final points = polylines.expand((l) => l).toList();
 
     return FlutterMap(
-      options: MapOptions(initialCameraFit: CameraFit.coordinates(coordinates: points)),
+      options: MapOptions(
+        initialCameraFit: CameraFit.coordinates(coordinates: points),
+        interactionOptions: const InteractionOptions(
+          flags: InteractiveFlag.none,
+        ),
+      ),
       children: [
         TileLayer(
           urlTemplate: urlTempalte.value,

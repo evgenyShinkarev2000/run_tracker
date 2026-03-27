@@ -16,6 +16,11 @@ class Speed {
   @override
   int get hashCode => metersPerSecond.hashCode;
 
+  bool operator >(Speed other) => metersPerSecond > other.metersPerSecond;
+  bool operator <(Speed other) => metersPerSecond < other.metersPerSecond;
+
+  double operator /(Speed other) => metersPerSecond / other.metersPerSecond;
+
   Pace toPace() {
     return Pace(metersPerSecondToMinutesPerKilometer(metersPerSecond));
   }

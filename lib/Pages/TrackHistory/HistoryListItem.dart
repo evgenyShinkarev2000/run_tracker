@@ -8,6 +8,7 @@ import 'package:run_tracker/Pages/TrackHistory/ListItemText.dart';
 import 'package:run_tracker/Providers/export.dart';
 import 'package:run_tracker/Routing/export.dart';
 import 'package:run_tracker/Services/Track/export.dart';
+import 'package:run_tracker/Services/export.dart';
 import 'package:run_tracker/Theme/export.dart';
 import 'package:run_tracker/localization/BuildContextExtension.dart';
 import 'package:run_tracker/localization/export.dart';
@@ -33,6 +34,7 @@ class _HistoryListItemState extends ConsumerState<HistoryListItem> {
   @override
   Widget build(BuildContext context) {
     final dateTimeFormat = ref.watch(appDateTimeFormatProvider);
+    final userDateTimeConverter = ref.watch(userDateTimeConverterProvider);
 
     return InkWell(
       onTap: () => context.appRouter.goTrackRecord(widget.item.track.id),
@@ -59,38 +61,37 @@ class _HistoryListItemState extends ConsumerState<HistoryListItem> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  UserDateTime.nullable(
-                    utcDateTime: widget.item.summary.start,
-                    builder: (context, userDateTime) => ListItemText(
-                      title: context.appLocalization.runCardCoverBeginDateTime,
-                      content: userDateTime == null
-                          ? null
-                          : dateTimeFormat.fullDateFullTime.format(userDateTime),
-                    ),
+                  ListItemText(
+                    title: context.appLocalization.runCardCoverBeginDateTime,
+                    value: widget.item.summary.start
+                        ?.applyConverter(userDateTimeConverter)
+                        .applyFormat(dateTimeFormat.fullDateFullTime),
                   ),
                   ListItemText(
                     title: context.appLocalization.runCardCoverDuration,
-                    content: widget.item.summary.activeDuration?.HHmmss,
+                    value: widget.item.summary.activeDuration?.HHmmss,
                   ),
                   ListItemText(
                     title: context.appLocalization.runCardCoverDistance,
-                    content:
+                    value:
                         "${widget.item.summary.activeDistance?.meters.toInt()} ${context.appLocalization.unitShortM}",
                   ),
                   ListItemText(
                     title: context.appLocalization.runCardCoverSpeed,
-                    content:
-                        "${widget.item.summary.speed?.kilometersPerHour.toStringAsFixed(1)} ${context.appLocalization.unitShortKmPerHour}",
+                    value:
+                        "${widget.item.summary.speed?.kilometersPerHour.toStringAsFixed(1)}",
+                    unit: context.appLocalization.unitShortKmPerHour,
                   ),
                   ListItemText(
                     title: context.appLocalization.runCardCoverPace,
-                    content:
-                        "${widget.item.summary.pace?.tryConvertToDuration()?.mmss} ${context.appLocalization.unitShortMinPerKm}",
+                    value:
+                        "${widget.item.summary.pace?.tryConvertToDuration()?.mmss}",
+                    unit: context.appLocalization.unitShortMinPerKm,
                   ),
                   //TODO add pulse
                   ListItemText(
                     title: context.appLocalization.runcardCoverPulse,
-                    content: "developing...",
+                    value: "developing...",
                   ),
                 ],
               ),
@@ -104,8 +105,7 @@ class _HistoryListItemState extends ConsumerState<HistoryListItem> {
   static List<List<LatLng>> _pointsToPolylines(
     TrackRecordWithSummaryAndPoints model,
   ) {
-    return model
-        .splitPath()
+    return model.points.splitPath()
         .map(
           (points) => points
               .where((p) => p.hasLatLng)

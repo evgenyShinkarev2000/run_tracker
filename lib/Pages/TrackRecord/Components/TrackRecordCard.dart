@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:run_tracker/Pages/TrackRecord/TrackRecordMap.dart';
+import 'package:run_tracker/Pages/TrackRecord/Components/TrackRecordMap.dart';
 import 'package:run_tracker/Services/Track/export.dart';
 
 class TrackRecordCard extends StatelessWidget {
@@ -14,7 +14,7 @@ class TrackRecordCard extends StatelessWidget {
       children: [
         AspectRatio(
           aspectRatio: 1,
-          child: TrackRecordMap(orderedPoints: trackRecord.orderedPoints),
+          child: TrackRecordMap(orderedPoints: trackRecord.points.orderedPoints),
         ),
       ],
     );

@@ -2,11 +2,12 @@ import 'package:cancellation_token/cancellation_token.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:run_tracker/Components/export.dart';
-import 'package:run_tracker/Pages/TrackRecord/TrackRecordCard.dart';
+import 'package:run_tracker/Pages/TrackRecord/Components/TrackRecordTabBar.dart';
 import 'package:run_tracker/Providers/Track/export.dart';
 import 'package:run_tracker/Providers/export.dart';
 import 'package:run_tracker/Routing/export.dart';
 import 'package:run_tracker/Services/Track/export.dart';
+import 'package:run_tracker/Services/export.dart';
 import 'package:run_tracker/Theme/export.dart';
 import 'package:run_tracker/localization/export.dart';
 
@@ -56,25 +57,27 @@ class _TrackRecordPageState extends ConsumerState<TrackRecordPage> {
             icon: Icon(Icons.arrow_back),
           ),
           backgroundColor: context.themeData.colorScheme.inversePrimary,
-          title: snapshot.data?.summary.start == null
-              ? null
-              : UserDateTime.notNull(
-                  utcDateTime: snapshot.data?.summary.start as DateTime,
-                  builder: (context, userDateTime) => Consumer(
-                    builder: (context, ref, prev) => Text(
-                      ref
-                          .read(appDateTimeFormatProvider)
-                          .fullDateFullTime
-                          .format(userDateTime),
-                    ),
-                  ),
-                ),
+          title: Consumer(
+            builder: (context, ref, widget) {
+              final userDateTimeConverter = ref.watch(
+                userDateTimeConverterProvider,
+              );
+              final appDateTimeFormat = ref.watch(appDateTimeFormatProvider);
+
+              return Text(
+                snapshot.data?.summary.start
+                        ?.applyConverter(userDateTimeConverter)
+                        .applyFormat(appDateTimeFormat.fullDateFullTime) ??
+                    "",
+              );
+            },
+          ),
         ),
         body: switch (snapshot.connectionState) {
           ConnectionState.done =>
             snapshot.data == null
                 ? Center(child: Text(context.appLocalization.nounNoData))
-                : TrackRecordCard(trackRecord: snapshot.data!),
+                : TrackRecordTabBar(trackRecord: snapshot.data!),
           _ => AppLoader(),
         },
       ),

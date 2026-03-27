@@ -2,6 +2,7 @@ import 'package:run_tracker/Core/Units/Speed.dart';
 
 class Pace {
   static const infinity = Pace(double.infinity);
+  static const zero = Pace(0.0);
 
   final double minutesPerKilometer;
 
@@ -15,6 +16,14 @@ class Pace {
   @override
   int get hashCode => minutesPerKilometer.hashCode;
 
+  bool operator >(Pace other) =>
+      minutesPerKilometer > other.minutesPerKilometer;
+  bool operator <(Pace other) =>
+      minutesPerKilometer < other.minutesPerKilometer;
+
+  double operator /(Pace other) =>
+      minutesPerKilometer / other.minutesPerKilometer;
+
   Speed toSpeed() {
     return Speed(
       (50 / 3) / minutesPerKilometer,
@@ -25,7 +34,7 @@ class Pace {
     if (minutesPerKilometer.isInfinite) {
       return null;
     }
-    
+
     return Duration(microseconds: (minutesPerKilometer * 6e7).round());
   }
 }

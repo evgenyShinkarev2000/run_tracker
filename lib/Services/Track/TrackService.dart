@@ -12,35 +12,13 @@ class TrackRecordWithSummary {
 }
 
 class TrackRecordWithSummaryAndPoints extends TrackRecordWithSummary {
-  final List<BasePoint> orderedPoints;
+  final TrackPointCollection points;
 
   TrackRecordWithSummaryAndPoints({
     required super.track,
     required super.summary,
-    required this.orderedPoints,
+    required this.points,
   });
-
-  Iterable<List<PositionPoint>> splitPath() sync* {
-    List<PositionPoint> positionPoints = [];
-    for (var point in orderedPoints) {
-      switch (CheckPointTypeVisitor.determineType(point)) {
-        case PointType.Pause:
-          if (positionPoints.isNotEmpty) {
-            yield positionPoints;
-            positionPoints = [];
-          }
-          break;
-        case PointType.Position:
-          positionPoints.add(point as PositionPoint);
-          break;
-        case PointType.Resume:
-          break;
-      }
-    }
-    if (positionPoints.isNotEmpty) {
-      yield positionPoints;
-    }
-  }
 }
 
 class TrackService {
@@ -92,14 +70,13 @@ class TrackService {
 
     for (var model in models) {
       ct?.throwIfCancelled();
-      model.points.sort((a, b) => a.createdAt.compareTo(b.createdAt));
       result.add(
         TrackRecordWithSummaryAndPoints(
           track: model.track,
           summary:
               model.summary ??
               await generateOrUpdateAndGetSummary(model.track.id),
-          orderedPoints: model.points,
+          points: TrackPointCollection.fromPoints(model.points),
         ),
       );
     }
@@ -120,14 +97,12 @@ class TrackService {
       return null;
     }
 
-    result.points.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-
     return TrackRecordWithSummaryAndPoints(
       track: result.track,
       summary: result.summary == null
           ? await generateOrUpdateAndGetSummary(trackRecordId)
           : result.summary!,
-      orderedPoints: result.points,
+      points: TrackPointCollection.fromPoints(result.points),
     );
   }
 

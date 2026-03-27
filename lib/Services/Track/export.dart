@@ -6,3 +6,4 @@ export 'TrackState.dart';
 export 'TrackWriter.dart';
 export 'TrackSummary.dart';
 export 'TrackService.dart';
+export 'TrackPointCollection.dart';
