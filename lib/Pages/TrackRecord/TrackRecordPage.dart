@@ -2,7 +2,7 @@ import 'package:cancellation_token/cancellation_token.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:run_tracker/Components/export.dart';
-import 'package:run_tracker/Pages/TrackRecord/Components/TrackRecordTabBar.dart';
+import 'package:run_tracker/Pages/TrackRecord/TrackRecordTabBar.dart';
 import 'package:run_tracker/Providers/Track/export.dart';
 import 'package:run_tracker/Providers/export.dart';
 import 'package:run_tracker/Routing/export.dart';
