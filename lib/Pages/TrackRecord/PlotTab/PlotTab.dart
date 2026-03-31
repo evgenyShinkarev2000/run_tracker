@@ -52,7 +52,7 @@ class _PlotTabState extends State<PlotTab> {
         widget.trackRecord.points.orderedPoints.first.createdAt;
     PositionPoint? prevPosition;
 
-    for (var path in widget.trackRecord.points.splitPath()) {
+    for (var path in widget.trackRecord.points.splitActiveSegments()) {
       prevPosition = null;
       for (var point in path) {
         final offset = point.createdAt

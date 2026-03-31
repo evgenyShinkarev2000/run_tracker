@@ -5,3 +5,4 @@ export 'DashboardSpeedProvider.dart';
 export 'TrackManagerProvider.dart';
 export 'TrackStateProvider.dart';
 export 'TrackServiceProvider.dart';
+export 'GPXImportProvider.dart';

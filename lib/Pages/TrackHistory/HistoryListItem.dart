@@ -105,7 +105,7 @@ class _HistoryListItemState extends ConsumerState<HistoryListItem> {
   static List<List<LatLng>> _pointsToPolylines(
     TrackRecordWithSummaryAndPoints model,
   ) {
-    return model.points.splitPath()
+    return model.points.splitActiveSegments()
         .map(
           (points) => points
               .where((p) => p.hasLatLng)

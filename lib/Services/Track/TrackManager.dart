@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:drift/drift.dart';
 import 'package:run_tracker/Core/export.dart';
 import 'package:run_tracker/Data/export.dart';
 import 'package:run_tracker/Services/Position/export.dart';
@@ -89,6 +90,7 @@ class TrackManager
       TrackRecordsCompanion.insert(
         createdAt: DateTime.now(),
         isCompleted: false,
+        source: Value("egn_run_tracker"),
       ),
     );
     if (_isDisposed) {

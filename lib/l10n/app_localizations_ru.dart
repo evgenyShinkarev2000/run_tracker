@@ -241,4 +241,16 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get trackRecordAbortDialogContent => 'запись была прервана';
+
+  @override
+  String get importGPX => 'импортировать GPX';
+
+  @override
+  String get importPickGPXFile => 'выберите GPX файл';
+
+  @override
+  String get importNoFile => 'файл не выбран';
+
+  @override
+  String get importFailed => 'не удалось импортировать';
 }

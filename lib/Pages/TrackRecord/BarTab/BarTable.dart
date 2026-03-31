@@ -37,7 +37,7 @@ class _BarTableState extends State<BarTable> {
   void initState() {
     super.initState();
 
-    path = widget.trackRecord.points.splitPath().toList();
+    path = widget.trackRecord.points.splitActiveSegments().toList();
     _updateIntervals();
   }
 

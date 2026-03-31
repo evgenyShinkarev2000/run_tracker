@@ -240,4 +240,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get trackRecordAbortDialogContent => 'the recording was interrupted';
+
+  @override
+  String get importGPX => 'import GPX';
+
+  @override
+  String get importPickGPXFile => 'pick GPX file';
+
+  @override
+  String get importNoFile => 'no file selected';
+
+  @override
+  String get importFailed => 'import failed';
 }

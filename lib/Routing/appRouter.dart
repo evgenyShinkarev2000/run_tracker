@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:run_tracker/Pages/TrackHistory/export.dart';
 import 'package:run_tracker/Pages/TrackRecord/export.dart';
@@ -27,6 +28,14 @@ final List<RouteBase> appRoutes = [
   ),
 ];
 
+final rootNavigatorKey = GlobalKey<NavigatorState>(
+  debugLabel: "instance rootNavigatorKey of GlobalKey<NavigatorState>",
+);
+
 GoRouter buildAppRouter(Talker talker) {
-  return GoRouter(routes: appRoutes, observers: [TalkerRouteObserver(talker)]);
+  return GoRouter(
+    routes: appRoutes,
+    observers: [TalkerRouteObserver(talker)],
+    navigatorKey: rootNavigatorKey,
+  );
 }

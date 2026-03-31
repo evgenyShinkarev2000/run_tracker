@@ -21,6 +21,7 @@ class TrackRecords extends Table {
   IntColumn get id => integer().autoIncrement()();
   DateTimeColumn get createdAt => dateTime()();
   BoolColumn get isCompleted => boolean()();
+  TextColumn get source => text().nullable()();
 }
 
 class TrackRecordPositionPoints extends Table {

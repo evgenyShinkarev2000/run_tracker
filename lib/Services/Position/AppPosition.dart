@@ -68,7 +68,7 @@ class AppPosition {
       return horizontalDistance;
     }
 
-    final verticalDistance = startAltitude + endAltitude;
+    final verticalDistance = endAltitude - startAltitude;
 
     return sqrt(
       horizontalDistance * horizontalDistance +

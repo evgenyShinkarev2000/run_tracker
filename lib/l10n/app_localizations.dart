@@ -547,6 +547,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'the recording was interrupted'**
   String get trackRecordAbortDialogContent;
+
+  /// No description provided for @importGPX.
+  ///
+  /// In en, this message translates to:
+  /// **'import GPX'**
+  String get importGPX;
+
+  /// No description provided for @importPickGPXFile.
+  ///
+  /// In en, this message translates to:
+  /// **'pick GPX file'**
+  String get importPickGPXFile;
+
+  /// No description provided for @importNoFile.
+  ///
+  /// In en, this message translates to:
+  /// **'no file selected'**
+  String get importNoFile;
+
+  /// No description provided for @importFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'import failed'**
+  String get importFailed;
 }
 
 class _AppLocalizationsDelegate

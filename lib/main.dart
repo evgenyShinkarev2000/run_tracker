@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:run_tracker/Components/Loader/AppInitLoader.dart';
 import 'package:run_tracker/Core/export.dart';
 import 'package:run_tracker/Data/AppDatabase.dart';
@@ -75,6 +76,7 @@ class MyApp extends ConsumerWidget {
         fontFamily: 'Roboto',
       ),
       routerConfig: appRouter,
+      builder: FToastBuilder(),
     );
   }
 }

@@ -4,7 +4,8 @@ import 'package:run_tracker/Services/export.dart';
 
 final messageServiceProvider = Provider<IMessageService>((ref) {
   final logger = ref.watch(loggerProvider);
-  final service = AppMessageService(logger);
+  final rootNavigatorKey = ref.watch(rootNavigatorKeyProvider);
+  final service = AppMessageService(logger, rootNavigatorKey);
 
   return service;
 });

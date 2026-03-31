@@ -90,7 +90,7 @@ class _TrackRecordMapState extends ConsumerState<TrackRecordMap> {
 
   @override
   Widget build(BuildContext context) {
-    if (points.isEmpty) {
+    if (points.length < 2) {
       return Center(child: Text(context.appLocalization.nounNoData));
     }
 
@@ -106,7 +106,9 @@ class _TrackRecordMapState extends ConsumerState<TrackRecordMap> {
           coordinates: points,
           padding: EdgeInsets.all(32),
         ),
-        interactionOptions: const InteractionOptions(flags: InteractiveFlag.none),
+        interactionOptions: const InteractionOptions(
+          flags: InteractiveFlag.none,
+        ),
       ),
       children: [
         TileLayer(

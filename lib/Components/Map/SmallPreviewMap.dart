@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:run_tracker/Components/export.dart';
 import 'package:run_tracker/Providers/export.dart';
+import 'package:run_tracker/localization/export.dart';
 
 class SmallPeviewMap extends ConsumerWidget {
   final List<List<LatLng>> polylines;
@@ -19,6 +20,10 @@ class SmallPeviewMap extends ConsumerWidget {
     }
 
     final points = polylines.expand((l) => l).toList();
+
+    if (points.length < 2) {
+      return Center(child: Text(context.appLocalization.nounNoData));
+    }
 
     return FlutterMap(
       options: MapOptions(

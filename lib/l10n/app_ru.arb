@@ -81,5 +81,9 @@
   "locationPermissionButtonRequestPermission": "запросить разрешение",
   "locationPermissionButtonIgnore": "игнорировать",
   "validationValueMusntBeNull": "значение не должно быть null",
-  "trackRecordAbortDialogContent": "запись была прервана"
+  "trackRecordAbortDialogContent": "запись была прервана",
+  "importGPX": "импортировать GPX",
+  "importPickGPXFile": "выберите GPX файл",
+  "importNoFile": "файл не выбран",
+  "importFailed": "не удалось импортировать"
 }

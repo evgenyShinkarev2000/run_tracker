@@ -254,8 +254,17 @@ class $TrackRecordsTable extends TrackRecords
       'CHECK ("is_completed" IN (0, 1))',
     ),
   );
+  static const VerificationMeta _sourceMeta = const VerificationMeta('source');
   @override
-  List<GeneratedColumn> get $columns => [id, createdAt, isCompleted];
+  late final GeneratedColumn<String> source = GeneratedColumn<String>(
+    'source',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, createdAt, isCompleted, source];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -290,6 +299,12 @@ class $TrackRecordsTable extends TrackRecords
     } else if (isInserting) {
       context.missing(_isCompletedMeta);
     }
+    if (data.containsKey('source')) {
+      context.handle(
+        _sourceMeta,
+        source.isAcceptableOrUnknown(data['source']!, _sourceMeta),
+      );
+    }
     return context;
   }
 
@@ -311,6 +326,10 @@ class $TrackRecordsTable extends TrackRecords
         DriftSqlType.bool,
         data['${effectivePrefix}is_completed'],
       )!,
+      source: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source'],
+      ),
     );
   }
 
@@ -324,10 +343,12 @@ class TrackRecord extends DataClass implements Insertable<TrackRecord> {
   final int id;
   final DateTime createdAt;
   final bool isCompleted;
+  final String? source;
   const TrackRecord({
     required this.id,
     required this.createdAt,
     required this.isCompleted,
+    this.source,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -335,6 +356,9 @@ class TrackRecord extends DataClass implements Insertable<TrackRecord> {
     map['id'] = Variable<int>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['is_completed'] = Variable<bool>(isCompleted);
+    if (!nullToAbsent || source != null) {
+      map['source'] = Variable<String>(source);
+    }
     return map;
   }
 
@@ -343,6 +367,9 @@ class TrackRecord extends DataClass implements Insertable<TrackRecord> {
       id: Value(id),
       createdAt: Value(createdAt),
       isCompleted: Value(isCompleted),
+      source: source == null && nullToAbsent
+          ? const Value.absent()
+          : Value(source),
     );
   }
 
@@ -355,6 +382,7 @@ class TrackRecord extends DataClass implements Insertable<TrackRecord> {
       id: serializer.fromJson<int>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       isCompleted: serializer.fromJson<bool>(json['isCompleted']),
+      source: serializer.fromJson<String?>(json['source']),
     );
   }
   @override
@@ -364,15 +392,21 @@ class TrackRecord extends DataClass implements Insertable<TrackRecord> {
       'id': serializer.toJson<int>(id),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'isCompleted': serializer.toJson<bool>(isCompleted),
+      'source': serializer.toJson<String?>(source),
     };
   }
 
-  TrackRecord copyWith({int? id, DateTime? createdAt, bool? isCompleted}) =>
-      TrackRecord(
-        id: id ?? this.id,
-        createdAt: createdAt ?? this.createdAt,
-        isCompleted: isCompleted ?? this.isCompleted,
-      );
+  TrackRecord copyWith({
+    int? id,
+    DateTime? createdAt,
+    bool? isCompleted,
+    Value<String?> source = const Value.absent(),
+  }) => TrackRecord(
+    id: id ?? this.id,
+    createdAt: createdAt ?? this.createdAt,
+    isCompleted: isCompleted ?? this.isCompleted,
+    source: source.present ? source.value : this.source,
+  );
   TrackRecord copyWithCompanion(TrackRecordsCompanion data) {
     return TrackRecord(
       id: data.id.present ? data.id.value : this.id,
@@ -380,6 +414,7 @@ class TrackRecord extends DataClass implements Insertable<TrackRecord> {
       isCompleted: data.isCompleted.present
           ? data.isCompleted.value
           : this.isCompleted,
+      source: data.source.present ? data.source.value : this.source,
     );
   }
 
@@ -388,46 +423,53 @@ class TrackRecord extends DataClass implements Insertable<TrackRecord> {
     return (StringBuffer('TrackRecord(')
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
-          ..write('isCompleted: $isCompleted')
+          ..write('isCompleted: $isCompleted, ')
+          ..write('source: $source')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, createdAt, isCompleted);
+  int get hashCode => Object.hash(id, createdAt, isCompleted, source);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is TrackRecord &&
           other.id == this.id &&
           other.createdAt == this.createdAt &&
-          other.isCompleted == this.isCompleted);
+          other.isCompleted == this.isCompleted &&
+          other.source == this.source);
 }
 
 class TrackRecordsCompanion extends UpdateCompanion<TrackRecord> {
   final Value<int> id;
   final Value<DateTime> createdAt;
   final Value<bool> isCompleted;
+  final Value<String?> source;
   const TrackRecordsCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.isCompleted = const Value.absent(),
+    this.source = const Value.absent(),
   });
   TrackRecordsCompanion.insert({
     this.id = const Value.absent(),
     required DateTime createdAt,
     required bool isCompleted,
+    this.source = const Value.absent(),
   }) : createdAt = Value(createdAt),
        isCompleted = Value(isCompleted);
   static Insertable<TrackRecord> custom({
     Expression<int>? id,
     Expression<DateTime>? createdAt,
     Expression<bool>? isCompleted,
+    Expression<String>? source,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (createdAt != null) 'created_at': createdAt,
       if (isCompleted != null) 'is_completed': isCompleted,
+      if (source != null) 'source': source,
     });
   }
 
@@ -435,11 +477,13 @@ class TrackRecordsCompanion extends UpdateCompanion<TrackRecord> {
     Value<int>? id,
     Value<DateTime>? createdAt,
     Value<bool>? isCompleted,
+    Value<String?>? source,
   }) {
     return TrackRecordsCompanion(
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       isCompleted: isCompleted ?? this.isCompleted,
+      source: source ?? this.source,
     );
   }
 
@@ -455,6 +499,9 @@ class TrackRecordsCompanion extends UpdateCompanion<TrackRecord> {
     if (isCompleted.present) {
       map['is_completed'] = Variable<bool>(isCompleted.value);
     }
+    if (source.present) {
+      map['source'] = Variable<String>(source.value);
+    }
     return map;
   }
 
@@ -463,7 +510,8 @@ class TrackRecordsCompanion extends UpdateCompanion<TrackRecord> {
     return (StringBuffer('TrackRecordsCompanion(')
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
-          ..write('isCompleted: $isCompleted')
+          ..write('isCompleted: $isCompleted, ')
+          ..write('source: $source')
           ..write(')'))
         .toString();
   }
@@ -1904,12 +1952,14 @@ typedef $$TrackRecordsTableCreateCompanionBuilder =
       Value<int> id,
       required DateTime createdAt,
       required bool isCompleted,
+      Value<String?> source,
     });
 typedef $$TrackRecordsTableUpdateCompanionBuilder =
     TrackRecordsCompanion Function({
       Value<int> id,
       Value<DateTime> createdAt,
       Value<bool> isCompleted,
+      Value<String?> source,
     });
 
 final class $$TrackRecordsTableReferences
@@ -2021,6 +2071,11 @@ class $$TrackRecordsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get source => $composableBuilder(
+    column: $table.source,
+    builder: (column) => ColumnFilters(column),
+  );
+
   Expression<bool> trackRecordPositionPointsRefs(
     Expression<bool> Function($$TrackRecordPositionPointsTableFilterComposer f)
     f,
@@ -2122,6 +2177,11 @@ class $$TrackRecordsTableOrderingComposer
     column: $table.isCompleted,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get source => $composableBuilder(
+    column: $table.source,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$TrackRecordsTableAnnotationComposer
@@ -2143,6 +2203,9 @@ class $$TrackRecordsTableAnnotationComposer
     column: $table.isCompleted,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get source =>
+      $composableBuilder(column: $table.source, builder: (column) => column);
 
   Expression<T> trackRecordPositionPointsRefs<T extends Object>(
     Expression<T> Function($$TrackRecordPositionPointsTableAnnotationComposer a)
@@ -2259,20 +2322,24 @@ class $$TrackRecordsTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<bool> isCompleted = const Value.absent(),
+                Value<String?> source = const Value.absent(),
               }) => TrackRecordsCompanion(
                 id: id,
                 createdAt: createdAt,
                 isCompleted: isCompleted,
+                source: source,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 required DateTime createdAt,
                 required bool isCompleted,
+                Value<String?> source = const Value.absent(),
               }) => TrackRecordsCompanion.insert(
                 id: id,
                 createdAt: createdAt,
                 isCompleted: isCompleted,
+                source: source,
               ),
           withReferenceMapper: (p0) => p0
               .map(

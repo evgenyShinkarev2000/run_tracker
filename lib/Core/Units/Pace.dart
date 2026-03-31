@@ -31,7 +31,7 @@ class Pace {
   }
 
   Duration? tryConvertToDuration() {
-    if (minutesPerKilometer.isInfinite) {
+    if (minutesPerKilometer.isInfinite || minutesPerKilometer.isNaN) {
       return null;
     }
 

@@ -81,5 +81,9 @@
   "locationPermissionButtonRequestPermission": "request permission",
   "locationPermissionButtonIgnore": "ignore",
   "validationValueMusntBeNull": "value musn't be null",
-  "trackRecordAbortDialogContent": "the recording was interrupted"
-}
+  "trackRecordAbortDialogContent": "the recording was interrupted",
+  "importGPX": "import GPX",
+  "importPickGPXFile": "pick GPX file",
+  "importNoFile": "no file selected",
+  "importFailed": "import failed"
+} 

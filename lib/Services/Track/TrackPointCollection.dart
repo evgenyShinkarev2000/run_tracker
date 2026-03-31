@@ -9,32 +9,54 @@ class TrackPointCollection {
   factory TrackPointCollection.fromPoints(Iterable<BasePoint> points) {
     var list = List<BasePoint>.from(points);
     list.sort((a, b) {
-      final compare = a.createdAt.compareTo(b.createdAt);
+      var compare = a.createdAt.compareTo(b.createdAt);
+      if (compare != 0) {
+        return compare;
+      }
 
-      return compare == 0 ? a.id.compareTo(b.id) : compare;
+      final aType = CheckPointTypeVisitor.determineType(a);
+      final bType = CheckPointTypeVisitor.determineType(b);
+      if (aType == PointType.Resume) {
+        return 1;
+      } else if (bType == PointType.Pause) {
+        return -1;
+      }
+
+      compare = a.id.compareTo(b.id);
+      if (compare != 0) {
+        return compare;
+      }
+
+      return aType.index.compareTo(bType.index);
     });
 
     return TrackPointCollection._(List.unmodifiable(list));
   }
 
-  Iterable<List<PositionPoint>> splitPath() sync* {
+  Iterable<List<PositionPoint>> splitActiveSegments() sync* {
     List<PositionPoint> positionPoints = [];
+    var isPaused = false;
     for (var point in orderedPoints) {
       switch (CheckPointTypeVisitor.determineType(point)) {
         case PointType.Pause:
+          isPaused = true;
           if (positionPoints.isNotEmpty) {
             yield positionPoints;
             positionPoints = [];
           }
           break;
         case PointType.Position:
+          if (isPaused) {
+            break;
+          }
           positionPoints.add(point as PositionPoint);
           break;
         case PointType.Resume:
+          isPaused = false;
           break;
       }
     }
-    if (positionPoints.isNotEmpty) {
+    if (!isPaused && positionPoints.isNotEmpty) {
       yield positionPoints;
     }
   }
