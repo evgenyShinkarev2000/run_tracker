@@ -53,6 +53,7 @@ class DropDownControls extends StatelessWidget {
                 ),
                 width: columnWidth,
                 dropdownMenuEntries: disntances,
+                searchCallback: (entries, query) => entries.indexWhere((e) => e.label == query),
               ),
               .time => DropdownMenu<Duration>(
                 initialSelection: duration,
@@ -61,7 +62,6 @@ class DropDownControls extends StatelessWidget {
                   "${context.appLocalization.nounInterval}, ${context.appLocalization.unitShortMinute}",
                 ),
                 width: columnWidth,
-
                 dropdownMenuEntries: durations,
               ),
             },
