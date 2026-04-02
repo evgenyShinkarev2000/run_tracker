@@ -1,3 +1,4 @@
+//TODO будет ли критичным накопление ошибки?
 class Average {
   double get average => _average;
   double _average = 0;
@@ -15,6 +16,8 @@ class Average {
     --_count;
     if (count == 0) {
       _average = 0;
+    } else if (count < 0) {
+      throw StateError("musn't call substract more times then add");
     } else {
       _average += (_average - num) / _count;
     }

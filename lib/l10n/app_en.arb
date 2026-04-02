@@ -85,5 +85,9 @@
   "importGPX": "import GPX",
   "importPickGPXFile": "pick GPX file",
   "importNoFile": "no file selected",
-  "importFailed": "import failed"
+  "importFailed": "import failed",
+  "chartMenuOutlierFilter": "outlier filter",
+  "chartMenuShowMarkers": "show markers",
+  "chartMenuResolutionFilter": "resolution filter",
+  "chartMenuDownsampling": "down sampling"
 } 

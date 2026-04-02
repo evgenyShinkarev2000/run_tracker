@@ -1,10 +1,11 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:run_tracker/Core/export.dart';
 import 'package:run_tracker/Data/export.dart';
-import 'package:run_tracker/Pages/TrackRecord/PlotTab/PrepareSpot.dart';
+import 'package:run_tracker/Pages/TrackRecord/PlotTab/NiceChart.dart';
 import 'package:run_tracker/Services/Track/export.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:run_tracker/Services/export.dart';
+import 'package:run_tracker/localization/export.dart';
 
 class PlotTab extends StatefulWidget {
   final TrackRecordWithSummaryAndPoints trackRecord;
@@ -16,12 +17,8 @@ class PlotTab extends StatefulWidget {
 }
 
 class _PlotTabState extends State<PlotTab> {
-  LineChartData speedChartData = LineChartData();
-  LineChartData heightChartData = LineChartData();
-  late final List<FlSpot> rawSpeedSpots = [];
-  late final List<FlSpot> rawHeightSpots = [];
-  List<FlSpot> preparedSpeedSpots = [];
-  List<FlSpot> preparedHeightSpots = [];
+  late final List<FlSpot> speedSpots = [];
+  late final List<FlSpot> heightSpots = [];
   late double maxX;
 
   @override
@@ -29,17 +26,37 @@ class _PlotTabState extends State<PlotTab> {
     super.initState();
 
     _initData();
-    _updateCharts();
   }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        children: [
-          AspectRatio(aspectRatio: 1.6, child: LineChart(speedChartData)),
-          AspectRatio(aspectRatio: 1.6, child: LineChart(heightChartData)),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            NiceChart(
+              title:
+                  "${context.appLocalization.nounSpeed}, ${context.appLocalization.unitShortKmPerHour}",
+              rawSpots: speedSpots,
+              maxX: maxX,
+              outlierInterval: 5,
+              isZeroBasedY: true,
+              mapYToView: _yToSpeed,
+              mapXToView: _xToDuration,
+            ),
+            NiceChart(
+              title:
+                  "${context.appLocalization.nounHeight}, ${context.appLocalization.unitShortM}",
+              rawSpots: heightSpots,
+              outlierInterval: 5,
+              maxX: maxX,
+              mapYToView: _yToHeight,
+              mapXToView: _xToDuration,
+            ),
+            //TODO график пульса
+          ],
+        ),
       ),
     );
   }
@@ -59,7 +76,7 @@ class _PlotTabState extends State<PlotTab> {
             .difference(startDateTime)
             .inSecondsDouble;
         if (point.altitude != null) {
-          rawHeightSpots.add(FlSpot(offset, point.altitude!));
+          heightSpots.add(FlSpot(offset, point.altitude!));
         }
         if (prevPosition == null) {
           prevPosition = point;
@@ -67,7 +84,7 @@ class _PlotTabState extends State<PlotTab> {
         }
         final distance = point.tryFindDistanceMeters(prevPosition);
         if (distance != null) {
-          rawSpeedSpots.add(
+          speedSpots.add(
             FlSpot(
               offset,
               distance /
@@ -85,34 +102,8 @@ class _PlotTabState extends State<PlotTab> {
         .inSecondsDouble;
   }
 
-  void _updateCharts() {
-    final prepareSpots = PrepareSpots();
-    final screen = WidgetsBinding.instance.platformDispatcher.views.first;
-    final prepareParams = PrepareSpotsParams(
-      applyDownSampling: true,
-      applyMovingAverage: true,
-      downSamplingThreshold: 
-          (screen.physicalSize.width / screen.devicePixelRatio).floor(),
-      movingAverageInterval: 5,
-    );
-
-    preparedSpeedSpots = prepareSpots
-        .process(prepareParams, rawSpeedSpots)
-        .toList();
-    preparedHeightSpots = prepareSpots
-        .process(prepareParams, rawHeightSpots)
-        .toList();
-
-    speedChartData = LineChartData(
-      minX: 0,
-      maxX: maxX,
-      minY: 0,
-      lineBarsData: [LineChartBarData(spots: preparedSpeedSpots)],
-    );
-    heightChartData = LineChartData(
-      minX: 0,
-      maxX: maxX,
-      lineBarsData: [LineChartBarData(spots: preparedHeightSpots)],
-    );
-  }
+  static String _yToSpeed(double y) =>
+      Speed.metersPerSecondToKilometersPerHour(y).toStringAsFixed(1);
+  static String _yToHeight(double y) => y.toStringAsFixed(0);
+  static String _xToDuration(double x) => Duration(seconds: x.toInt()).HH_noPad_mmss;
 }

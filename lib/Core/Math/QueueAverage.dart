@@ -15,9 +15,11 @@ class QueueAverage {
     _average.add(num);
   }
 
-  void dequeue() {
+  double dequeue() {
     final num = _queue.removeFirst();
     _average.substract(num);
+
+    return num;
   }
 
   void reset() {

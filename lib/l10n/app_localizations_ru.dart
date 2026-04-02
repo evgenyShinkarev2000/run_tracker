@@ -253,4 +253,16 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get importFailed => 'не удалось импортировать';
+
+  @override
+  String get chartMenuOutlierFilter => 'фильтр выбросов';
+
+  @override
+  String get chartMenuShowMarkers => 'показывать точки';
+
+  @override
+  String get chartMenuResolutionFilter => 'фильтр разрешения';
+
+  @override
+  String get chartMenuDownsampling => 'понижение разрешения';
 }

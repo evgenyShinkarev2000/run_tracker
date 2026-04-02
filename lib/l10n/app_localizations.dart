@@ -571,6 +571,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'import failed'**
   String get importFailed;
+
+  /// No description provided for @chartMenuOutlierFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'outlier filter'**
+  String get chartMenuOutlierFilter;
+
+  /// No description provided for @chartMenuShowMarkers.
+  ///
+  /// In en, this message translates to:
+  /// **'show markers'**
+  String get chartMenuShowMarkers;
+
+  /// No description provided for @chartMenuResolutionFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'resolution filter'**
+  String get chartMenuResolutionFilter;
+
+  /// No description provided for @chartMenuDownsampling.
+  ///
+  /// In en, this message translates to:
+  /// **'down sampling'**
+  String get chartMenuDownsampling;
 }
 
 class _AppLocalizationsDelegate

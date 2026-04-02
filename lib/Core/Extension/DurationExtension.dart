@@ -9,4 +9,10 @@ extension DurationExtension on Duration {
 
   String get mmss =>
       "${minutes.toString().padLeft(2, "0")}:${seconds.toString().padLeft(2, "0")}";
+
+  String get HH_noPad_mmss {
+    return hours == 0
+        ? mmss
+        : "${hours.toString()}:${minutes.toString().padLeft(2, "0")}:${seconds.toString().padLeft(2, "0")}";
+  }
 }

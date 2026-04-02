@@ -85,5 +85,9 @@
   "importGPX": "импортировать GPX",
   "importPickGPXFile": "выберите GPX файл",
   "importNoFile": "файл не выбран",
-  "importFailed": "не удалось импортировать"
+  "importFailed": "не удалось импортировать",
+  "chartMenuOutlierFilter": "фильтр выбросов",
+  "chartMenuShowMarkers": "показывать точки",
+  "chartMenuResolutionFilter": "фильтр разрешения",
+  "chartMenuDownsampling": "понижение разрешения"
 }

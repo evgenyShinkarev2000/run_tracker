@@ -252,4 +252,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get importFailed => 'import failed';
+
+  @override
+  String get chartMenuOutlierFilter => 'outlier filter';
+
+  @override
+  String get chartMenuShowMarkers => 'show markers';
+
+  @override
+  String get chartMenuResolutionFilter => 'resolution filter';
+
+  @override
+  String get chartMenuDownsampling => 'down sampling';
 }

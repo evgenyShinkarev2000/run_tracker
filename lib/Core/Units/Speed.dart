@@ -28,4 +28,7 @@ class Speed {
   static double metersPerSecondToMinutesPerKilometer(double metersPerSecond) {
     return (50 / 3) / metersPerSecond; // 1 / (metersPerSecond / 1000 * 60)
   }
+
+  static double metersPerSecondToKilometersPerHour(double metersPerSecond) =>
+      metersPerSecond * 3.6;
 }
