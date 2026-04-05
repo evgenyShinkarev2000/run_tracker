@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:run_tracker/Providers/export.dart';
+import 'package:run_tracker/Providers/Settings/export.dart';
 import 'package:run_tracker/localization/export.dart';
 
 final appDateTimeFormatProvider = Provider((ref) {

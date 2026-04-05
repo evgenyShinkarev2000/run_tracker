@@ -12,6 +12,7 @@ import 'package:run_tracker/Components/Map/Components/export.dart';
 import 'package:run_tracker/Components/Map/Providers/LocationMarkerHeadingProvider.dart';
 import 'package:run_tracker/Components/Map/Providers/LocationMarkerPositionProvider.dart';
 import 'package:run_tracker/Components/export.dart';
+import 'package:run_tracker/Providers/Settings/export.dart';
 import 'package:run_tracker/Providers/Track/export.dart';
 import 'package:run_tracker/Providers/export.dart';
 import 'package:run_tracker/Services/Track/export.dart';

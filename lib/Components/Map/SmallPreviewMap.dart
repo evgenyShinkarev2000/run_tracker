@@ -3,7 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:run_tracker/Components/export.dart';
-import 'package:run_tracker/Providers/export.dart';
+import 'package:run_tracker/Providers/Settings/export.dart';
 import 'package:run_tracker/localization/export.dart';
 
 class SmallPeviewMap extends ConsumerWidget {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:run_tracker/Components/export.dart';
 import 'package:run_tracker/Data/export.dart';
+import 'package:run_tracker/Providers/Settings/export.dart';
 import 'package:run_tracker/Providers/export.dart';
 import 'package:run_tracker/Services/export.dart';
 import 'package:run_tracker/localization/BuildContextExtension.dart';

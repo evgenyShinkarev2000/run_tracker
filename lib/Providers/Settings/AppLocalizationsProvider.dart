@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:run_tracker/Providers/export.dart';
+import 'package:run_tracker/Providers/Settings/export.dart';
 import 'package:run_tracker/l10n/app_localizations.dart';
 import 'package:run_tracker/localization/export.dart';
 

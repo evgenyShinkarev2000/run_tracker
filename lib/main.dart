@@ -10,7 +10,7 @@ import 'package:run_tracker/Core/export.dart';
 import 'package:run_tracker/Data/AppDatabase.dart';
 import 'package:run_tracker/Data/AppSettings.dart';
 import 'package:run_tracker/Providers/AppRouterProvider.dart';
-import 'package:run_tracker/Providers/AppSettingsProvider.dart';
+import 'package:run_tracker/Providers/Settings/export.dart';
 import 'package:run_tracker/Providers/export.dart';
 import 'package:run_tracker/l10n/app_localizations.dart';
 import 'package:run_tracker/localization/export.dart';

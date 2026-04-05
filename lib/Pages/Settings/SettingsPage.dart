@@ -4,6 +4,7 @@ import 'package:run_tracker/Components/export.dart';
 import 'package:run_tracker/Pages/Settings/DriftDbPage.dart';
 import 'package:run_tracker/Pages/Settings/LocationPermissionPage.dart';
 import 'package:run_tracker/Pages/Settings/TalkerPage.dart';
+import 'package:run_tracker/Providers/Settings/export.dart';
 import 'package:run_tracker/Providers/export.dart';
 import 'package:run_tracker/Routing/export.dart';
 import 'package:run_tracker/Theme/export.dart';

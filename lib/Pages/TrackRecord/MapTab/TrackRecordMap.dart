@@ -5,7 +5,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:run_tracker/Components/Map/MapIcon.dart';
 import 'package:run_tracker/Components/export.dart';
 import 'package:run_tracker/Data/export.dart';
-import 'package:run_tracker/Providers/export.dart';
+import 'package:run_tracker/Providers/Settings/export.dart';
 import 'package:run_tracker/localization/export.dart';
 
 class TrackRecordMap extends ConsumerStatefulWidget {

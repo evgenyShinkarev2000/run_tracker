@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:run_tracker/Providers/export.dart';
+import 'package:run_tracker/Providers/Settings/export.dart';
 import 'package:run_tracker/Routing/export.dart';
 import 'package:run_tracker/Theme/export.dart';
 import 'package:run_tracker/localization/export.dart';
