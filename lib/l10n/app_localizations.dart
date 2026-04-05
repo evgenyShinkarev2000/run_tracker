@@ -470,6 +470,12 @@ abstract class AppLocalizations {
   /// **'geolocation'**
   String get settingLocation;
 
+  /// No description provided for @settingDevMode.
+  ///
+  /// In en, this message translates to:
+  /// **'developer mode'**
+  String get settingDevMode;
+
   /// No description provided for @historyPageNoRecords.
   ///
   /// In en, this message translates to:

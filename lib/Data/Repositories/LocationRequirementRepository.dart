@@ -1,45 +1,26 @@
 import 'package:cancellation_token/cancellation_token.dart';
-import 'package:drift/drift.dart';
+import 'package:run_tracker/Data/Repositories/SettingRepository.dart';
 import 'package:run_tracker/Data/export.dart';
 
 abstract class LocationRequirementRepository
-    extends CommonValueRepository<LocationRequirement> {}
+    implements ICommonValueRepository<LocationRequirement> {}
 
-class DriftLocationRequirementRepository extends LocationRequirementRepository {
-  static const String key = "LocationRequirement";
+class DriftLocationRequirementRepository
+    extends EnumSettingRepository<LocationRequirement>
+    with CommonValueRepository<LocationRequirement>
+    implements LocationRequirementRepository {
+  DriftLocationRequirementRepository(super.appDatabase);
 
-  final AppDatabase _appDatabase;
-  DriftLocationRequirementRepository(this._appDatabase);
+  @override
+  String get key => "LocationRequirement";
+
+  @override
+  List<LocationRequirement> get enumValues => LocationRequirement.values;
 
   @override
   Future<LocationRequirement> Get([CancellationToken? ct]) async {
-    ct?.throwIfCancelled();
-    var setting =
-        await (_appDatabase.settings.select()..where((s) => s.name.equals(key)))
-            .getSingleOrNull()
-            .asCancellable(ct);
-
-    if (setting == null) {
-      return _getDefault();
-    }
-
-    return LocationRequirement.values.firstWhere(
-      (v) => v.name == setting.value,
-      orElse: _getDefault,
-    );
+    return (await protectedGet(ct)) ?? LocationRequirement.RequireAndUse;
   }
-
-  @override
-  Future<void> Set(model, [CancellationToken? ct]) async {
-    ct?.throwIfCancelled();
-    await _appDatabase.settings
-        .insertOnConflictUpdate(Setting(name: key, value: model.name))
-        .asCancellable(ct);
-
-    await super.Set(model, ct);
-  }
-
-  LocationRequirement _getDefault() => LocationRequirement.RequireAndUse;
 }
 
 enum LocationRequirement { RequireAndUse, SilentUse, Ignore }

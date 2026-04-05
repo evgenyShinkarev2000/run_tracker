@@ -199,6 +199,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get settingLocation => 'геолокация';
 
   @override
+  String get settingDevMode => 'режим разработчика';
+
+  @override
   String get historyPageNoRecords => 'нет записей';
 
   @override

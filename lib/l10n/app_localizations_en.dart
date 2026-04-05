@@ -199,6 +199,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingLocation => 'geolocation';
 
   @override
+  String get settingDevMode => 'developer mode';
+
+  @override
   String get historyPageNoRecords => 'no records';
 
   @override

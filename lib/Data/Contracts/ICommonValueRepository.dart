@@ -11,8 +11,8 @@ abstract interface class ICommonValueRepository<T>
         ISetValueRepository<T>,
         IStreamProvider<T> {}
 
-abstract class CommonValueRepository<T> extends ICommonValueRepository<T>
-    implements IDisposable {
+abstract mixin class CommonValueRepository<T>
+    implements ICommonValueRepository<T>, IDisposable {
   late final LazyBehaviorSubject<T> _lazyBehaviorSubject = LazyBehaviorSubject(
     Get,
   );

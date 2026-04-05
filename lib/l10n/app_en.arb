@@ -69,6 +69,7 @@
   "settingVariantThemeLigth": "light",
   "settingVariantThemeDark": "dark",
   "settingLocation": "geolocation",
+  "settingDevMode": "developer mode",
   "historyPageNoRecords": "no records",
   "historyPageCreateRecord": "record a track",
   "runRecordPageShare": "share",

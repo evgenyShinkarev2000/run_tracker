@@ -1,14 +1,13 @@
 import 'dart:async';
 
 import 'package:cancellation_token/cancellation_token.dart';
-import 'package:drift/drift.dart';
-import 'package:run_tracker/Data/AppDatabase.dart';
 import 'package:run_tracker/Data/Contracts/ICommonValueRepository.dart';
+import 'package:run_tracker/Data/Repositories/SettingRepository.dart';
 import 'package:run_tracker/localization/export.dart';
 
-abstract class LocaleRepository extends CommonValueRepository<AppLocale> {}
+abstract class LocaleRepository implements ICommonValueRepository<AppLocale> {}
 
-class MemoryLocaleRepository extends LocaleRepository {
+class MemoryLocaleRepository with CommonValueRepository<AppLocale> {
   AppLocale _currentLocal = AppLocales.ru;
 
   @override
@@ -27,29 +26,30 @@ class MemoryLocaleRepository extends LocaleRepository {
   }
 }
 
-class DriftLocaleRepository extends LocaleRepository {
-  static const String key = "Locale";
-  final AppDatabase _database;
+class DriftLocaleRepository extends BaseSettingRepository<AppLocale> with CommonValueRepository<AppLocale> implements LocaleRepository  {
+  @override
+  String get key => "Locale";
 
-  DriftLocaleRepository(this._database);
+  DriftLocaleRepository(super.appDatabase);
 
   @override
   Future<AppLocale> Get([CancellationToken? ct]) async {
-    ct?.throwIfCancelled();
-    var setting =
-        await (_database.settings.select()..where((s) => s.name.equals(key)))
-            .getSingleOrNull()
-            .asCancellable(ct);
-
-    return AppLocales.fromCodeOrFallback(setting?.value);
+    return (await protectedGet(ct)) ?? AppLocales.fallback;
   }
 
   @override
-  Future Set(AppLocale model, [CancellationToken? ct]) async {
-    ct?.throwIfCancelled();
-    await _database.settings.insertOnConflictUpdate(
-      Setting(name: key, value: model.locale.languageCode),
-    );
-    super.Set(model);
+  Future<void> Set(AppLocale model, [CancellationToken? ct]) async {
+    await protectedSet(model, ct);
+    await super.Set(model, ct);
+  }
+
+  @override
+  AppLocale protectedDeserialize(String serializedModel) {
+    return AppLocales.fromCodeOrFallback(serializedModel);
+  }
+
+  @override
+  String protectedSerialize(AppLocale model) {
+    return model.locale.languageCode;
   }
 }

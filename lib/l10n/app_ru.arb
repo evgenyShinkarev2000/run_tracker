@@ -69,6 +69,7 @@
   "settingVariantThemeLigth": "светлая",
   "settingVariantThemeDark": "темная",
   "settingLocation": "геолокация",
+  "settingDevMode": "режим разработчика",
   "historyPageNoRecords": "нет записей",
   "historyPageCreateRecord": "записать трек",
   "runRecordPageShare": "поделиться",
