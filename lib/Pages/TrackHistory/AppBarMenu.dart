@@ -70,7 +70,7 @@ class _AppBarMenuState extends ConsumerState<AppBarMenu> {
       trackRecord = await importService.importTrackRecord(fileContent);
     } catch (ex, s) {
       messageService.showAndLogError(
-        DartExceptionWrapper(ex, stackTrace: s),
+        DartExceptionWrapper(ex, s),
         importFailedMessage,
       );
       return;

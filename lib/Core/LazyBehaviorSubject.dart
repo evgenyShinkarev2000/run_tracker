@@ -42,7 +42,7 @@ class LazyBehaviorSubject<T> implements IDisposable {
     if (behaviorSubject.hasValue) {
       return;
     }
-    behaviorSubject.add(value!);
+    behaviorSubject.add(value as T);
   }
 }
 

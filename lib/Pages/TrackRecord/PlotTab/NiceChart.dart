@@ -99,9 +99,7 @@ class _NiceChartState extends State<NiceChart> {
               rightTitles: AxisTitles(),
               leftTitles: AxisTitles(
                 sideTitles: SideTitles(
-                  interval: maxY == null || minY == null
-                      ? null
-                      : (maxY! - minY!) / 2,
+                  interval: _getLeftLabelInterval(),
                   reservedSize: 32,
                   showTitles: true,
                   getTitlesWidget: _getLeftAxisRender,
@@ -109,7 +107,7 @@ class _NiceChartState extends State<NiceChart> {
               ),
               bottomTitles: AxisTitles(
                 sideTitles: SideTitles(
-                  interval: widget.maxX / 2,
+                  interval: _getBottomLabelInterval(),
                   reservedSize: 32,
                   showTitles: true,
                   getTitlesWidget: _getBottomAxisRender,
@@ -120,7 +118,12 @@ class _NiceChartState extends State<NiceChart> {
               touchTooltipData: LineTouchTooltipData(
                 getTooltipColor: getBackgroundColor,
                 getTooltipItems: (touchedSpots) => touchedSpots
-                    .map((e) => LineTooltipItem("${_mapYToView(e.y)}\n${_mapXToView(e.x)}", textStyle))
+                    .map(
+                      (e) => LineTooltipItem(
+                        "${_mapYToView(e.y)}\n${_mapXToView(e.x)}",
+                        textStyle,
+                      ),
+                    )
                     .toList(),
               ),
             ),
@@ -245,5 +248,20 @@ class _NiceChartState extends State<NiceChart> {
     return meta.axisPosition == 0 ||
         meta.axisPosition == meta.parentAxisSize ||
         (meta.axisPosition - (meta.parentAxisSize / 2)).abs() < 1e-3;
+  }
+
+  double? _getLeftLabelInterval() {
+    if (maxY == null || minY == null) {
+      return null;
+    }
+    final interval = (maxY! - minY!) / 2;
+
+    return interval <= 0 ? null : interval;
+  }
+
+  double? _getBottomLabelInterval() {
+    final interval = widget.maxX / 2;
+
+    return interval <= 0 ? null : interval;
   }
 }

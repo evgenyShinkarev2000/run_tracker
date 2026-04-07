@@ -65,7 +65,7 @@ class GeolocatorPositionService extends PositionService implements IDisposable {
     } catch (ex, s) {
       _logger.logWarning(
         "Exception thrown in GeolocatorPositionDataProvider in Geolocator.getLastKnownPosition()",
-        appException: DartExceptionWrapper(ex, stackTrace: s),
+        appException: DartExceptionWrapper(ex, s),
       );
     }
 
@@ -125,7 +125,7 @@ class GeolocatorPositionService extends PositionService implements IDisposable {
         //TODO пока игнорируем, потом нужно создать отдельный сервис, который бы учитывал настройки геолокации.
         _logger.logWarning(
           "Exception thrown in GeolocatorPositionDataProvider in Geolocator.getPositionStream().handleError",
-          appException: DartExceptionWrapper(e, stackTrace: s),
+          appException: DartExceptionWrapper(e, s),
         );
       }),
     );

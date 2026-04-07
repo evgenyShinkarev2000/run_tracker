@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:run_tracker/Core/export.dart';
 
@@ -14,8 +16,19 @@ class AppException implements Exception, IJsonSerializable {
     this.innerException,
   }) : data = data ?? {};
 
+  factory AppException.inner(Object ex) {
+    if (ex is AppException) {
+      return ex;
+    }
+
+    return DartExceptionWrapper(ex);
+  }
+
   @protected
   String getName() => "AppException";
+
+  @override
+  String toString() => jsonEncode(toJson());
 
   @override
   Map<String, dynamic> toJson() {

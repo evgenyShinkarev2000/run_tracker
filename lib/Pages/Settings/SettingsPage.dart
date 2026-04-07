@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:run_tracker/Components/export.dart';
+import 'package:run_tracker/Pages/PulseDev/PulseDev.dart';
 import 'package:run_tracker/Pages/Settings/DriftDbPage.dart';
 import 'package:run_tracker/Pages/Settings/LocationPermissionPage.dart';
 import 'package:run_tracker/Pages/Settings/TalkerPage.dart';
@@ -93,6 +94,11 @@ class SettingsPage extends StatelessWidget {
               onTap: () => _showDbPage(context),
               iconData: Icons.storage_outlined,
             ),
+            SettingItem(
+              name: "pulse",
+              onTap: () => _showPulsePage(context),
+              iconData: Icons.monitor_heart_outlined,
+            ),
           ],
         ),
       ),
@@ -136,6 +142,18 @@ class SettingsPage extends StatelessWidget {
       builder: (context) {
         return DriftDbPage();
       },
+    );
+  }
+
+  void _showPulsePage(BuildContext context) {
+    showModalBottomSheet(
+      routeSettings: RouteSettings(
+        name: "${context.appRouter.state.path}/pulse",
+      ),
+      context: context,
+      constraints: BoxConstraints.expand(),
+      isScrollControlled: true,
+      builder: (_) => PulseDev(),
     );
   }
 }

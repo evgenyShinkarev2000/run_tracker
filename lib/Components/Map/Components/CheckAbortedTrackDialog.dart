@@ -42,7 +42,7 @@ class _CheckAbortedTrackDialogState
     try {
       await ref.read(trackManagerProvider).dropAborted();
     } catch (ex, s) {
-      messageService.showAndLogError(DartExceptionWrapper(ex, stackTrace: s));
+      messageService.showAndLogError(DartExceptionWrapper(ex, s));
     }
     setState(() {
       isLoading = false;
@@ -57,7 +57,7 @@ class _CheckAbortedTrackDialogState
     try {
       await ref.read(trackManagerProvider).continueAborted();
     } catch (ex, s) {
-      messageService.showAndLogError(DartExceptionWrapper(ex, stackTrace: s));
+      messageService.showAndLogError(DartExceptionWrapper(ex, s));
     }
     setState(() {
       isLoading = false;

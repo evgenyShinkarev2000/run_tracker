@@ -65,8 +65,8 @@ class SettingItemWithDialog extends ConsumerWidget {
     var messageService = ref.read(messageServiceProvider);
     try {
       shouldClose = await task.call();
-    } catch (ex, st) {
-      messageService.showAndLogError(DartExceptionWrapper(ex, stackTrace: st));
+    } catch (ex, s) {
+      messageService.showAndLogError(DartExceptionWrapper(ex, s));
     }
     if (shouldClose && context.mounted) {
       context.pop();
@@ -78,8 +78,8 @@ class SettingItemWithDialog extends ConsumerWidget {
     var messageService = ref.read(messageServiceProvider);
     try {
       shouldOpenDialog = onTap == null ? true : await onTap!.call();
-    } catch (ex, st) {
-      messageService.showAndLogError(DartExceptionWrapper(ex, stackTrace: st));
+    } catch (ex, s) {
+      messageService.showAndLogError(DartExceptionWrapper(ex, s));
     }
     if (shouldOpenDialog && context.mounted) {
       _showDialog(context, ref);

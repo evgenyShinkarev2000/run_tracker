@@ -30,7 +30,7 @@ class _MapScopeState extends ConsumerState<MapScope> {
     );
     final logger = ref.read(loggerProvider);
     _manager.initialize().catchError((e, s){
-      logger.logError("Can't initialize TrackManager", appException: DartExceptionWrapper(e, stackTrace: s));
+      logger.logError("Can't initialize TrackManager", appException: DartExceptionWrapper(e, s));
       throw e;
     });
   }
