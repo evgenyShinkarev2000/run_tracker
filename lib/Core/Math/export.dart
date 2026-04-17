@@ -5,3 +5,4 @@ export 'IntervalAverageGeneric.dart';
 export 'LargeTriangleDownSampling.dart';
 export 'QueueAverageGeneric.dart';
 export 'CenteredIntervalAverageGeneric.dart';
+export 'CompressorGeneric.dart';

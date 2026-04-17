@@ -52,7 +52,7 @@ class CameraFrameWithFlashProvider implements IDisposable {
     } catch (ex, s) {
       _logger.logError(
         "Exception in _handleListen when _startCameraWithLock",
-        appException: DartExceptionWrapper(ex, s),
+        appException: AppException.caught(ex, s),
       );
     }
   }
@@ -63,7 +63,7 @@ class CameraFrameWithFlashProvider implements IDisposable {
     } catch (ex, s) {
       _logger.logError(
         "Exception in _handleCancelListen when _stopCameraWithLock()",
-        appException: DartExceptionWrapper(ex, s),
+        appException: AppException.caught(ex, s),
       );
     }
   }
@@ -108,6 +108,7 @@ class CameraFrameWithFlashProvider implements IDisposable {
     } catch (ex) {
       _cameraState = .startingError;
       completer.completeError(ex);
+      rethrow;
     }
 
     _cameraState = .using;
@@ -119,10 +120,9 @@ class CameraFrameWithFlashProvider implements IDisposable {
     List<CameraDescription>? cameras;
     try {
       cameras = await availableCameras();
-    } catch (ex, s) {
+    } catch (ex) {
       throw AppException(
         message: "Exception when await availableCameras()",
-        stackTrace: s,
         innerException: AppException.inner(ex),
       );
     }
@@ -130,10 +130,9 @@ class CameraFrameWithFlashProvider implements IDisposable {
     CameraDescription? camera;
     try {
       camera = await _chooseCamera(cameras);
-    } catch (ex, s) {
+    } catch (ex) {
       throw AppException(
         message: "Exception  when await _chooseCamera(cameras)",
-        stackTrace: s,
         innerException: AppException.inner(ex),
       );
     }
@@ -147,10 +146,9 @@ class CameraFrameWithFlashProvider implements IDisposable {
 
     try {
       await cameraController.initialize();
-    } catch (ex, s) {
+    } catch (ex) {
       throw AppException(
         message: "Exception when cameraController.initialize()",
-        stackTrace: s,
         innerException: AppException.inner(ex),
       );
     }
@@ -160,23 +158,23 @@ class CameraFrameWithFlashProvider implements IDisposable {
     } catch (ex, s) {
       _logger.logWarning(
         "Exception when cameraController.setFlashMode(.torch)",
-        appException: DartExceptionWrapper(ex, s),
+        appException: AppException.caught(ex, s),
       );
     }
     try {
       await cameraController.startImageStream(_handleFrame);
-    } catch (ex, s) {
+    } catch (ex) {
       try {
         await cameraController.dispose();
-      } catch (ex, s) {
-        _logger.logWarning(
-          "Exception when cameraController.dispose() after exception in cameraController.startImageStream(_handleFrame)",
-          appException: DartExceptionWrapper(ex, s),
+      } catch (ex) {
+        throw AppException(
+          message:
+              "Exception when cameraController.dispose() after exception in cameraController.startImageStream(_handleFrame)",
+          innerException: AppException.inner(ex),
         );
       }
       throw AppException(
         message: "Exception when CameraController.startImageStream",
-        stackTrace: s,
         innerException: AppException.inner(ex),
       );
     }
@@ -225,7 +223,9 @@ class CameraFrameWithFlashProvider implements IDisposable {
     } catch (ex) {
       _cameraState = .stoppingError;
       completer.completeError(ex);
+      rethrow;
     }
+
     _cameraState = .noUsed;
     completer.complete();
     _cameraController.value = null;
@@ -234,10 +234,13 @@ class CameraFrameWithFlashProvider implements IDisposable {
   Future<void> _stopCameraInternal() async {
     final controller = _cameraController.value;
     if (controller == null) {
-      throw AppException(
-        message:
-            "CameraFrameWithFlashProvider._cameraState == .using but _cameraController.value == null",
-      );
+      if (_cameraState == .using) {
+        throw AppException(
+          message:
+              "CameraFrameWithFlashProvider._cameraState == .using but _cameraController.value == null",
+        );
+      }
+      return;
     }
     await controller.dispose();
   }

@@ -28,11 +28,10 @@ class PPGSerializer {
     for (final indexWithline in lines.skip(1).indexed) {
       try {
         result.add(parser(indexWithline.$2));
-      } catch (ex, s) {
+      } catch (ex) {
         throw AppException(
           message:
               "Exception when parse line ${indexWithline.$2} with index ${indexWithline.$1 + 1}. See inner exception.",
-          stackTrace: s,
           innerException: AppException.inner(ex),
         );
       }

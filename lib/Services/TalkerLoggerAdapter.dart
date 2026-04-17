@@ -4,6 +4,12 @@ import 'package:run_tracker/Core/export.dart';
 import 'package:talker/talker.dart' as talk;
 
 class TalkerLoggerAdapter with LoggerWithLogMethods implements ILogger {
+  static final JsonEncoder _encoder = JsonEncoder.withIndent(
+    " ",
+    UnknownTypeSerializer.Default.visit,
+  );
+  static final StringBuffer _stringBuffer = StringBuffer();
+
   final talk.Talker _talker;
 
   TalkerLoggerAdapter(this._talker);
@@ -15,26 +21,36 @@ class TalkerLoggerAdapter with LoggerWithLogMethods implements ILogger {
     AppException? appException,
     Map<String, dynamic>? data,
   }) {
-    final Map<String, dynamic> map = {};
+    try {
+      _logInternal(logLevel, message, appException: appException, data: data);
+    } finally {
+      _stringBuffer.clear();
+    }
+  }
+
+  void _logInternal(
+    LogLevel logLevel,
+    String? message, {
+    AppException? appException,
+    Map<String, dynamic>? data,
+  }) {
+    _stringBuffer.writeln(message);
     if (appException != null) {
-      final exceptionMap = appException.toJson();
-      exceptionMap.remove("message");
-      map["exception"] = exceptionMap;
+      _stringBuffer.write("exception: ");
+      _stringBuffer.writeln(
+        _encoder.convert(appException.toJson(includeStack: false)),
+      );
     }
     if (data != null) {
-      map["data"] = data;
+      _stringBuffer.write("data: ");
+      _stringBuffer.writeln(_encoder.convert(data));
     }
-    final serialized = jsonEncode(
-      map,
-      toEncodable: UnknownTypeSerializer.Default.visit,
-    );
-    final formatedMessage = [
-      message,
-      appException?.message,
-      serialized,
-    ].nonNulls.join(" | ");
+    if (appException?.stackTrace != null) {
+      _stringBuffer.writeln("strack trace: ");
+      _stringBuffer.writeln(appException?.stackTrace.toString());
+    }
 
-    _talker.log(formatedMessage, logLevel: mapLogLevel(logLevel));
+    _talker.log(_stringBuffer.toString(), logLevel: mapLogLevel(logLevel));
   }
 
   static talk.LogLevel mapLogLevel(LogLevel logLevel) {

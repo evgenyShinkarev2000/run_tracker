@@ -15,7 +15,6 @@ class TrackRecordTabBar extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Column(
-        // crossAxisAlignment: .stretch,
         children: [
           Container(
             color: context.themeData.colorScheme.secondaryContainer,

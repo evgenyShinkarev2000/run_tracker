@@ -12,10 +12,10 @@ class CenteredIntervalAverageGeneric<T> {
 
   Iterable<(T, double)> mapByCenteredAverage(
     Iterable<T> items,
-    double intervalSize,
+    double interval,
   ) {
     final processor = InternalCenteredIntervalAverageGeneric(
-      intervalSize: intervalSize,
+      interval: interval,
       getX: _getX,
       getY: _getY,
     );
@@ -25,7 +25,7 @@ class CenteredIntervalAverageGeneric<T> {
 }
 
 class InternalCenteredIntervalAverageGeneric<T> {
-  final double intervalSize;
+  final double interval;
   final double Function(T) _getX;
   final double Function(T) _getY;
 
@@ -33,27 +33,47 @@ class InternalCenteredIntervalAverageGeneric<T> {
   final QueueAverageGeneric<T> _nextQueue;
 
   InternalCenteredIntervalAverageGeneric({
-    required this.intervalSize,
+    required this.interval,
     required double Function(T) getX,
     required double Function(T) getY,
-  }) : assert(intervalSize > 0),
+  }) : assert(interval > 0),
        _getX = getX,
        _getY = getY,
        _prevQueue = QueueAverageGeneric(getY: getY),
        _nextQueue = QueueAverageGeneric(getY: getY);
 
-  Iterable<(T, double)> mapByCenteredAverage(Iterable<T> items) sync* {
-    for (var item in items) {
-      final itemX = _getX(item);
-
-      while (_nextQueue.isNotEmpty &&
-          itemX - _getX(_nextQueue.peekFirst()) > intervalSize) {
-        yield _dequeueAndProcessNext();
+  Stream<(T, double)> mapByCenteredAverageAsync(Stream<T> items) async* {
+    await for (var item in items) {
+      for (var result in processItem(item)) {
+        yield result;
       }
-
-      _nextQueue.enqueue(item);
     }
 
+    for (var result in _processQueue()) {
+      yield result;
+    }
+  }
+
+  Iterable<(T, double)> mapByCenteredAverage(Iterable<T> items) sync* {
+    for (var item in items) {
+      yield* processItem(item);
+    }
+
+    yield* _processQueue();
+  }
+
+  Iterable<(T, double)> processItem(T item) sync* {
+    final itemX = _getX(item);
+
+    while (_nextQueue.isNotEmpty &&
+        itemX - _getX(_nextQueue.peekFirst()) > interval) {
+      yield _dequeueAndProcessNext();
+    }
+
+    _nextQueue.enqueue(item);
+  }
+
+  Iterable<(T, double)> _processQueue() sync* {
     while (_nextQueue.isNotEmpty) {
       yield _dequeueAndProcessNext();
     }
@@ -64,7 +84,7 @@ class InternalCenteredIntervalAverageGeneric<T> {
     final currentX = _getX(current);
 
     while (_prevQueue.isNotEmpty &&
-        currentX - _getX(_prevQueue.peekFirst()) > intervalSize) {
+        currentX - _getX(_prevQueue.peekFirst()) > interval) {
       _prevQueue.dequeue();
     }
 

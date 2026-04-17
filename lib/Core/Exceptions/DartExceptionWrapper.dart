@@ -1,9 +1,9 @@
-import 'package:run_tracker/Core/Exceptions/export.dart';
+part of 'AppException.dart';
 
-class DartExceptionWrapper extends AppException {
+class _DartExceptionWrapper extends AppException {
   final Object dartException;
 
-  DartExceptionWrapper(this.dartException, [StackTrace? stackTrace])
+  _DartExceptionWrapper(this.dartException, [StackTrace? stackTrace])
     : super(message: dartException.toString(), stackTrace: stackTrace);
 
   @override

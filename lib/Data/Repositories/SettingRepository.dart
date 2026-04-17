@@ -1,8 +1,7 @@
 import 'package:cancellation_token/cancellation_token.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
-import 'package:run_tracker/Core/Exceptions/AppException.dart';
-import 'package:run_tracker/Core/Exceptions/DartExceptionWrapper.dart';
+import 'package:run_tracker/Core/export.dart';
 import 'package:run_tracker/Data/AppDatabase.dart';
 
 abstract class BaseSettingRepository<T> {
@@ -22,11 +21,10 @@ abstract class BaseSettingRepository<T> {
     Setting? setting;
     try {
       setting = await selectStatement.getSingleOrNull();
-    } catch (ex, s) {
+    } catch (ex) {
       throw AppException(
         message: "Exception when get setting for key $key",
-        stackTrace: s,
-        innerException: DartExceptionWrapper(ex),
+        innerException: AppException.inner(ex),
         data: {"key": key},
       );
     }
@@ -39,11 +37,10 @@ abstract class BaseSettingRepository<T> {
     T? model;
     try {
       model = protectedDeserialize(setting.value);
-    } catch (ex, s) {
+    } catch (ex) {
       throw AppException(
         message: "Exception when deserialize setting for key $key",
-        stackTrace: s,
-        innerException: DartExceptionWrapper(ex),
+        innerException: AppException.inner(ex),
         data: {"key": key, "serializedValue": setting.value},
       );
     }
@@ -58,11 +55,10 @@ abstract class BaseSettingRepository<T> {
     String? serialized;
     try {
       serialized = protectedSerialize(model);
-    } catch (ex, s) {
+    } catch (ex) {
       throw AppException(
         message: "Exception when serialize setting for key $key",
-        stackTrace: s,
-        innerException: DartExceptionWrapper(ex),
+        innerException: AppException.inner(ex),
         data: {"key": key, "model.toString": model.toString()},
       );
     }
@@ -70,11 +66,10 @@ abstract class BaseSettingRepository<T> {
       await _appDatabase.settings.insertOnConflictUpdate(
         Setting(name: key, value: serialized),
       );
-    } catch (ex, s) {
+    } catch (ex) {
       throw AppException(
         message: "Exception when set setting for key $key",
-        stackTrace: s,
-        innerException: DartExceptionWrapper(ex),
+        innerException: AppException.inner(ex),
         data: {"key": key, "serializedValue": serialized},
       );
     }
