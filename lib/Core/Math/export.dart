@@ -6,3 +6,4 @@ export 'LargeTriangleDownSampling.dart';
 export 'QueueAverageGeneric.dart';
 export 'CenteredIntervalAverageGeneric.dart';
 export 'CompressorGeneric.dart';
+export 'GridLinearInterpolation.dart';

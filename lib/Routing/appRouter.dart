@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:run_tracker/Pages/Pulse/export.dart';
 import 'package:run_tracker/Pages/TrackHistory/export.dart';
 import 'package:run_tracker/Pages/TrackRecord/export.dart';
 import 'package:run_tracker/Pages/export.dart';
@@ -26,6 +27,7 @@ final List<RouteBase> appRoutes = [
       return TrackRecordPage(trackRecordId: id);
     },
   ),
+  GoRoute(path: AppRoutes.Pulse, builder: (context, state) => PulsePage()),
 ];
 
 final rootNavigatorKey = GlobalKey<NavigatorState>(

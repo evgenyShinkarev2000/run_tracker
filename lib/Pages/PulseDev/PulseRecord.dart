@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:run_tracker/Core/export.dart';
 import 'package:run_tracker/Pages/PulseDev/DashboardChart.dart';
+import 'package:run_tracker/Pages/PulseDev/FFTChartTimer.dart';
 import 'package:run_tracker/Pages/PulseDev/TransformMethods.dart';
 import 'package:run_tracker/Providers/Camera/export.dart';
 import 'package:run_tracker/Providers/export.dart';
@@ -48,6 +49,7 @@ class _PulseRecordState extends ConsumerState<PulseRecord> {
   bool processFrame = false;
   bool showProcessedChart = false;
   bool showPreview = false;
+  bool showSpectogram = false;
 
   @override
   void initState() {
@@ -108,21 +110,21 @@ class _PulseRecordState extends ConsumerState<PulseRecord> {
                     ),
                   ),
                   SizedBox(
-                    width: 200,
+                    width: 150,
                     child: CheckboxListTile(
                       dense: true,
                       value: showRawChart,
                       onChanged: _handleShowChartChanged,
-                      title: Text("show chart"),
+                      title: Text("chart"),
                     ),
                   ),
                   SizedBox(
-                    width: 300,
+                    width: 250,
                     child: CheckboxListTile(
                       dense: true,
                       value: showProcessedChart,
                       onChanged: _handleShowProcessedChartChanged,
-                      title: Text("show processed chart"),
+                      title: Text("processed chart"),
                     ),
                   ),
                   SizedBox(
@@ -132,6 +134,15 @@ class _PulseRecordState extends ConsumerState<PulseRecord> {
                       value: processFrame,
                       onChanged: _handleProcessFrameChanged,
                       title: Text("process frame"),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 250,
+                    child: CheckboxListTile(
+                      dense: true,
+                      value: showSpectogram,
+                      onChanged: _handleShowSpectogramChanged,
+                      title: Text("spectogram"),
                     ),
                   ),
                   ValueListenableBuilder(
@@ -163,6 +174,17 @@ class _PulseRecordState extends ConsumerState<PulseRecord> {
                       spots: processedSpots,
                       minX: minX,
                       maxX: maxX,
+                    ),
+                  ),
+                )
+              : null,
+          showSpectogram
+              ? Flexible(
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: FFTChartTimer(
+                      processFFT: true,
+                      processedSpots: processedSpots,
                     ),
                   ),
                 )
@@ -312,6 +334,16 @@ class _PulseRecordState extends ConsumerState<PulseRecord> {
 
     setState(() {
       showProcessedChart = value;
+    });
+  }
+
+  void _handleShowSpectogramChanged(bool? value) {
+    if (value == null) {
+      return;
+    }
+
+    setState(() {
+      showSpectogram = value;
     });
   }
 

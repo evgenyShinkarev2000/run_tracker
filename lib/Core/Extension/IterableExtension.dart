@@ -15,6 +15,25 @@ extension IterableExtension<T> on Iterable<T> {
     return max;
   }
 
+  T? selectMaxItem<N extends num>(N Function(T item) selector) {
+    final iterator = this.iterator;
+    if (!iterator.moveNext()) {
+      return null;
+    }
+
+    var maxItem = iterator.current;
+    var maxNum = selector(iterator.current);
+    while (iterator.moveNext()) {
+      final currentNum = selector(iterator.current);
+      if (currentNum > maxNum) {
+        maxNum = currentNum;
+        maxItem = iterator.current;
+      }
+    }
+
+    return maxItem;
+  }
+
   (N, N)? selectMinMaxNum<N extends num>(N Function(T item) selector) {
     final iterator = this.iterator;
     if (!iterator.moveNext()) {

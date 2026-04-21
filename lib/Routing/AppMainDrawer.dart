@@ -21,6 +21,10 @@ class AppMainDrawer extends StatelessWidget {
             title: context.appLocalization.menuHistory,
           ),
           DrawerItem(
+            path: AppRoutes.Pulse,
+            title: context.appLocalization.menuPulse,
+          ),
+          DrawerItem(
             path: AppRoutes.Settings,
             title: context.appLocalization.menuSettings,
           ),

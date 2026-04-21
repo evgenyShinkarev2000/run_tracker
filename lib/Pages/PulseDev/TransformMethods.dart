@@ -59,6 +59,18 @@ class TransformMethods {
     return spots;
   }
 
+  static Iterable<FlSpot> interpolateAll(
+    Iterable<FlSpot> spots,
+    double gridStep,
+  ) sync* {
+    final interpolation = GridLinearInterpolation(gridStep);
+    for (final spot in spots) {
+      yield* interpolation
+          .interpolate(spot.x, spot.y)
+          .map((xy) => FlSpot(xy.$1, xy.$2));
+    }
+  }
+
   static double getX(FlSpot spot) => spot.x;
   static double getY(FlSpot spot) => spot.y;
 }
@@ -85,6 +97,8 @@ extension TransformMethodsExtension on Iterable<FlSpot> {
     interval: interval,
     count: count,
   );
+
+  Iterable<FlSpot> interpolateAll(double interval) => TransformMethods.interpolateAll(this, interval);
 }
 
 class TransformBuilder {

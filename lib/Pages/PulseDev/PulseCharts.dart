@@ -1,9 +1,11 @@
+import 'package:fftea/fftea.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:run_tracker/Core/export.dart';
-import 'package:run_tracker/Pages/PulseDev/TransformMethods.dart';
 import 'package:run_tracker/Pages/PulseDev/DashboardChart.dart';
 import 'package:run_tracker/Pages/PulseDev/Dashboards.dart';
+import 'package:run_tracker/Pages/PulseDev/FFTHelper.dart';
+import 'package:run_tracker/Pages/PulseDev/TransformMethods.dart';
 import 'package:run_tracker/Services/Pulse/export.dart';
 
 class PulseCharts extends StatefulWidget {
@@ -19,9 +21,9 @@ class PulseChartsState extends State<PulseCharts> {
 
   List<BrightnessWithDuration> data = [];
   List<FlSpot> rawDataSpots = [];
-  List<FlSpot> data1 = [];
-  List<FlSpot> data2 = [];
-  List<FlSpot> data3 = [];
+  List<FlSpot> prepearedData = [];
+  List<FlSpot> rawSpectogram = [];
+  List<FlSpot> paddedSpectogram = [];
 
   RangeValues rangeValues = RangeValues(0, 0);
   double? minX;
@@ -29,10 +31,6 @@ class PulseChartsState extends State<PulseCharts> {
 
   @override
   Widget build(BuildContext context) {
-    if (data.isEmpty) {
-      return Center(child: Text("no data"));
-    }
-
     return Column(
       children: [
         RangeSlider(
@@ -64,10 +62,10 @@ class PulseChartsState extends State<PulseCharts> {
                       ),
                       Expanded(
                         child: DashboardChart(
-                          title: "data 1",
+                          title: "prepearedData",
                           minX: rangeValues.start,
                           maxX: rangeValues.end,
-                          spots: data1,
+                          spots: prepearedData,
                         ),
                       ),
                     ],
@@ -78,18 +76,17 @@ class PulseChartsState extends State<PulseCharts> {
                     children: [
                       Expanded(
                         child: DashboardChart(
-                          title: "data 2",
-                          minX: rangeValues.start,
-                          maxX: rangeValues.end,
-                          spots: data2,
+                          title: "raw spectogram, x - index",
+                          spots: rawSpectogram,
+                          allowTouch: true,
                         ),
                       ),
                       Expanded(
                         child: DashboardChart(
-                          title: "data 3",
-                          minX: rangeValues.start,
-                          maxX: rangeValues.end,
-                          spots: data3,
+                          title: "padded spectogram, x - frequency",
+                          spots: paddedSpectogram,
+                          allowTouch: true,
+                          roundX: 2,
                         ),
                       ),
                     ],
@@ -122,23 +119,45 @@ class PulseChartsState extends State<PulseCharts> {
         .map((e) => FlSpot(e.duration.inSecondsDouble, e.brightness))
         .toList();
 
-    data2 = rawDataSpots
+    prepearedData = rawDataSpots
         .removeOffset(0.3)
         .average(0.3)
         .average(0.2)
         .average(0.1)
         .toList();
 
-    final TransformBuilder _transform = TransformBuilder()
-      ..removeOffset(0.3)
-      ..average(0.3)
-      ..average(0.2)
-      ..average(0.1);
-
-    data3 = [];
-    for (final spot in rawDataSpots) {
-      data3.addAll(_transform.add(spot));
+    final interpolatedSpots = prepearedData.interpolateAll(1 / 30).toList();
+    final maxInterpolatedX = interpolatedSpots.lastOrNull?.x;
+    if (maxInterpolatedX != null) {
+      updateFFT(interpolatedSpots.map((v) => v.y).toList(), maxInterpolatedX);
+    } else {
+      rawSpectogram = [];
+      paddedSpectogram = [];
     }
+  }
+
+  void updateFFT(List<double> interpolated, double maxX) {
+    final rawFFT = FFT(interpolated.length);
+    final rawResult = rawFFT.realFft(interpolated);
+    rawSpectogram = rawResult
+        .magnitudes()
+        .take((rawResult.length / 2).floor())
+        .indexed
+        .map((v) => FlSpot(v.$1.toDouble(), v.$2))
+        .toList();
+
+    final paddedFFT = FFTHelper(
+      size: interpolated.length,
+      durationSeconds: maxX,
+      wantedFrequencyAccuracy: 1 / 60,
+    );
+    final spectogramResult = paddedFFT.findSpectogram(
+      interpolated,
+      maxFrequency: 4,
+    );
+    paddedSpectogram = spectogramResult.spectogram.indexed
+        .map((v) => FlSpot(spectogramResult.indexToFrequency(v.$1), v.$2))
+        .toList();
   }
 
   void _handleRangeValuesChanged(RangeValues values) {

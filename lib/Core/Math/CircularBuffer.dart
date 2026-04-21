@@ -40,6 +40,12 @@ class CircularBuffer<T> {
     return element;
   }
 
+  void clear() {
+    _list.clear();
+    _count = 0;
+    _startIndex = 0;
+  }
+
   List<T> toList() {
     return List<T>.generate(_count, (i) {
       var index = _startIndex + i;
