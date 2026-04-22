@@ -7,9 +7,8 @@ class PulseChart extends StatelessWidget {
   final double maxX;
   final double? minY;
   final double? maxY;
-  final GlobalKey _emptyKey = GlobalKey(debugLabel: "empty line chart");
 
-  PulseChart({
+  const PulseChart({
     super.key,
     required this.spots,
     required this.minX,
@@ -20,9 +19,11 @@ class PulseChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (spots.isEmpty) {
+      return Container();
+    }
+
     return LineChart(
-      // prevent LateInitializationError: Field 'mostLeftSpot' has not been initialized.The relevant error-causing widget was: LineChart
-      // key: spots.isEmpty ? _emptyKey : null,
       LineChartData(
         minX: minX,
         maxX: maxX,

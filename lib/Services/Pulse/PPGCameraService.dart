@@ -41,6 +41,7 @@ class PPGCameraService implements IDisposable {
   DateTime? _stableStartedAt;
   DateTime? _lastFFTRun;
 
+  // TODO вынести в конфигурацию
   final Duration _cameraUnstableTime = Duration(milliseconds: 500);
   final double _frameRate = 30;
   final Duration _fftFindFrequency = Duration(seconds: 1);
@@ -65,25 +66,38 @@ class PPGCameraService implements IDisposable {
 
   @override
   void dispose() {
-    stop();
+    _frameSubscription?.cancel();
     _spotController.close();
     _pulseController.close();
     _isDisposed = true;
   }
 
-  void restart() {
+  void start() {
     _ensureNotDisposed();
-    stop();
-    _frameSubscription = _camera.stream.listen(_handleFrame);
-  }
 
-  void stop() {
-    if (_frameSubscription == null) {
+    if (_frameSubscription != null) {
       return;
     }
 
-    _frameSubscription!.cancel();
+    _frameSubscription = _camera.stream.listen(_handleFrame);
+  }
+
+  void restart() {
+    _ensureNotDisposed();
+
+    _frameSubscription ??= _camera.stream.listen(_handleFrame);
+    _resetProcessors();
+  }
+
+  void stop() {
+    _ensureNotDisposed();
+
+    _resetProcessors();
+    _frameSubscription?.cancel();
     _frameSubscription = null;
+  }
+
+  void _resetProcessors() {
     _lastFrameTimestamp = null;
     _startedAt = null;
     _stableStartedAt = null;
@@ -140,7 +154,8 @@ class PPGCameraService implements IDisposable {
     }
     if (_circularBuffer.count == _fftSize &&
         (_lastFFTRun == null ||
-            _lastFrameTimestamp!.difference(_lastFFTRun!) > _fftFindFrequency)) {
+            _lastFrameTimestamp!.difference(_lastFFTRun!) >
+                _fftFindFrequency)) {
       _lastFFTRun = _lastFrameTimestamp;
       final spectogram = _fft.findSpectogram(
         _circularBuffer.toList(),

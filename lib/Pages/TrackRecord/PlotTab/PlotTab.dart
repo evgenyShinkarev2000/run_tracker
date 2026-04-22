@@ -8,7 +8,7 @@ import 'package:run_tracker/Services/export.dart';
 import 'package:run_tracker/localization/export.dart';
 
 class PlotTab extends StatefulWidget {
-  final TrackRecordWithSummaryAndPoints trackRecord;
+  final TrackRecordWithSummaryAndPointAndPulse trackRecord;
 
   const PlotTab({super.key, required this.trackRecord});
 
@@ -19,6 +19,7 @@ class PlotTab extends StatefulWidget {
 class _PlotTabState extends State<PlotTab> {
   late final List<FlSpot> speedSpots = [];
   late final List<FlSpot> heightSpots = [];
+  late final List<FlSpot> _pulseSpots = [];
   late double maxX;
 
   @override
@@ -54,7 +55,14 @@ class _PlotTabState extends State<PlotTab> {
               mapYToView: _yToHeight,
               mapXToView: _xToDuration,
             ),
-            //TODO график пульса
+            NiceChart(
+              title:
+                  "${context.appLocalization.nounPulse} ${context.appLocalization.unitShortBPM}",
+              rawSpots: _pulseSpots,
+              maxX: maxX,
+              mapYToView: _yToPulse,
+              mapXToView: _xToDuration,
+            ),
           ],
         ),
       ),
@@ -97,6 +105,16 @@ class _PlotTabState extends State<PlotTab> {
       }
     }
 
+    _pulseSpots.addAll(
+      widget.trackRecord.pulseMeasurements.map(
+        (pm) => FlSpot(
+          pm.measuredAt.difference(startDateTime).inSecondsDouble,
+          pm.pulseBPM,
+        ),
+      ),
+    );
+    _pulseSpots.sort((a, b) => a.x.compareTo(b.x));
+
     maxX = widget.trackRecord.points.orderedPoints.last.createdAt
         .difference(widget.trackRecord.points.orderedPoints.first.createdAt)
         .inSecondsDouble;
@@ -105,5 +123,7 @@ class _PlotTabState extends State<PlotTab> {
   static String _yToSpeed(double y) =>
       Speed.metersPerSecondToKilometersPerHour(y).toStringAsFixed(1);
   static String _yToHeight(double y) => y.toStringAsFixed(0);
-  static String _xToDuration(double x) => Duration(seconds: x.toInt()).HH_noPad_mmss;
+  static String _xToDuration(double x) =>
+      Duration(seconds: x.toInt()).HH_noPad_mmss;
+  static String _yToPulse(double y) => y.toStringAsFixed(0);
 }

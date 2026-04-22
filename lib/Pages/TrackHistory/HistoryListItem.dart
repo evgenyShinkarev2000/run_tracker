@@ -88,10 +88,12 @@ class _HistoryListItemState extends ConsumerState<HistoryListItem> {
                         "${widget.item.summary.pace?.tryConvertToDuration()?.mmss}",
                     unit: context.appLocalization.unitShortMinPerKm,
                   ),
-                  //TODO add pulse
                   ListItemText(
                     title: context.appLocalization.runcardCoverPulse,
-                    value: "developing...",
+                    value: widget.item.summary.averagePulseBPM
+                        ?.round()
+                        .toString(),
+                    unit: context.appLocalization.unitShortBPM,
                   ),
                 ],
               ),
@@ -105,7 +107,8 @@ class _HistoryListItemState extends ConsumerState<HistoryListItem> {
   static List<List<LatLng>> _pointsToPolylines(
     TrackRecordWithSummaryAndPoints model,
   ) {
-    return model.points.splitActiveSegments()
+    return model.points
+        .splitActiveSegments()
         .map(
           (points) => points
               .where((p) => p.hasLatLng)

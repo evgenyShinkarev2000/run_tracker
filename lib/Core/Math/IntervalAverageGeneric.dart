@@ -25,4 +25,8 @@ class IntervalAverageGeneric<T> {
 
     return _averageQueue.average;
   }
+
+  void reset() {
+    _averageQueue.reset();
+  }
 }

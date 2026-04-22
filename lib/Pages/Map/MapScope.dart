@@ -25,8 +25,10 @@ class _MapScopeState extends ConsumerState<MapScope> {
     _manager = TrackManager(
       ref.read(trackRecordRepositoryProvider),
       ref.read(trackRecordPointsRepositoryProvider),
+      ref.read(pulseRepositoryProvider),
       ref.read(trackServiceProvider),
       ref.read(positionStreamProvider),
+      ref.read(loggerProvider),
     );
     final logger = ref.read(loggerProvider);
     _manager.initialize().catchError((ex, s){

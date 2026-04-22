@@ -19,7 +19,7 @@ class PulsePage extends StatelessWidget{
         ],
       ),
       drawer: AppMainDrawer(),
-      body: Center(child: PulseCard()),
+      body: Center(child: PulseCard(showManual: true,)),
     );
   }
 }

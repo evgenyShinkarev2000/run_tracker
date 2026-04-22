@@ -177,8 +177,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get pulseMeasureTabManual => 'вручную';
 
   @override
-  String get pulseMeasureMetronomIntructionClickAtDrum =>
-      'нажимайте барабан на каждый удар сердца';
+  String get pulseMeasureMetronomInstructionClickAtDrum =>
+      'нажимайте на экран на каждый удар сердца';
+
+  @override
+  String get pulseMeasureManualInstruction => 'введите пульс';
 
   @override
   String get settingsLanguage => 'язык';

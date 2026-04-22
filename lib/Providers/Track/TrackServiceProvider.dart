@@ -7,6 +7,7 @@ final trackServiceProvider = Provider((ref) {
     ref.watch(trackRecordRepositoryProvider),
     ref.watch(trackRecordPointsRepositoryProvider),
     ref.watch(trackRecordSummaryRepositoryProvider),
+    ref.watch(pulseRepositoryProvider),
     TrackSummaryCalculator(),
   );
 });

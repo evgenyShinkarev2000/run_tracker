@@ -10,18 +10,23 @@ class TrackSummary {
   final Duration? activeDuration;
   final Distance? activeDistance;
   final Duration? activePositioningDuration;
+  final double? averagePulseBPM;
 
-  TrackSummary({
+  const TrackSummary({
     this.start,
     this.end,
     this.activeDuration,
     this.activeDistance,
     this.activePositioningDuration,
+    this.averagePulseBPM,
   });
 }
 
 class TrackSummaryCalculator {
-  TrackSummary calculateSummary(List<BasePoint> points) {
+  TrackSummary calculateSummary(
+    List<BasePoint> points,
+    List<PulseMeasurement> pulseMeasurements,
+  ) {
     if (points.isEmpty) {
       return TrackSummary.empty;
     }
@@ -31,13 +36,21 @@ class TrackSummaryCalculator {
     for (final point in points) {
       point.accept(visitor);
     }
-    
+
+    var sum = 0.0;
+    for (final measurement in pulseMeasurements) {
+      sum += measurement.pulseBPM;
+    }
+
     return TrackSummary(
       start: points.first.createdAt,
       end: points.last.createdAt,
       activeDuration: _findActiveDuration(points),
       activeDistance: Distance(visitor.activeDistance),
       activePositioningDuration: visitor.activeDuration,
+      averagePulseBPM: pulseMeasurements.isEmpty
+          ? null
+          : sum / pulseMeasurements.length,
     );
   }
 

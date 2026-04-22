@@ -92,6 +92,6 @@ class OptionalLazyBehaviorSubject<T> implements IDisposable {
     if (behaviorSubject.hasValue) {
       return;
     }
-    behaviorSubject.add(optionalValue.value as T);
+    behaviorSubject.add(optionalValue.value);
   }
 }

@@ -21,7 +21,7 @@ class TrackRecordPage extends ConsumerStatefulWidget {
 }
 
 class _TrackRecordPageState extends ConsumerState<TrackRecordPage> {
-  late final Future<TrackRecordWithSummaryAndPoints?> trackRecordFuture;
+  late final Future<TrackRecordWithSummaryAndPointAndPulse?> trackRecordFuture;
 
   final CancellationToken ct = CancellationToken();
 
@@ -33,7 +33,7 @@ class _TrackRecordPageState extends ConsumerState<TrackRecordPage> {
         ? Future.value(null)
         : ref
               .read(trackServiceProvider)
-              .getTrackRecordWithSummaryAndPointsOrGenerateById(
+              .getTrackRecordWithSummaryAndPointsAndPulseOrGenerateById(
                 widget.trackRecordId!,
                 ct,
               );

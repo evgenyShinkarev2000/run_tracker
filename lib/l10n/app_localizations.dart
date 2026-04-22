@@ -428,11 +428,17 @@ abstract class AppLocalizations {
   /// **'manual'**
   String get pulseMeasureTabManual;
 
-  /// No description provided for @pulseMeasureMetronomIntructionClickAtDrum.
+  /// No description provided for @pulseMeasureMetronomInstructionClickAtDrum.
   ///
   /// In en, this message translates to:
-  /// **'touch the drum for every heartbeat'**
-  String get pulseMeasureMetronomIntructionClickAtDrum;
+  /// **'touch the screen for every heartbeat'**
+  String get pulseMeasureMetronomInstructionClickAtDrum;
+
+  /// No description provided for @pulseMeasureManualInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'enter pulse'**
+  String get pulseMeasureManualInstruction;
 
   /// No description provided for @settingsLanguage.
   ///

@@ -22,7 +22,12 @@ class MapTab extends ConsumerWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          AspectRatio(aspectRatio: 1, child: TrackRecordMap(orderedPoints: trackRecord.points.orderedPoints)),
+          AspectRatio(
+            aspectRatio: 1,
+            child: TrackRecordMap(
+              orderedPoints: trackRecord.points.orderedPoints,
+            ),
+          ),
           MapTabRow(
             title: context.appLocalization.runCardCoverBeginDateTime,
             value: trackRecord.summary.start
@@ -42,7 +47,9 @@ class MapTab extends ConsumerWidget {
           ),
           MapTabRow(
             title: context.appLocalization.runCardCoverDistance,
-            value: trackRecord.summary.activeDistance?.meters.toInt().toString(),
+            value: trackRecord.summary.activeDistance?.meters
+                .toInt()
+                .toString(),
             unit: context.appLocalization.unitShortM,
             isSelected: true,
           ),
@@ -55,16 +62,15 @@ class MapTab extends ConsumerWidget {
           ),
           MapTabRow(
             title: context.appLocalization.nounPace,
-            value: trackRecord.summary.pace?.minutesPerKilometer.toStringAsFixed(
-              1,
-            ),
+            value: trackRecord.summary.pace?.minutesPerKilometer
+                .toStringAsFixed(1),
             unit: context.appLocalization.unitShortMinPerKm,
             isSelected: true,
           ),
-          //TODO добавить пульс
           MapTabRow(
             title: context.appLocalization.nounPulse,
-            value: "Developing...",
+            value: trackRecord.summary.averagePulseBPM?.round().toString(),
+            unit: context.appLocalization.unitShortBPM,
           ),
         ],
       ),

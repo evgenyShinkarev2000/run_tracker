@@ -6,6 +6,7 @@ import 'package:run_tracker/Data/export.dart';
 import 'package:run_tracker/Services/Position/export.dart';
 import 'package:run_tracker/Services/Track/export.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:run_tracker/Services/Pulse/export.dart' as pulse;
 
 abstract class TrackStateProvider {
   Stream<TrackState> get stateStream;
@@ -42,14 +43,18 @@ class TrackManager
 
   final TrackRecordRepository _trackRecordRepository;
   final TrackRecordPointsRepository _trackRecordPointsRepository;
+  final PulseRepository _pulseRepository;
   final PositionProvider _positionDataProvider;
   final TrackService _trackService;
+  final ILogger _logger;
 
   TrackManager(
     this._trackRecordRepository,
     this._trackRecordPointsRepository,
+    this._pulseRepository,
     this._trackService,
     this._positionDataProvider,
+    this._logger,
   ) {
     _dashboard = TrackDashboardParameters(
       this,
@@ -130,7 +135,7 @@ class TrackManager
     await _writer!.writePause();
   }
 
-  Future<void> complete() async {
+  Future<TrackRecord> complete() async {
     switch (_stateSubject.value) {
       case TrackState.Running || TrackState.Paused:
         _stateSubject.add(TrackState.Completed);
@@ -139,9 +144,10 @@ class TrackManager
           _processedTrack!.copyWith(isCompleted: true),
         );
         await _trackService.generateOrUpdateSummary(_processedTrack!.id);
-        break;
+
+        return _processedTrack!;
       default:
-        _throwStateMustBeOneOfError([TrackState.Running, TrackState.Paused]);
+        throw _stateMustBeOneOfError([TrackState.Running, TrackState.Paused]);
     }
   }
 
@@ -149,6 +155,25 @@ class TrackManager
     _ensureState(TrackState.Paused);
     _stateSubject.add(TrackState.Running);
     _writer!.writeResume();
+  }
+
+  Future<void> writePulseMeasurement(
+    pulse.PulseMeasurement pulseMeasurement,
+  ) async {
+    switch (_stateSubject.value) {
+      case .Running || .Paused:
+        await _pulseRepository.addOrUpdate(
+          PulseMeasurementsCompanion.insert(
+            trackRecordId: _processedTrack!.id,
+            measuredAt: pulseMeasurement.measuredAt,
+            pulseBPM: pulseMeasurement.pulseBPM,
+            source: pulseMeasurement.pulseMeasureKind,
+          ),
+        );
+        break;
+      default:
+        throw _stateMustBeOneOfError([.Running, .Paused]);
+    }
   }
 
   Future<void> _normilizeAborted() async {
@@ -186,6 +211,7 @@ class TrackManager
       _trackRecordPointsRepository,
     );
     _recorder = TrackRecorder(
+      _logger,
       _writer!,
       stateProvider: this,
       positionProvider: _positionDataProvider,
@@ -204,9 +230,10 @@ class TrackManager
     );
   }
 
-  void _throwStateMustBeOneOfError(List<TrackState> states) {
-    throw StateError(
-      "TrackManager must be in one of states ${states.join(", ")}, current state ${_stateSubject.value}",
+  AppException _stateMustBeOneOfError(List<TrackState> states) {
+    throw AppException(
+      message:
+          "TrackManager must be in one of states ${states.join(", ")}, current state ${_stateSubject.value}",
     );
   }
 }

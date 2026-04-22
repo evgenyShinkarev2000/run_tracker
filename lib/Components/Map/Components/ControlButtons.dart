@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:run_tracker/Components/Loader/export.dart';
+import 'package:run_tracker/Core/export.dart';
+import 'package:run_tracker/Pages/Pulse/export.dart';
 import 'package:run_tracker/Providers/Track/export.dart';
+import 'package:run_tracker/Providers/export.dart';
+import 'package:run_tracker/Services/Pulse/export.dart';
 import 'package:run_tracker/Services/Track/export.dart';
+import 'package:run_tracker/Routing/export.dart';
 
 class ControlButtons extends ConsumerStatefulWidget {
   const ControlButtons({super.key});
@@ -26,9 +31,7 @@ class _ControlButtonsState extends ConsumerState<ControlButtons> {
   List<Widget> _buildButtons(TrackState state) {
     switch (state) {
       case TrackState.Loading || TrackState.Aborted || TrackState.Completed:
-        return [
-          const ButtonLoader(),
-        ];
+        return [const ButtonLoader()];
       case TrackState.Ready:
         return [_buildButton(_start, Icons.play_arrow_outlined)];
       case TrackState.Running:
@@ -67,9 +70,32 @@ class _ControlButtonsState extends ConsumerState<ControlButtons> {
   }
 
   void _stop() async {
-    await ref.read(trackManagerProvider).complete();
-    //TODO переход к треку
+    final trackRecord = await ref.read(trackManagerProvider).complete();
+    if (context.mounted) {
+      // ignore: use_build_context_synchronously
+      context.appRouter.goTrackRecord(trackRecord.id);
+    }
   }
 
-  void _pulse() {}
+  void _pulse() async {
+    showDialog(
+      context: context,
+      builder: (_) => PulseDialog(onSave: _handlePulseSave),
+    );
+  }
+
+  void _handlePulseSave(PulseMeasurement model) async {
+    if (!mounted) {
+      return;
+    }
+
+    final trackManager = ref.read(trackManagerProvider);
+    final messageService = ref.read(messageServiceProvider);
+
+    try {
+      await trackManager.writePulseMeasurement(model);
+    } catch (ex, s) {
+      messageService.showAndLogError(AppException.caught(ex, s));
+    }
+  }
 }

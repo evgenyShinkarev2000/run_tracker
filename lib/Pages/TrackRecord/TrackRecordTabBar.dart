@@ -6,7 +6,7 @@ import 'package:run_tracker/Services/Track/export.dart';
 import 'package:run_tracker/Theme/export.dart';
 
 class TrackRecordTabBar extends StatelessWidget {
-  final TrackRecordWithSummaryAndPoints trackRecord;
+  final TrackRecordWithSummaryAndPointAndPulse trackRecord;
 
   const TrackRecordTabBar({super.key, required this.trackRecord});
 

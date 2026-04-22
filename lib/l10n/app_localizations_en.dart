@@ -177,8 +177,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pulseMeasureTabManual => 'manual';
 
   @override
-  String get pulseMeasureMetronomIntructionClickAtDrum =>
-      'touch the drum for every heartbeat';
+  String get pulseMeasureMetronomInstructionClickAtDrum =>
+      'touch the screen for every heartbeat';
+
+  @override
+  String get pulseMeasureManualInstruction => 'enter pulse';
 
   @override
   String get settingsLanguage => 'language';

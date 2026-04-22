@@ -81,7 +81,7 @@ class TrackRecordQueryModel {
   final DateTime? trackCreatedAtStart;
   final DateTime? trackCreatedAtEnd;
 
-  TrackRecordQueryModel({
+  const TrackRecordQueryModel({
     this.pagination,
     this.trackCreatedAtSort,
     this.trackCreatedAtStart,

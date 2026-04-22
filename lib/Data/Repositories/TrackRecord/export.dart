@@ -7,3 +7,4 @@ export 'TrackRecordRepository.dart';
 export 'ITrackRecordPointVisitor.dart';
 export 'CheckPointTypeVisitor.dart';
 export 'TrackRecordSummaryRepository.dart';
+export 'PulseRepository.dart';

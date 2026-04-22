@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:run_tracker/Core/Units/export.dart';
 import 'package:run_tracker/Data/Repositories/TrackRecord/export.dart';
 import 'package:run_tracker/Data/TypeConverters/export.dart';
+import 'package:run_tracker/Services/Pulse/export.dart';
 
 part 'AppDatabase.g.dart';
 
@@ -59,9 +60,18 @@ class TrackRecordSummaries extends Table {
       real().map(const DistanceConverter()).nullable()();
   IntColumn? get activePositioningDuration =>
       integer().map(const DurationConverter()).nullable()();
+  RealColumn? get averagePulse => real().nullable()();
 
   @override
   Set<Column<Object>> get primaryKey => {trackRecordId};
+}
+
+class PulseMeasurements extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get trackRecordId => integer().references(TrackRecords, #id)();
+  DateTimeColumn get measuredAt => dateTime()();
+  RealColumn get pulseBPM => real()();
+  TextColumn get source => textEnum<PulseMeasureKind>()();
 }
 
 @DriftDatabase(
@@ -71,6 +81,7 @@ class TrackRecordSummaries extends Table {
     TrackRecordPositionPoints,
     TrackRecordPoints,
     TrackRecordSummaries,
+    PulseMeasurements,
   ],
 )
 class AppDatabase extends _$AppDatabase {

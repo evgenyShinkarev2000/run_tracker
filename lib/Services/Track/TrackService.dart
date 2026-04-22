@@ -21,16 +21,30 @@ class TrackRecordWithSummaryAndPoints extends TrackRecordWithSummary {
   });
 }
 
+class TrackRecordWithSummaryAndPointAndPulse
+    extends TrackRecordWithSummaryAndPoints {
+  final List<PulseMeasurement> pulseMeasurements;
+
+  TrackRecordWithSummaryAndPointAndPulse({
+    required super.track,
+    required super.summary,
+    required super.points,
+    required this.pulseMeasurements,
+  });
+}
+
 class TrackService {
   final TrackRecordRepository _trackRecordRepository;
   final TrackRecordPointsRepository _trackRecordPointsRepository;
   final TrackRecordSummaryRepository _trackRecordSummaryRepository;
+  final PulseRepository _pulseRepository;
   final TrackSummaryCalculator _trackSummaryCalculator;
 
   TrackService(
     this._trackRecordRepository,
     this._trackRecordPointsRepository,
     this._trackRecordSummaryRepository,
+    this._pulseRepository,
     this._trackSummaryCalculator,
   );
 
@@ -84,8 +98,8 @@ class TrackService {
     return result;
   }
 
-  Future<TrackRecordWithSummaryAndPoints?>
-  getTrackRecordWithSummaryAndPointsOrGenerateById(
+  Future<TrackRecordWithSummaryAndPointAndPulse?>
+  getTrackRecordWithSummaryAndPointsAndPulseOrGenerateById(
     int trackRecordId, [
     CancellationToken? ct,
   ]) async {
@@ -96,13 +110,15 @@ class TrackService {
     if (result == null) {
       return null;
     }
+    final pulse = await _pulseRepository.getByQuery(PulseMeasureQueryModel(trackRecordIds: [trackRecordId]), ct);
 
-    return TrackRecordWithSummaryAndPoints(
+    return TrackRecordWithSummaryAndPointAndPulse(
       track: result.track,
       summary: result.summary == null
           ? await generateOrUpdateAndGetSummary(trackRecordId)
           : result.summary!,
       points: TrackPointCollection.fromPoints(result.points),
+      pulseMeasurements: pulse,
     );
   }
 
@@ -110,7 +126,14 @@ class TrackService {
     final points = await _trackRecordPointsRepository.getPointsByTrackRecordId(
       trackRecordId,
     );
-    return _trackSummaryCalculator.calculateSummary(points.toList());
+    final pulseMeasurements = await _pulseRepository.getByQuery(
+      PulseMeasureQueryModel(trackRecordIds: [trackRecordId]),
+    );
+
+    return _trackSummaryCalculator.calculateSummary(
+      points.toList(),
+      pulseMeasurements,
+    );
   }
 
   Future<void> generateOrUpdateSummary(int trackRecordId) async {

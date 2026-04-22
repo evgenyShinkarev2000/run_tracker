@@ -1388,6 +1388,17 @@ class $TrackRecordSummariesTable extends TrackRecordSummaries
       ).withConverter<Duration?>(
         $TrackRecordSummariesTable.$converteractivePositioningDurationn,
       );
+  static const VerificationMeta _averagePulseMeta = const VerificationMeta(
+    'averagePulse',
+  );
+  @override
+  late final GeneratedColumn<double> averagePulse = GeneratedColumn<double>(
+    'average_pulse',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     trackRecordId,
@@ -1396,6 +1407,7 @@ class $TrackRecordSummariesTable extends TrackRecordSummaries
     activeDuration,
     activeDistance,
     activePositioningDuration,
+    averagePulse,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1428,6 +1440,15 @@ class $TrackRecordSummariesTable extends TrackRecordSummaries
       context.handle(
         _endMeta,
         end.isAcceptableOrUnknown(data['end']!, _endMeta),
+      );
+    }
+    if (data.containsKey('average_pulse')) {
+      context.handle(
+        _averagePulseMeta,
+        averagePulse.isAcceptableOrUnknown(
+          data['average_pulse']!,
+          _averagePulseMeta,
+        ),
       );
     }
     return context;
@@ -1473,6 +1494,10 @@ class $TrackRecordSummariesTable extends TrackRecordSummaries
               data['${effectivePrefix}active_positioning_duration'],
             ),
           ),
+      averagePulseBPM: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}average_pulse'],
+      ),
     );
   }
 
@@ -1503,6 +1528,7 @@ class TrackRecordSummary extends DataClass
   final Duration? activeDuration;
   final Distance? activeDistance;
   final Duration? activePositioningDuration;
+  final double? averagePulseBPM;
   const TrackRecordSummary({
     required this.trackRecordId,
     this.start,
@@ -1510,6 +1536,7 @@ class TrackRecordSummary extends DataClass
     this.activeDuration,
     this.activeDistance,
     this.activePositioningDuration,
+    this.averagePulseBPM,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1542,6 +1569,9 @@ class TrackRecordSummary extends DataClass
         ),
       );
     }
+    if (!nullToAbsent || averagePulseBPM != null) {
+      map['average_pulse'] = Variable<double>(averagePulseBPM);
+    }
     return map;
   }
 
@@ -1562,6 +1592,9 @@ class TrackRecordSummary extends DataClass
           activePositioningDuration == null && nullToAbsent
           ? const Value.absent()
           : Value(activePositioningDuration),
+      averagePulse: averagePulseBPM == null && nullToAbsent
+          ? const Value.absent()
+          : Value(averagePulseBPM),
     );
   }
 
@@ -1579,6 +1612,7 @@ class TrackRecordSummary extends DataClass
       activePositioningDuration: serializer.fromJson<Duration?>(
         json['activePositioningDuration'],
       ),
+      averagePulseBPM: serializer.fromJson<double?>(json['averagePulse']),
     );
   }
   @override
@@ -1593,6 +1627,7 @@ class TrackRecordSummary extends DataClass
       'activePositioningDuration': serializer.toJson<Duration?>(
         activePositioningDuration,
       ),
+      'averagePulse': serializer.toJson<double?>(averagePulseBPM),
     };
   }
 
@@ -1603,6 +1638,7 @@ class TrackRecordSummary extends DataClass
     Value<Duration?> activeDuration = const Value.absent(),
     Value<Distance?> activeDistance = const Value.absent(),
     Value<Duration?> activePositioningDuration = const Value.absent(),
+    Value<double?> averagePulse = const Value.absent(),
   }) => TrackRecordSummary(
     trackRecordId: trackRecordId ?? this.trackRecordId,
     start: start.present ? start.value : this.start,
@@ -1616,6 +1652,7 @@ class TrackRecordSummary extends DataClass
     activePositioningDuration: activePositioningDuration.present
         ? activePositioningDuration.value
         : this.activePositioningDuration,
+    averagePulseBPM: averagePulse.present ? averagePulse.value : this.averagePulseBPM,
   );
   TrackRecordSummary copyWithCompanion(TrackRecordSummariesCompanion data) {
     return TrackRecordSummary(
@@ -1633,6 +1670,9 @@ class TrackRecordSummary extends DataClass
       activePositioningDuration: data.activePositioningDuration.present
           ? data.activePositioningDuration.value
           : this.activePositioningDuration,
+      averagePulseBPM: data.averagePulse.present
+          ? data.averagePulse.value
+          : this.averagePulseBPM,
     );
   }
 
@@ -1644,7 +1684,8 @@ class TrackRecordSummary extends DataClass
           ..write('end: $end, ')
           ..write('activeDuration: $activeDuration, ')
           ..write('activeDistance: $activeDistance, ')
-          ..write('activePositioningDuration: $activePositioningDuration')
+          ..write('activePositioningDuration: $activePositioningDuration, ')
+          ..write('averagePulse: $averagePulseBPM')
           ..write(')'))
         .toString();
   }
@@ -1657,6 +1698,7 @@ class TrackRecordSummary extends DataClass
     activeDuration,
     activeDistance,
     activePositioningDuration,
+    averagePulseBPM,
   );
   @override
   bool operator ==(Object other) =>
@@ -1667,7 +1709,8 @@ class TrackRecordSummary extends DataClass
           other.end == this.end &&
           other.activeDuration == this.activeDuration &&
           other.activeDistance == this.activeDistance &&
-          other.activePositioningDuration == this.activePositioningDuration);
+          other.activePositioningDuration == this.activePositioningDuration &&
+          other.averagePulseBPM == this.averagePulseBPM);
 }
 
 class TrackRecordSummariesCompanion
@@ -1678,6 +1721,7 @@ class TrackRecordSummariesCompanion
   final Value<Duration?> activeDuration;
   final Value<Distance?> activeDistance;
   final Value<Duration?> activePositioningDuration;
+  final Value<double?> averagePulse;
   const TrackRecordSummariesCompanion({
     this.trackRecordId = const Value.absent(),
     this.start = const Value.absent(),
@@ -1685,6 +1729,7 @@ class TrackRecordSummariesCompanion
     this.activeDuration = const Value.absent(),
     this.activeDistance = const Value.absent(),
     this.activePositioningDuration = const Value.absent(),
+    this.averagePulse = const Value.absent(),
   });
   TrackRecordSummariesCompanion.insert({
     this.trackRecordId = const Value.absent(),
@@ -1693,6 +1738,7 @@ class TrackRecordSummariesCompanion
     this.activeDuration = const Value.absent(),
     this.activeDistance = const Value.absent(),
     this.activePositioningDuration = const Value.absent(),
+    this.averagePulse = const Value.absent(),
   });
   static Insertable<TrackRecordSummary> custom({
     Expression<int>? trackRecordId,
@@ -1701,6 +1747,7 @@ class TrackRecordSummariesCompanion
     Expression<int>? activeDuration,
     Expression<double>? activeDistance,
     Expression<int>? activePositioningDuration,
+    Expression<double>? averagePulse,
   }) {
     return RawValuesInsertable({
       if (trackRecordId != null) 'track_record_id': trackRecordId,
@@ -1710,6 +1757,7 @@ class TrackRecordSummariesCompanion
       if (activeDistance != null) 'active_distance': activeDistance,
       if (activePositioningDuration != null)
         'active_positioning_duration': activePositioningDuration,
+      if (averagePulse != null) 'average_pulse': averagePulse,
     });
   }
 
@@ -1720,6 +1768,7 @@ class TrackRecordSummariesCompanion
     Value<Duration?>? activeDuration,
     Value<Distance?>? activeDistance,
     Value<Duration?>? activePositioningDuration,
+    Value<double?>? averagePulse,
   }) {
     return TrackRecordSummariesCompanion(
       trackRecordId: trackRecordId ?? this.trackRecordId,
@@ -1729,6 +1778,7 @@ class TrackRecordSummariesCompanion
       activeDistance: activeDistance ?? this.activeDistance,
       activePositioningDuration:
           activePositioningDuration ?? this.activePositioningDuration,
+      averagePulse: averagePulse ?? this.averagePulse,
     );
   }
 
@@ -1765,6 +1815,9 @@ class TrackRecordSummariesCompanion
         ),
       );
     }
+    if (averagePulse.present) {
+      map['average_pulse'] = Variable<double>(averagePulse.value);
+    }
     return map;
   }
 
@@ -1776,7 +1829,379 @@ class TrackRecordSummariesCompanion
           ..write('end: $end, ')
           ..write('activeDuration: $activeDuration, ')
           ..write('activeDistance: $activeDistance, ')
-          ..write('activePositioningDuration: $activePositioningDuration')
+          ..write('activePositioningDuration: $activePositioningDuration, ')
+          ..write('averagePulse: $averagePulse')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PulseMeasurementsTable extends PulseMeasurements
+    with TableInfo<$PulseMeasurementsTable, PulseMeasurement> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PulseMeasurementsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _trackRecordIdMeta = const VerificationMeta(
+    'trackRecordId',
+  );
+  @override
+  late final GeneratedColumn<int> trackRecordId = GeneratedColumn<int>(
+    'track_record_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES track_records (id)',
+    ),
+  );
+  static const VerificationMeta _measuredAtMeta = const VerificationMeta(
+    'measuredAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> measuredAt = GeneratedColumn<DateTime>(
+    'measured_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _pulseBPMMeta = const VerificationMeta(
+    'pulseBPM',
+  );
+  @override
+  late final GeneratedColumn<double> pulseBPM = GeneratedColumn<double>(
+    'pulse_b_p_m',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<PulseMeasureKind, String> source =
+      GeneratedColumn<String>(
+        'source',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<PulseMeasureKind>(
+        $PulseMeasurementsTable.$convertersource,
+      );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    trackRecordId,
+    measuredAt,
+    pulseBPM,
+    source,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'pulse_measurements';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PulseMeasurement> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('track_record_id')) {
+      context.handle(
+        _trackRecordIdMeta,
+        trackRecordId.isAcceptableOrUnknown(
+          data['track_record_id']!,
+          _trackRecordIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_trackRecordIdMeta);
+    }
+    if (data.containsKey('measured_at')) {
+      context.handle(
+        _measuredAtMeta,
+        measuredAt.isAcceptableOrUnknown(data['measured_at']!, _measuredAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_measuredAtMeta);
+    }
+    if (data.containsKey('pulse_b_p_m')) {
+      context.handle(
+        _pulseBPMMeta,
+        pulseBPM.isAcceptableOrUnknown(data['pulse_b_p_m']!, _pulseBPMMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_pulseBPMMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PulseMeasurement map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PulseMeasurement(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      trackRecordId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}track_record_id'],
+      )!,
+      measuredAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}measured_at'],
+      )!,
+      pulseBPM: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}pulse_b_p_m'],
+      )!,
+      source: $PulseMeasurementsTable.$convertersource.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}source'],
+        )!,
+      ),
+    );
+  }
+
+  @override
+  $PulseMeasurementsTable createAlias(String alias) {
+    return $PulseMeasurementsTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<PulseMeasureKind, String, String> $convertersource =
+      const EnumNameConverter<PulseMeasureKind>(PulseMeasureKind.values);
+}
+
+class PulseMeasurement extends DataClass
+    implements Insertable<PulseMeasurement> {
+  final int id;
+  final int trackRecordId;
+  final DateTime measuredAt;
+  final double pulseBPM;
+  final PulseMeasureKind source;
+  const PulseMeasurement({
+    required this.id,
+    required this.trackRecordId,
+    required this.measuredAt,
+    required this.pulseBPM,
+    required this.source,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['track_record_id'] = Variable<int>(trackRecordId);
+    map['measured_at'] = Variable<DateTime>(measuredAt);
+    map['pulse_b_p_m'] = Variable<double>(pulseBPM);
+    {
+      map['source'] = Variable<String>(
+        $PulseMeasurementsTable.$convertersource.toSql(source),
+      );
+    }
+    return map;
+  }
+
+  PulseMeasurementsCompanion toCompanion(bool nullToAbsent) {
+    return PulseMeasurementsCompanion(
+      id: Value(id),
+      trackRecordId: Value(trackRecordId),
+      measuredAt: Value(measuredAt),
+      pulseBPM: Value(pulseBPM),
+      source: Value(source),
+    );
+  }
+
+  factory PulseMeasurement.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PulseMeasurement(
+      id: serializer.fromJson<int>(json['id']),
+      trackRecordId: serializer.fromJson<int>(json['trackRecordId']),
+      measuredAt: serializer.fromJson<DateTime>(json['measuredAt']),
+      pulseBPM: serializer.fromJson<double>(json['pulseBPM']),
+      source: $PulseMeasurementsTable.$convertersource.fromJson(
+        serializer.fromJson<String>(json['source']),
+      ),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'trackRecordId': serializer.toJson<int>(trackRecordId),
+      'measuredAt': serializer.toJson<DateTime>(measuredAt),
+      'pulseBPM': serializer.toJson<double>(pulseBPM),
+      'source': serializer.toJson<String>(
+        $PulseMeasurementsTable.$convertersource.toJson(source),
+      ),
+    };
+  }
+
+  PulseMeasurement copyWith({
+    int? id,
+    int? trackRecordId,
+    DateTime? measuredAt,
+    double? pulseBPM,
+    PulseMeasureKind? source,
+  }) => PulseMeasurement(
+    id: id ?? this.id,
+    trackRecordId: trackRecordId ?? this.trackRecordId,
+    measuredAt: measuredAt ?? this.measuredAt,
+    pulseBPM: pulseBPM ?? this.pulseBPM,
+    source: source ?? this.source,
+  );
+  PulseMeasurement copyWithCompanion(PulseMeasurementsCompanion data) {
+    return PulseMeasurement(
+      id: data.id.present ? data.id.value : this.id,
+      trackRecordId: data.trackRecordId.present
+          ? data.trackRecordId.value
+          : this.trackRecordId,
+      measuredAt: data.measuredAt.present
+          ? data.measuredAt.value
+          : this.measuredAt,
+      pulseBPM: data.pulseBPM.present ? data.pulseBPM.value : this.pulseBPM,
+      source: data.source.present ? data.source.value : this.source,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PulseMeasurement(')
+          ..write('id: $id, ')
+          ..write('trackRecordId: $trackRecordId, ')
+          ..write('measuredAt: $measuredAt, ')
+          ..write('pulseBPM: $pulseBPM, ')
+          ..write('source: $source')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, trackRecordId, measuredAt, pulseBPM, source);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PulseMeasurement &&
+          other.id == this.id &&
+          other.trackRecordId == this.trackRecordId &&
+          other.measuredAt == this.measuredAt &&
+          other.pulseBPM == this.pulseBPM &&
+          other.source == this.source);
+}
+
+class PulseMeasurementsCompanion extends UpdateCompanion<PulseMeasurement> {
+  final Value<int> id;
+  final Value<int> trackRecordId;
+  final Value<DateTime> measuredAt;
+  final Value<double> pulseBPM;
+  final Value<PulseMeasureKind> source;
+  const PulseMeasurementsCompanion({
+    this.id = const Value.absent(),
+    this.trackRecordId = const Value.absent(),
+    this.measuredAt = const Value.absent(),
+    this.pulseBPM = const Value.absent(),
+    this.source = const Value.absent(),
+  });
+  PulseMeasurementsCompanion.insert({
+    this.id = const Value.absent(),
+    required int trackRecordId,
+    required DateTime measuredAt,
+    required double pulseBPM,
+    required PulseMeasureKind source,
+  }) : trackRecordId = Value(trackRecordId),
+       measuredAt = Value(measuredAt),
+       pulseBPM = Value(pulseBPM),
+       source = Value(source);
+  static Insertable<PulseMeasurement> custom({
+    Expression<int>? id,
+    Expression<int>? trackRecordId,
+    Expression<DateTime>? measuredAt,
+    Expression<double>? pulseBPM,
+    Expression<String>? source,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (trackRecordId != null) 'track_record_id': trackRecordId,
+      if (measuredAt != null) 'measured_at': measuredAt,
+      if (pulseBPM != null) 'pulse_b_p_m': pulseBPM,
+      if (source != null) 'source': source,
+    });
+  }
+
+  PulseMeasurementsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? trackRecordId,
+    Value<DateTime>? measuredAt,
+    Value<double>? pulseBPM,
+    Value<PulseMeasureKind>? source,
+  }) {
+    return PulseMeasurementsCompanion(
+      id: id ?? this.id,
+      trackRecordId: trackRecordId ?? this.trackRecordId,
+      measuredAt: measuredAt ?? this.measuredAt,
+      pulseBPM: pulseBPM ?? this.pulseBPM,
+      source: source ?? this.source,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (trackRecordId.present) {
+      map['track_record_id'] = Variable<int>(trackRecordId.value);
+    }
+    if (measuredAt.present) {
+      map['measured_at'] = Variable<DateTime>(measuredAt.value);
+    }
+    if (pulseBPM.present) {
+      map['pulse_b_p_m'] = Variable<double>(pulseBPM.value);
+    }
+    if (source.present) {
+      map['source'] = Variable<String>(
+        $PulseMeasurementsTable.$convertersource.toSql(source.value),
+      );
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PulseMeasurementsCompanion(')
+          ..write('id: $id, ')
+          ..write('trackRecordId: $trackRecordId, ')
+          ..write('measuredAt: $measuredAt, ')
+          ..write('pulseBPM: $pulseBPM, ')
+          ..write('source: $source')
           ..write(')'))
         .toString();
   }
@@ -1793,6 +2218,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $TrackRecordPointsTable(this);
   late final $TrackRecordSummariesTable trackRecordSummaries =
       $TrackRecordSummariesTable(this);
+  late final $PulseMeasurementsTable pulseMeasurements =
+      $PulseMeasurementsTable(this);
   late final Index trackRecordCreatedAtIndex = Index(
     'TrackRecord_CreatedAt_Index',
     'CREATE INDEX TrackRecord_CreatedAt_Index ON track_records (created_at)',
@@ -1807,6 +2234,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     trackRecordPositionPoints,
     trackRecordPoints,
     trackRecordSummaries,
+    pulseMeasurements,
     trackRecordCreatedAtIndex,
   ];
   @override
@@ -2045,6 +2473,30 @@ final class $$TrackRecordsTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$PulseMeasurementsTable, List<PulseMeasurement>>
+  _pulseMeasurementsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.pulseMeasurements,
+        aliasName: $_aliasNameGenerator(
+          db.trackRecords.id,
+          db.pulseMeasurements.trackRecordId,
+        ),
+      );
+
+  $$PulseMeasurementsTableProcessedTableManager get pulseMeasurementsRefs {
+    final manager = $$PulseMeasurementsTableTableManager(
+      $_db,
+      $_db.pulseMeasurements,
+    ).filter((f) => f.trackRecordId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _pulseMeasurementsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$TrackRecordsTableFilterComposer
@@ -2144,6 +2596,31 @@ class $$TrackRecordsTableFilterComposer
           }) => $$TrackRecordSummariesTableFilterComposer(
             $db: $db,
             $table: $db.trackRecordSummaries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> pulseMeasurementsRefs(
+    Expression<bool> Function($$PulseMeasurementsTableFilterComposer f) f,
+  ) {
+    final $$PulseMeasurementsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.pulseMeasurements,
+      getReferencedColumn: (t) => t.trackRecordId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PulseMeasurementsTableFilterComposer(
+            $db: $db,
+            $table: $db.pulseMeasurements,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -2285,6 +2762,32 @@ class $$TrackRecordsTableAnnotationComposer
         );
     return f(composer);
   }
+
+  Expression<T> pulseMeasurementsRefs<T extends Object>(
+    Expression<T> Function($$PulseMeasurementsTableAnnotationComposer a) f,
+  ) {
+    final $$PulseMeasurementsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.pulseMeasurements,
+          getReferencedColumn: (t) => t.trackRecordId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$PulseMeasurementsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.pulseMeasurements,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$TrackRecordsTableTableManager
@@ -2304,6 +2807,7 @@ class $$TrackRecordsTableTableManager
             bool trackRecordPositionPointsRefs,
             bool trackRecordPointsRefs,
             bool trackRecordSummariesRefs,
+            bool pulseMeasurementsRefs,
           })
         > {
   $$TrackRecordsTableTableManager(_$AppDatabase db, $TrackRecordsTable table)
@@ -2354,6 +2858,7 @@ class $$TrackRecordsTableTableManager
                 trackRecordPositionPointsRefs = false,
                 trackRecordPointsRefs = false,
                 trackRecordSummariesRefs = false,
+                pulseMeasurementsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -2362,6 +2867,7 @@ class $$TrackRecordsTableTableManager
                       db.trackRecordPositionPoints,
                     if (trackRecordPointsRefs) db.trackRecordPoints,
                     if (trackRecordSummariesRefs) db.trackRecordSummaries,
+                    if (pulseMeasurementsRefs) db.pulseMeasurements,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -2429,6 +2935,27 @@ class $$TrackRecordsTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (pulseMeasurementsRefs)
+                        await $_getPrefetchedData<
+                          TrackRecord,
+                          $TrackRecordsTable,
+                          PulseMeasurement
+                        >(
+                          currentTable: table,
+                          referencedTable: $$TrackRecordsTableReferences
+                              ._pulseMeasurementsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$TrackRecordsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).pulseMeasurementsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.trackRecordId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -2453,6 +2980,7 @@ typedef $$TrackRecordsTableProcessedTableManager =
         bool trackRecordPositionPointsRefs,
         bool trackRecordPointsRefs,
         bool trackRecordSummariesRefs,
+        bool pulseMeasurementsRefs,
       })
     >;
 typedef $$TrackRecordPositionPointsTableCreateCompanionBuilder =
@@ -3159,6 +3687,7 @@ typedef $$TrackRecordSummariesTableCreateCompanionBuilder =
       Value<Duration?> activeDuration,
       Value<Distance?> activeDistance,
       Value<Duration?> activePositioningDuration,
+      Value<double?> averagePulse,
     });
 typedef $$TrackRecordSummariesTableUpdateCompanionBuilder =
     TrackRecordSummariesCompanion Function({
@@ -3168,6 +3697,7 @@ typedef $$TrackRecordSummariesTableUpdateCompanionBuilder =
       Value<Duration?> activeDuration,
       Value<Distance?> activeDistance,
       Value<Duration?> activePositioningDuration,
+      Value<double?> averagePulse,
     });
 
 final class $$TrackRecordSummariesTableReferences
@@ -3243,6 +3773,11 @@ class $$TrackRecordSummariesTableFilterComposer
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
+  ColumnFilters<double> get averagePulse => $composableBuilder(
+    column: $table.averagePulse,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$TrackRecordsTableFilterComposer get trackRecordId {
     final $$TrackRecordsTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -3301,6 +3836,11 @@ class $$TrackRecordSummariesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get averagePulse => $composableBuilder(
+    column: $table.averagePulse,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$TrackRecordsTableOrderingComposer get trackRecordId {
     final $$TrackRecordsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -3355,6 +3895,11 @@ class $$TrackRecordSummariesTableAnnotationComposer
   GeneratedColumnWithTypeConverter<Duration?, int>
   get activePositioningDuration => $composableBuilder(
     column: $table.activePositioningDuration,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get averagePulse => $composableBuilder(
+    column: $table.averagePulse,
     builder: (column) => column,
   );
 
@@ -3425,6 +3970,7 @@ class $$TrackRecordSummariesTableTableManager
                 Value<Distance?> activeDistance = const Value.absent(),
                 Value<Duration?> activePositioningDuration =
                     const Value.absent(),
+                Value<double?> averagePulse = const Value.absent(),
               }) => TrackRecordSummariesCompanion(
                 trackRecordId: trackRecordId,
                 start: start,
@@ -3432,6 +3978,7 @@ class $$TrackRecordSummariesTableTableManager
                 activeDuration: activeDuration,
                 activeDistance: activeDistance,
                 activePositioningDuration: activePositioningDuration,
+                averagePulse: averagePulse,
               ),
           createCompanionCallback:
               ({
@@ -3442,6 +3989,7 @@ class $$TrackRecordSummariesTableTableManager
                 Value<Distance?> activeDistance = const Value.absent(),
                 Value<Duration?> activePositioningDuration =
                     const Value.absent(),
+                Value<double?> averagePulse = const Value.absent(),
               }) => TrackRecordSummariesCompanion.insert(
                 trackRecordId: trackRecordId,
                 start: start,
@@ -3449,6 +3997,7 @@ class $$TrackRecordSummariesTableTableManager
                 activeDuration: activeDuration,
                 activeDistance: activeDistance,
                 activePositioningDuration: activePositioningDuration,
+                averagePulse: averagePulse,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -3519,6 +4068,341 @@ typedef $$TrackRecordSummariesTableProcessedTableManager =
       TrackRecordSummary,
       PrefetchHooks Function({bool trackRecordId})
     >;
+typedef $$PulseMeasurementsTableCreateCompanionBuilder =
+    PulseMeasurementsCompanion Function({
+      Value<int> id,
+      required int trackRecordId,
+      required DateTime measuredAt,
+      required double pulseBPM,
+      required PulseMeasureKind source,
+    });
+typedef $$PulseMeasurementsTableUpdateCompanionBuilder =
+    PulseMeasurementsCompanion Function({
+      Value<int> id,
+      Value<int> trackRecordId,
+      Value<DateTime> measuredAt,
+      Value<double> pulseBPM,
+      Value<PulseMeasureKind> source,
+    });
+
+final class $$PulseMeasurementsTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $PulseMeasurementsTable,
+          PulseMeasurement
+        > {
+  $$PulseMeasurementsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $TrackRecordsTable _trackRecordIdTable(_$AppDatabase db) =>
+      db.trackRecords.createAlias(
+        $_aliasNameGenerator(
+          db.pulseMeasurements.trackRecordId,
+          db.trackRecords.id,
+        ),
+      );
+
+  $$TrackRecordsTableProcessedTableManager get trackRecordId {
+    final $_column = $_itemColumn<int>('track_record_id')!;
+
+    final manager = $$TrackRecordsTableTableManager(
+      $_db,
+      $_db.trackRecords,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_trackRecordIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$PulseMeasurementsTableFilterComposer
+    extends Composer<_$AppDatabase, $PulseMeasurementsTable> {
+  $$PulseMeasurementsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get measuredAt => $composableBuilder(
+    column: $table.measuredAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get pulseBPM => $composableBuilder(
+    column: $table.pulseBPM,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<PulseMeasureKind, PulseMeasureKind, String>
+  get source => $composableBuilder(
+    column: $table.source,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  $$TrackRecordsTableFilterComposer get trackRecordId {
+    final $$TrackRecordsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.trackRecordId,
+      referencedTable: $db.trackRecords,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TrackRecordsTableFilterComposer(
+            $db: $db,
+            $table: $db.trackRecords,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PulseMeasurementsTableOrderingComposer
+    extends Composer<_$AppDatabase, $PulseMeasurementsTable> {
+  $$PulseMeasurementsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get measuredAt => $composableBuilder(
+    column: $table.measuredAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get pulseBPM => $composableBuilder(
+    column: $table.pulseBPM,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get source => $composableBuilder(
+    column: $table.source,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$TrackRecordsTableOrderingComposer get trackRecordId {
+    final $$TrackRecordsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.trackRecordId,
+      referencedTable: $db.trackRecords,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TrackRecordsTableOrderingComposer(
+            $db: $db,
+            $table: $db.trackRecords,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PulseMeasurementsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PulseMeasurementsTable> {
+  $$PulseMeasurementsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get measuredAt => $composableBuilder(
+    column: $table.measuredAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get pulseBPM =>
+      $composableBuilder(column: $table.pulseBPM, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<PulseMeasureKind, String> get source =>
+      $composableBuilder(column: $table.source, builder: (column) => column);
+
+  $$TrackRecordsTableAnnotationComposer get trackRecordId {
+    final $$TrackRecordsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.trackRecordId,
+      referencedTable: $db.trackRecords,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TrackRecordsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.trackRecords,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PulseMeasurementsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PulseMeasurementsTable,
+          PulseMeasurement,
+          $$PulseMeasurementsTableFilterComposer,
+          $$PulseMeasurementsTableOrderingComposer,
+          $$PulseMeasurementsTableAnnotationComposer,
+          $$PulseMeasurementsTableCreateCompanionBuilder,
+          $$PulseMeasurementsTableUpdateCompanionBuilder,
+          (PulseMeasurement, $$PulseMeasurementsTableReferences),
+          PulseMeasurement,
+          PrefetchHooks Function({bool trackRecordId})
+        > {
+  $$PulseMeasurementsTableTableManager(
+    _$AppDatabase db,
+    $PulseMeasurementsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PulseMeasurementsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PulseMeasurementsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PulseMeasurementsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> trackRecordId = const Value.absent(),
+                Value<DateTime> measuredAt = const Value.absent(),
+                Value<double> pulseBPM = const Value.absent(),
+                Value<PulseMeasureKind> source = const Value.absent(),
+              }) => PulseMeasurementsCompanion(
+                id: id,
+                trackRecordId: trackRecordId,
+                measuredAt: measuredAt,
+                pulseBPM: pulseBPM,
+                source: source,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int trackRecordId,
+                required DateTime measuredAt,
+                required double pulseBPM,
+                required PulseMeasureKind source,
+              }) => PulseMeasurementsCompanion.insert(
+                id: id,
+                trackRecordId: trackRecordId,
+                measuredAt: measuredAt,
+                pulseBPM: pulseBPM,
+                source: source,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$PulseMeasurementsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({trackRecordId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (trackRecordId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.trackRecordId,
+                                referencedTable:
+                                    $$PulseMeasurementsTableReferences
+                                        ._trackRecordIdTable(db),
+                                referencedColumn:
+                                    $$PulseMeasurementsTableReferences
+                                        ._trackRecordIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$PulseMeasurementsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PulseMeasurementsTable,
+      PulseMeasurement,
+      $$PulseMeasurementsTableFilterComposer,
+      $$PulseMeasurementsTableOrderingComposer,
+      $$PulseMeasurementsTableAnnotationComposer,
+      $$PulseMeasurementsTableCreateCompanionBuilder,
+      $$PulseMeasurementsTableUpdateCompanionBuilder,
+      (PulseMeasurement, $$PulseMeasurementsTableReferences),
+      PulseMeasurement,
+      PrefetchHooks Function({bool trackRecordId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -3536,4 +4420,6 @@ class $AppDatabaseManager {
       $$TrackRecordPointsTableTableManager(_db, _db.trackRecordPoints);
   $$TrackRecordSummariesTableTableManager get trackRecordSummaries =>
       $$TrackRecordSummariesTableTableManager(_db, _db.trackRecordSummaries);
+  $$PulseMeasurementsTableTableManager get pulseMeasurements =>
+      $$PulseMeasurementsTableTableManager(_db, _db.pulseMeasurements);
 }

@@ -6,13 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:run_tracker/Core/Flutter/ManualValueNotifier.dart';
 import 'package:run_tracker/Core/export.dart';
+import 'package:run_tracker/Pages/Pulse/InstructionText.dart';
 import 'package:run_tracker/Pages/Pulse/PulseChart.dart';
+import 'package:run_tracker/Pages/Pulse/PulseLabel.dart';
 import 'package:run_tracker/Providers/Pulse/PulsePPGServiceProvider.dart';
 import 'package:run_tracker/Services/Pulse/export.dart';
 import 'package:run_tracker/localization/export.dart';
 
 class PPGTab extends ConsumerStatefulWidget {
-  const PPGTab({super.key});
+  final void Function(double? pulseBPM)? onPulseChanged;
+
+  const PPGTab({super.key, this.onPulseChanged});
 
   @override
   ConsumerState<PPGTab> createState() => _PPGTabState();
@@ -40,7 +44,7 @@ class _PPGTabState extends ConsumerState<PPGTab> {
     _ppgService = ref.read(pulsePPGServiceFactoryProvider).build();
     _spotSubscription = _ppgService.spotStream.listen(_handleSpot);
     _pulseSubscription = _ppgService.pulseStream.listen(_handlePulse);
-    _ppgService.restart();
+    _ppgService.start();
   }
 
   @override
@@ -61,9 +65,8 @@ class _PPGTabState extends ConsumerState<PPGTab> {
       child: Column(
         spacing: 8,
         children: [
-          Text(
-            context.appLocalization.pulseMeasureCameraInstructionInitial,
-            textAlign: .center,
+          InstructionText(
+            text: context.appLocalization.pulseMeasureCameraInstructionInitial,
           ),
           Flexible(
             child: AspectRatio(
@@ -84,12 +87,7 @@ class _PPGTabState extends ConsumerState<PPGTab> {
           ),
           ValueListenableBuilder(
             valueListenable: _pulse,
-            builder: (context, value, child) {
-              return Text(
-                "${context.appLocalization.nounPulse}, ${context.appLocalization.unitShortBPM}: ${value?.round() ?? ""}",
-                textAlign: .center,
-              );
-            },
+            builder: (context, value, child) => PulseLabel(pulseBPM: value),
           ),
           Center(
             child: IconButton(
@@ -113,14 +111,14 @@ class _PPGTabState extends ConsumerState<PPGTab> {
     if (minMaxY == null) {
       return;
     }
-    final maxY = max(minMaxY.$1.abs(), minMaxY.$2.abs());
-    _minY = -maxY;
-    _maxY = maxY;
+    _maxY = max(minMaxY.$1.abs(), minMaxY.$2.abs());
+    _minY = -_maxY;
     _spots.notifyListeners();
   }
 
   void _handlePulse(double pulsePerMinute) {
     _pulse.value = pulsePerMinute;
+    widget.onPulseChanged?.call(pulsePerMinute);
   }
 
   void _handleResetPressed() {
@@ -131,6 +129,8 @@ class _PPGTabState extends ConsumerState<PPGTab> {
     _spots.value.clear();
     _spots.notifyListeners();
     _pulse.value = null;
+    widget.onPulseChanged?.call(null);
+    _ppgService.restart();
   }
 
   static List<FlSpot> _buildDefaultSpots() {
