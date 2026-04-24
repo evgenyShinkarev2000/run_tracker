@@ -361,7 +361,7 @@ class _PulseRecordState extends ConsumerState<PulseRecord> {
       );
       return;
     }
-    final fileName = "ppg_${DateTime.timestamp().toIso8601String()}.csv";
+    final fileName = "ppg_${DateTime.timestamp().toIso8601String().replaceAll(RegExp(":|-"), "_")}.csv";
     String? savedPath;
     try {
       savedPath = await FilePicker.platform.saveFile(

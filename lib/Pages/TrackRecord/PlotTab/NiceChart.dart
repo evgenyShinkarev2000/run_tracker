@@ -146,7 +146,6 @@ class _NiceChartState extends State<NiceChart> {
       this.maxWidth = maxWidth;
       _prepareSpots();
       showMarkers ??= maxWidth / preparedSpots.length > 20;
-      Future.microtask(() => setState(() {}));
     }
   }
 

@@ -71,8 +71,7 @@ class _ControlButtonsState extends ConsumerState<ControlButtons> {
 
   void _stop() async {
     final trackRecord = await ref.read(trackManagerProvider).complete();
-    if (context.mounted) {
-      // ignore: use_build_context_synchronously
+    if (mounted) {
       context.appRouter.goTrackRecord(trackRecord.id);
     }
   }

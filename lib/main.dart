@@ -34,6 +34,17 @@ void main() async {
   );
   final logger = providerContainer.read(loggerProvider);
   FlutterError.onError = (FlutterErrorDetails error) {
+    final exception = error.exception;
+    if (exception is FlutterError &&
+        exception.message.startsWith(
+          "setState() called after dispose(): _UncontrolledProviderScopeState",
+        )) {
+      logger.logWarning(
+        "flutter fuck brain again",
+        appException: FlutterExceptionWrapper(error),
+      );
+      return;
+    }
     logger.logError(null, appException: FlutterExceptionWrapper(error));
   };
 
@@ -62,6 +73,7 @@ class MyApp extends ConsumerWidget {
     var appRouter = ref.watch(appRouterProvider);
 
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
       title: 'Run tracker',
       localizationsDelegates: [
         AppLocalizations.delegate,

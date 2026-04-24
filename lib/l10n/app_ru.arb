@@ -73,8 +73,10 @@
   "settingDevMode": "режим разработчика",
   "historyPageNoRecords": "нет записей",
   "historyPageCreateRecord": "записать трек",
+  "runRecordBuildingScreenshot": "подготовка снимка",
   "runRecordPageShare": "поделиться",
-  "runRecordPageShareError": "сервис недоступен",
+  "runRecordSaveAsImage": "сохранить как изображение",
+  "runRecordPageShareError": "не удалось поделиться",
   "locationPermissionMessageLoading": "получение статуса сервисов геолокации",
   "locationPermissionMessagePermited": "приложение имеет доступ к сервисам геолокации",
   "locationPermissionMessageDenied": "приложению запрещен доступ к сервисам геолокации",
@@ -91,5 +93,6 @@
   "chartMenuOutlierFilter": "фильтр выбросов",
   "chartMenuShowMarkers": "показывать точки",
   "chartMenuResolutionFilter": "фильтр разрешения",
-  "chartMenuDownsampling": "понижение разрешения"
+  "chartMenuDownsampling": "понижение разрешения",
+  "confirmRemoveRequest": "подтвердите удаление"
 }

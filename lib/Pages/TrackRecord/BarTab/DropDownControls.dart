@@ -65,7 +65,7 @@ class DropDownControls extends StatelessWidget {
                 dropdownMenuEntries: durations,
               ),
             },
-
+    
             DropdownMenu(
               initialSelection: IntervalType.distance,
               onSelected: _setIntervalType,

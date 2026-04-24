@@ -42,12 +42,15 @@ class _BarTabState extends State<BarTab> {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: BarTable(
-              trackRecord: widget.trackRecord,
-              intervalType: intervalType,
-              unitType: unitType,
-              durationInterval: duration,
-              distanceInterval: distance,
+            child: SingleChildScrollView(
+              scrollDirection: .vertical,
+              child: BarTable(
+                trackRecord: widget.trackRecord,
+                intervalType: intervalType,
+                unitType: unitType,
+                durationInterval: duration,
+                distanceInterval: distance,
+              ),
             ),
           ),
         ),

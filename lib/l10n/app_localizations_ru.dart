@@ -211,10 +211,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get historyPageCreateRecord => 'записать трек';
 
   @override
+  String get runRecordBuildingScreenshot => 'подготовка снимка';
+
+  @override
   String get runRecordPageShare => 'поделиться';
 
   @override
-  String get runRecordPageShareError => 'сервис недоступен';
+  String get runRecordSaveAsImage => 'сохранить как изображение';
+
+  @override
+  String get runRecordPageShareError => 'не удалось поделиться';
 
   @override
   String get locationPermissionMessageLoading =>
@@ -271,4 +277,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get chartMenuDownsampling => 'понижение разрешения';
+
+  @override
+  String get confirmRemoveRequest => 'подтвердите удаление';
 }

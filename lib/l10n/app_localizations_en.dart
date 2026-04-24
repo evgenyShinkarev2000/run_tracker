@@ -211,10 +211,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get historyPageCreateRecord => 'record a track';
 
   @override
+  String get runRecordBuildingScreenshot => 'building screenshot';
+
+  @override
   String get runRecordPageShare => 'share';
 
   @override
-  String get runRecordPageShareError => 'service is unavailable';
+  String get runRecordSaveAsImage => 'save as image';
+
+  @override
+  String get runRecordPageShareError => 'failed to share';
 
   @override
   String get locationPermissionMessageLoading =>
@@ -270,4 +276,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get chartMenuDownsampling => 'down sampling';
+
+  @override
+  String get confirmRemoveRequest => 'confirm deletion';
 }

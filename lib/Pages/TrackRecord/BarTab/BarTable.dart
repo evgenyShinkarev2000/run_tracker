@@ -56,67 +56,79 @@ class _BarTableState extends State<BarTable> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      scrollDirection: Axis.vertical,
-      itemBuilder: (context, index) {
-        final interval = intervals[index];
-        final (label, coef) = _buildUnitLabelAndCoef(interval);
-
-        return Row(
-          spacing: 8,
-          children: [
-            SizedBox(
-              width: 40,
-              child: Text(
-                _buildIntervalLabel(interval, index),
-                overflow: TextOverflow.clip,
-                maxLines: 1,
-                softWrap: false,
+    return Column(
+      children: intervals.indexed.map((i) {
+        final (label, coef) = _buildUnitLabelAndCoef(i.$2);
+        return Container(
+          padding: EdgeInsets.symmetric(vertical: 4),
+          decoration: BoxDecoration(
+            border: Border(
+              top: i.$1 == 0
+                  ? BorderSide(
+                      color: context.themeData.colorScheme.secondaryContainer,
+                    )
+                  : BorderSide.none,
+              bottom: BorderSide(
+                color: context.themeData.colorScheme.secondaryContainer,
               ),
             ),
-            SizedBox(height: 16, width: 1, child: VerticalDivider()),
-            Expanded(
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 45,
-                    child: Text(
-                      label,
-                      overflow: TextOverflow.clip,
-                      maxLines: 1,
-                      softWrap: false,
+          ),
+          child: Row(
+            spacing: 8,
+            children: [
+              SizedBox(
+                width: 40,
+                child: Text(
+                  _buildIntervalLabel(i.$2, i.$1),
+                  overflow: TextOverflow.clip,
+                  maxLines: 1,
+                  softWrap: false,
+                ),
+              ),
+              SizedBox(height: 16, width: 1, child: VerticalDivider()),
+              Expanded(
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 45,
+                      child: Text(
+                        label,
+                        overflow: TextOverflow.clip,
+                        maxLines: 1,
+                        softWrap: false,
+                      ),
                     ),
-                  ),
-                  Flexible(
-                    fit: .loose,
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        return Container(
-                          height: 16,
-                          width: constraints.maxWidth * coef,
-                          color: context.themeData.primaryColor,
-                        );
-                      },
+                    Flexible(
+                      fit: .loose,
+                      child: SizedBox(
+                        height: 16,
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            return Container(
+                              width: constraints.maxWidth * coef,
+                              color: context.themeData.primaryColor,
+                            );
+                          },
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 16, width: 1, child: VerticalDivider()),
-            SizedBox(
-              width: 80,
-              child: Text(
-                interval.heightDelta.toStringAsFixed(1),
-                overflow: TextOverflow.fade,
-                maxLines: 1,
-                softWrap: false,
+              SizedBox(height: 16, width: 1, child: VerticalDivider()),
+              SizedBox(
+                width: 80,
+                child: Text(
+                  i.$2.heightDelta.toStringAsFixed(1),
+                  overflow: TextOverflow.fade,
+                  maxLines: 1,
+                  softWrap: false,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
-      },
-      separatorBuilder: (_, _) => Divider(),
-      itemCount: intervals.length,
+      }).toList(),
     );
   }
 
@@ -159,7 +171,8 @@ class _BarTableState extends State<BarTable> {
       case .distance:
         var accumulated = oneBasedIndex * widget.distanceInterval.meters;
         if (oneBasedIndex == intervals.length) {
-          accumulated += interval.distance.meters - widget.distanceInterval.meters;
+          accumulated +=
+              interval.distance.meters - widget.distanceInterval.meters;
         }
         return (accumulated / 1000).toStringAsFixed(1);
       case .time:

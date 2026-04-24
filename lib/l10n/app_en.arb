@@ -73,8 +73,10 @@
   "settingDevMode": "developer mode",
   "historyPageNoRecords": "no records",
   "historyPageCreateRecord": "record a track",
+  "runRecordBuildingScreenshot": "building screenshot",
   "runRecordPageShare": "share",
-  "runRecordPageShareError": "service is unavailable",
+  "runRecordSaveAsImage": "save as image",
+  "runRecordPageShareError": "failed to share",
   "locationPermissionMessageLoading": "obtaining the status of geolocation services",
   "locationPermissionMessagePermited": "the application has access to geolocation services",
   "locationPermissionMessageDenied": "the app is denied access to location services",
@@ -91,5 +93,6 @@
   "chartMenuOutlierFilter": "outlier filter",
   "chartMenuShowMarkers": "show markers",
   "chartMenuResolutionFilter": "resolution filter",
-  "chartMenuDownsampling": "down sampling"
+  "chartMenuDownsampling": "down sampling",
+  "confirmRemoveRequest": "confirm deletion"
 } 

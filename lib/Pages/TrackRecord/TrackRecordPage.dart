@@ -2,13 +2,10 @@ import 'package:cancellation_token/cancellation_token.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:run_tracker/Components/export.dart';
+import 'package:run_tracker/Pages/TrackRecord/TrackRecordAppBar.dart';
 import 'package:run_tracker/Pages/TrackRecord/TrackRecordTabBar.dart';
 import 'package:run_tracker/Providers/Track/export.dart';
-import 'package:run_tracker/Providers/export.dart';
-import 'package:run_tracker/Routing/export.dart';
 import 'package:run_tracker/Services/Track/export.dart';
-import 'package:run_tracker/Services/export.dart';
-import 'package:run_tracker/Theme/export.dart';
 import 'package:run_tracker/localization/export.dart';
 
 class TrackRecordPage extends ConsumerStatefulWidget {
@@ -51,28 +48,7 @@ class _TrackRecordPageState extends ConsumerState<TrackRecordPage> {
     return FutureBuilder(
       future: trackRecordFuture,
       builder: (context, snapshot) => Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: context.appRouter.goHistory,
-            icon: Icon(Icons.arrow_back),
-          ),
-          backgroundColor: context.themeData.colorScheme.inversePrimary,
-          title: Consumer(
-            builder: (context, ref, widget) {
-              final userDateTimeConverter = ref.watch(
-                userDateTimeConverterProvider,
-              );
-              final appDateTimeFormat = ref.watch(appDateTimeFormatProvider);
-
-              return Text(
-                snapshot.data?.summary.start
-                        ?.applyConverter(userDateTimeConverter)
-                        .applyFormat(appDateTimeFormat.fullDateFullTime) ??
-                    "",
-              );
-            },
-          ),
-        ),
+        appBar: TrackRecordAppBar(trackRecord: snapshot.data),
         body: switch (snapshot.connectionState) {
           ConnectionState.done =>
             snapshot.data == null

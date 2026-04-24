@@ -494,16 +494,28 @@ abstract class AppLocalizations {
   /// **'record a track'**
   String get historyPageCreateRecord;
 
+  /// No description provided for @runRecordBuildingScreenshot.
+  ///
+  /// In en, this message translates to:
+  /// **'building screenshot'**
+  String get runRecordBuildingScreenshot;
+
   /// No description provided for @runRecordPageShare.
   ///
   /// In en, this message translates to:
   /// **'share'**
   String get runRecordPageShare;
 
+  /// No description provided for @runRecordSaveAsImage.
+  ///
+  /// In en, this message translates to:
+  /// **'save as image'**
+  String get runRecordSaveAsImage;
+
   /// No description provided for @runRecordPageShareError.
   ///
   /// In en, this message translates to:
-  /// **'service is unavailable'**
+  /// **'failed to share'**
   String get runRecordPageShareError;
 
   /// No description provided for @locationPermissionMessageLoading.
@@ -607,6 +619,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'down sampling'**
   String get chartMenuDownsampling;
+
+  /// No description provided for @confirmRemoveRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'confirm deletion'**
+  String get confirmRemoveRequest;
 }
 
 class _AppLocalizationsDelegate
