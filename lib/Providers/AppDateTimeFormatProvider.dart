@@ -8,5 +8,6 @@ final appDateTimeFormatProvider = Provider((ref) {
 
   return AppDateTimeFormat(
     fullDateFullTime: DateFormat.yMd(locale.locale.languageCode).add_Hms(),
+    fullDateOnly: DateFormat.yMd(locale.locale.languageCode),
   );
 });

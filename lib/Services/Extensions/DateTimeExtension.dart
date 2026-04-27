@@ -3,6 +3,8 @@ import 'package:run_tracker/Services/export.dart';
 
 extension DateTimeExtension on DateTime {
   String applyFormat(DateFormat format) => format.format(this);
-  DateTime applyConverter(UserDateTimeConverter converter) =>
+  DateTime fromUtcToUser(UserDateTimeConverter converter) =>
       converter.toUserDateTime(this);
+  DateTime fromUserToUtc(UserDateTimeConverter converter) =>
+      converter.toUtcDateTime(this);
 }

@@ -21,6 +21,10 @@ class AppMainDrawer extends StatelessWidget {
             title: context.appLocalization.menuHistory,
           ),
           DrawerItem(
+            path: AppRoutes.Statistics,
+            title: context.appLocalization.menuStatistic,
+          ),
+          DrawerItem(
             path: AppRoutes.Pulse,
             title: context.appLocalization.menuPulse,
           ),
@@ -30,45 +34,6 @@ class AppMainDrawer extends StatelessWidget {
           ),
         ],
       ),
-      // child: ListView(
-      //   children: [
-      //     AppDrawerItem(
-      //       activities,
-      //       onTap: goActivity,
-      //       isActive: goRouter.currentRouteHas(Routes.activityPage),
-      //     ),
-      //     AppDrawerItem(
-      //       map,
-      //       onTap: goMap,
-      //       isActive: goRouter.currentRouteHas(Routes.mapPage),
-      //     ),
-      //     AppDrawerItem(
-      //       history,
-      //       onTap: goHistory,
-      //       isActive: goRouter.currentRouteHas(Routes.historyPage),
-      //     ),
-      //     AppDrawerItem(
-      //       context.appLocalization.menuStatistic,
-      //       onTap: goStatistic,
-      //       isActive: goRouter.currentRouteHas(Routes.statisticPage),
-      //     ),
-      //     AppDrawerItem(
-      //       context.appLocalization.menuPulse,
-      //       onTap: goPulse,
-      //       isActive: goRouter.currentRouteHas(Routes.pulsePage),
-      //     ),
-      //     AppDrawerItem(
-      //       settings,
-      //       onTap: goSetting,
-      //       isActive: goRouter.currentRouteHas(Routes.settingPage),
-      //     ),
-      //     AppDrawerItem(
-      //       "hive",
-      //       onTap: goHive,
-      //       isActive: goRouter.currentRouteHas(Routes.hivePage),
-      //     ),
-      //   ],
-      // ),
     );
   }
 }

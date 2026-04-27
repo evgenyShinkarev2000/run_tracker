@@ -12,6 +12,17 @@ class UserDateTimeConverter {
     return utcDateTime.toLocal();
   }
 
+  DateTime toUtcDateTime(DateTime localDateTime) {
+    if (localDateTime.isUtc) {
+      throw AppException(
+        message:
+            "expected !DateTime.isUtc, got ${localDateTime.toIso8601String()}",
+      );
+    }
+
+    return localDateTime.toUtc();
+  }
+
   DateTime? tryToUserDateTime(DateTime? utcDateTime) {
     if (utcDateTime == null) {
       return null;

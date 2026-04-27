@@ -64,7 +64,7 @@ class _HistoryListItemState extends ConsumerState<HistoryListItem> {
                   ListItemText(
                     title: context.appLocalization.runCardCoverBeginDateTime,
                     value: widget.item.summary.start
-                        ?.applyConverter(userDateTimeConverter)
+                        ?.fromUtcToUser(userDateTimeConverter)
                         .applyFormat(dateTimeFormat.fullDateFullTime),
                   ),
                   ListItemText(

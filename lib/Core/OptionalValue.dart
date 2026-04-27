@@ -9,5 +9,5 @@ class OptionalValue<T> {
   final bool hasValue;
 
   const OptionalValue.empty() : _value = null, hasValue = false;
-  const OptionalValue(this._value) : hasValue = true;
+  const OptionalValue(T value) : _value = value, hasValue = true;
 }

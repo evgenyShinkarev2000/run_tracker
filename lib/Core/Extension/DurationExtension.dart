@@ -15,4 +15,8 @@ extension DurationExtension on Duration {
         ? mmss
         : "${hours.toString()}:${minutes.toString().padLeft(2, "0")}:${seconds.toString().padLeft(2, "0")}";
   }
+
+  String get HH_noPad_mm {
+    return "$hours:${minutes.toString().padLeft(2, "0")}";
+  }
 }

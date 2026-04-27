@@ -32,7 +32,7 @@ class TrackRecordAppBar extends StatelessWidget implements PreferredSizeWidget {
 
           return Text(
             trackRecord?.summary.start
-                    ?.applyConverter(userDateTimeConverter)
+                    ?.fromUtcToUser(userDateTimeConverter)
                     .applyFormat(appDateTimeFormat.fullDateFullTime) ??
                 "",
           );

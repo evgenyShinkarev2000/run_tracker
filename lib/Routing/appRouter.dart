@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:run_tracker/Pages/Pulse/export.dart';
-import 'package:run_tracker/Pages/TrackHistory/export.dart';
-import 'package:run_tracker/Pages/TrackRecord/export.dart';
 import 'package:run_tracker/Pages/export.dart';
 import 'package:run_tracker/Routing/AppRoutes.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -28,6 +25,10 @@ final List<RouteBase> appRoutes = [
     },
   ),
   GoRoute(path: AppRoutes.Pulse, builder: (context, state) => PulsePage()),
+  GoRoute(
+    path: AppRoutes.Statistics,
+    builder: (context, state) => StatisticsPage(),
+  ),
 ];
 
 final rootNavigatorKey = GlobalKey<NavigatorState>(

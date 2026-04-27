@@ -29,13 +29,13 @@ class MapTabInner extends ConsumerWidget {
         MapTabRow(
           title: context.appLocalization.runCardCoverBeginDateTime,
           value: trackRecord.summary.start
-              ?.applyConverter(userDateTimeConverter)
+              ?.fromUtcToUser(userDateTimeConverter)
               .applyFormat(appDateTimeFormat.fullDateFullTime),
         ),
         MapTabRow(
           title: context.appLocalization.runCardCoverEndDateTime,
           value: trackRecord.summary.end
-              ?.applyConverter(userDateTimeConverter)
+              ?.fromUtcToUser(userDateTimeConverter)
               .applyFormat(appDateTimeFormat.fullDateFullTime),
           isSelected: true,
         ),

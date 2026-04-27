@@ -3,14 +3,12 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:run_tracker/Core/export.dart';
 import 'package:run_tracker/Pages/TrackRecord/BarTab/BarHeader.dart';
-import 'package:run_tracker/Pages/TrackRecord/BarTab/BarTab.dart';
 import 'package:run_tracker/Pages/TrackRecord/BarTab/BarTable.dart';
 import 'package:run_tracker/Pages/TrackRecord/MapTab/MapTabInnerdart.dart';
 import 'package:run_tracker/Pages/TrackRecord/PlotTab/PlotTabInner.dart';
 import 'package:run_tracker/Services/Track/export.dart';
 import 'package:run_tracker/Theme/export.dart';
 import 'package:run_tracker/l10n/app_localizations.dart';
-import 'package:run_tracker/localization/BuildContextExtension.dart';
 
 //TODO настройки BarTable
 class LongScreenshot extends StatelessWidget {
