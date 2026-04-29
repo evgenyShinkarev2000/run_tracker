@@ -126,7 +126,7 @@ class _StatisticsChartState extends ConsumerState<StatisticsChart> {
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: 32,
+              reservedSize: 24,
               interval: 0.5,
               getTitlesWidget: (value, meta) => SideTitleWidget(
                 fitInside: .fromTitleMeta(meta),

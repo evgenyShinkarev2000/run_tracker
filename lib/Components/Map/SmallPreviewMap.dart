@@ -44,9 +44,8 @@ class SmallPeviewMap extends ConsumerWidget {
         ),
         PolylineLayer(
           polylines: polylines
-              .map((points) => Polyline(points: points))
+              .map((points) => Polyline(points: points, color: Colors.blueAccent))
               .toList(),
-          simplificationTolerance: 2,
         ),
       ],
     );

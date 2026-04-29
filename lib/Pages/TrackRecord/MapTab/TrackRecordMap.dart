@@ -84,7 +84,7 @@ class _TrackRecordMapState extends ConsumerState<TrackRecordMap> {
 
     markers.add(Marker(point: points.last, child: MapIcon(Icons.stop)));
     for (var points in lines) {
-      polylines.add(Polyline(points: points));
+      polylines.add(Polyline(points: points, color: Colors.blueAccent));
     }
   }
 
@@ -120,7 +120,7 @@ class _TrackRecordMapState extends ConsumerState<TrackRecordMap> {
             ),
           ),
         ),
-        PolylineLayer(polylines: polylines, simplificationTolerance: 1),
+        PolylineLayer(polylines: polylines),
         MarkerLayer(markers: markers, alignment: Alignment.topCenter),
       ],
     );

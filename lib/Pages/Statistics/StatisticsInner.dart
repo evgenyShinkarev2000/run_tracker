@@ -39,11 +39,14 @@ class _StatisticsInnerState extends ConsumerState<StatisticsInner> {
     return Column(
       spacing: 8,
       children: [
-        DropdownControls(
-          intervalKind: _intervalKind,
-          intervalKindChanged: _handleIntervalKindChanged,
-          userStartDateTime: _lastSelectedUserTime,
-          startUserDateTimeChanged: _handleStartDateTimeChanged,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: DropdownControls(
+            intervalKind: _intervalKind,
+            intervalKindChanged: _handleIntervalKindChanged,
+            userStartDateTime: _lastSelectedUserTime,
+            startUserDateTimeChanged: _handleStartDateTimeChanged,
+          ),
         ),
         _isLoading
             ? AppLoader()
@@ -53,7 +56,10 @@ class _StatisticsInnerState extends ConsumerState<StatisticsInner> {
                   child: Column(
                     spacing: 8,
                     children: [
-                      StatisticsSummary(intervals: _intervals),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: StatisticsSummary(intervals: _intervals),
+                      ),
                       AspectRatio(
                         aspectRatio: 1.6,
                         child: StatisticsCharts(

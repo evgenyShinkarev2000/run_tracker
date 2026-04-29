@@ -16,7 +16,7 @@ class StatisticsPage extends StatelessWidget {
       ),
       drawer: AppMainDrawer(),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(vertical: 8),
         child: StatisticsInner(),
       ),
     );
