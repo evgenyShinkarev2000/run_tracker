@@ -27,7 +27,8 @@ class TrackRecords extends Table {
 
 class TrackRecordPositionPoints extends Table {
   IntColumn get id => integer().autoIncrement()();
-  IntColumn get trackRecordId => integer().references(TrackRecords, #id)();
+  IntColumn get trackRecordId =>
+      integer().references(TrackRecords, #id, onDelete: .cascade)();
   DateTimeColumn get createdAt => dateTime()();
 
   /// From the equator. The latitude of this position in degrees normalized to the interval -90.0
@@ -44,14 +45,16 @@ class TrackRecordPositionPoints extends Table {
 
 class TrackRecordPoints extends Table {
   IntColumn get id => integer().autoIncrement()();
-  IntColumn get trackRecordId => integer().references(TrackRecords, #id)();
+  IntColumn get trackRecordId =>
+      integer().references(TrackRecords, #id, onDelete: .cascade)();
   DateTimeColumn get createdAt => dateTime()();
   TextColumn get discriminator => textEnum<PointType>()();
   TextColumn get paylod => text().nullable()();
 }
 
 class TrackRecordSummaries extends Table {
-  IntColumn get trackRecordId => integer().references(TrackRecords, #id)();
+  IntColumn get trackRecordId =>
+      integer().references(TrackRecords, #id, onDelete: .cascade)();
   DateTimeColumn? get start => dateTime().nullable()();
   DateTimeColumn? get end => dateTime().nullable()();
   IntColumn? get activeDuration =>
@@ -68,7 +71,8 @@ class TrackRecordSummaries extends Table {
 
 class PulseMeasurements extends Table {
   IntColumn get id => integer().autoIncrement()();
-  IntColumn get trackRecordId => integer().references(TrackRecords, #id)();
+  IntColumn get trackRecordId =>
+      integer().references(TrackRecords, #id, onDelete: .cascade)();
   DateTimeColumn get measuredAt => dateTime()();
   RealColumn get pulseBPM => real()();
   TextColumn get source => textEnum<PulseMeasureKind>()();

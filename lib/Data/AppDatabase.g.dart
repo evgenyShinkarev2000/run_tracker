@@ -547,7 +547,7 @@ class $TrackRecordPositionPointsTable extends TrackRecordPositionPoints
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES track_records (id)',
+      'REFERENCES track_records (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
@@ -973,7 +973,7 @@ class $TrackRecordPointsTable extends TrackRecordPoints
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES track_records (id)',
+      'REFERENCES track_records (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
@@ -1332,7 +1332,7 @@ class $TrackRecordSummariesTable extends TrackRecordSummaries
     type: DriftSqlType.int,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES track_records (id)',
+      'REFERENCES track_records (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _startMeta = const VerificationMeta('start');
@@ -1866,7 +1866,7 @@ class $PulseMeasurementsTable extends PulseMeasurements
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES track_records (id)',
+      'REFERENCES track_records (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _measuredAtMeta = const VerificationMeta(
@@ -2237,6 +2237,39 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     pulseMeasurements,
     trackRecordCreatedAtIndex,
   ];
+  @override
+  StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'track_records',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [
+        TableUpdate('track_record_position_points', kind: UpdateKind.delete),
+      ],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'track_records',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('track_record_points', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'track_records',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('track_record_summaries', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'track_records',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('pulse_measurements', kind: UpdateKind.delete)],
+    ),
+  ]);
   @override
   DriftDatabaseOptions get options =>
       const DriftDatabaseOptions(storeDateTimeAsText: true);
