@@ -25,9 +25,7 @@ class _LocationPermissionDialogState
 
   @override
   Widget build(BuildContext context) {
-    final locationPermissionService = ref.watch(
-      positionServiceProvider,
-    );
+    final locationPermissionService = ref.watch(positionServiceProvider);
     final appLocationPermissionService = ref.watch(
       appLocationPermissionServiceProvider,
     );
@@ -80,6 +78,6 @@ class _LocationPermissionDialogState
         context.appLocalization.locationPermissionMessagePermited,
     };
 
-    return Text(text);
+    return Text(text, textAlign: .center);
   }
 }

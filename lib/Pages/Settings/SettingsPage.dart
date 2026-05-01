@@ -19,7 +19,7 @@ class SettingsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: context.themeData.colorScheme.inversePrimary,
-        title: Text(context.appLocalization.menuMap),
+        title: Text(context.appLocalization.menuSettings),
       ),
       drawer: AppMainDrawer(),
       body: Center(

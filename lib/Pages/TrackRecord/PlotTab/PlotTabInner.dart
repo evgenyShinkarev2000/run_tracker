@@ -96,6 +96,7 @@ class _PlotTabInnerState extends State<PlotTabInner> {
             ),
           );
         }
+        prevPosition = point;
       }
     }
 
