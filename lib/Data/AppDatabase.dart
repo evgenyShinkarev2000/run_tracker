@@ -112,6 +112,13 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    beforeOpen: (details) async {
+      await customStatement("PRAGMA foreign_keys = ON");
+    },
+  );
+
   static void Initialize() {
     if (!kIsWeb) {
       return;

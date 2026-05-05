@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:run_tracker/Core/export.dart';
 
+// TODO попробовать Provider.family
 class PulseMetronomeFactory {
   PulseMetronome build() => PulseMetronome();
 }
