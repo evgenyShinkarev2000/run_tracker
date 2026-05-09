@@ -12,4 +12,4 @@ final positionProvider = StreamProvider((ref) {
   final dataProvider = ref.watch(positionStreamProvider);
 
   return dataProvider.stream;
-});
+}, isAutoDispose: true);

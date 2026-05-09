@@ -14,4 +14,4 @@ final locationMarkerPositionProvider = FutureProvider<LocationMarkerPosition>((
       );
     }),
   );
-});
+}, isAutoDispose: true);

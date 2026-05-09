@@ -16,4 +16,4 @@ final appLocationPermissionServiceProvider = Provider((ref) {
 final appLocationPermissionProvider = StreamProvider((ref){
   final service = ref.watch(appLocationPermissionServiceProvider);
   return service.stream;
-});
+}, isAutoDispose: true);

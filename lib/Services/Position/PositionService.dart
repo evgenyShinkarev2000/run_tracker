@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:run_tracker/Core/export.dart';
 import 'package:run_tracker/Services/Position/export.dart';
@@ -43,6 +45,11 @@ class GeolocatorPositionService extends PositionService implements IDisposable {
         return;
       }
       _updateGeolocatorStream();
+    };
+    _positionController.onCancel = () {
+      _ensureNotDisposed();
+      _geolocatorPositionSubscription?.cancel();
+      _geolocatorPositionSubscription = null;
     };
   }
 
@@ -116,19 +123,22 @@ class GeolocatorPositionService extends PositionService implements IDisposable {
     if (_geolocatorPositionSubscription != null) {
       _geolocatorPositionSubscription!.cancel();
     }
-    _geolocatorPositionSubscription = Geolocator.getPositionStream().listen(
-      (p) {
-        _lastStreamedPosition = _fromGeolocatorPosition(p);
-        _positionController.add(_lastStreamedPosition!);
-      },
-      onError: ((Object e, StackTrace s) {
-        //TODO пока игнорируем, потом нужно создать отдельный сервис, который бы учитывал настройки геолокации.
-        _logger.logWarning(
-          "Exception thrown in GeolocatorPositionDataProvider in Geolocator.getPositionStream().handleError",
-          appException: AppException.caught(e, s),
+    _geolocatorPositionSubscription =
+        Geolocator.getPositionStream(
+          locationSettings: _getLocationSettings(),
+        ).listen(
+          (p) {
+            _lastStreamedPosition = _fromGeolocatorPosition(p);
+            _positionController.add(_lastStreamedPosition!);
+          },
+          onError: ((Object e, StackTrace s) {
+            //TODO пока игнорируем, потом нужно создать отдельный сервис, который бы учитывал настройки геолокации.
+            _logger.logWarning(
+              "Exception thrown in GeolocatorPositionDataProvider in Geolocator.getPositionStream().handleError",
+              appException: AppException.caught(e, s),
+            );
+          }),
         );
-      }),
-    );
   }
 
   void _ensureNotDisposed() {
@@ -157,6 +167,24 @@ class GeolocatorPositionService extends PositionService implements IDisposable {
       horizontalAccuracy: position.accuracy,
       speed: AppPositionComponent(position.speed, position.speedAccuracy),
       timestamp: position.timestamp.toUtc(),
+    );
+  }
+
+  static LocationSettings? _getLocationSettings() {
+    if (kIsWasm) {
+      return null;
+    }
+    if (!Platform.isAndroid) {
+      return null;
+    }
+
+    return AndroidSettings(
+      //TODO улучшить сообщение
+      foregroundNotificationConfig: ForegroundNotificationConfig(
+        notificationTitle: "run tracker",
+        notificationText: "",
+        enableWakeLock: true,
+      ),
     );
   }
 }

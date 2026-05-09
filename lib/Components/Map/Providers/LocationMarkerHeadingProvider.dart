@@ -11,4 +11,4 @@ final locationMarkerHeadingProvider = FutureProvider((ref) async {
       );
     }),
   );
-});
+}, isAutoDispose: true);

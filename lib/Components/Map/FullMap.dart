@@ -76,6 +76,7 @@ class _FullMapState extends ConsumerState<FullMap> {
     _locationMarkerHeadingController.close();
     _mapController.dispose();
     _mapEventStreamSubscription.cancel();
+    _positionSubscription?.close();
 
     super.dispose();
   }
@@ -178,17 +179,17 @@ class _FullMapState extends ConsumerState<FullMap> {
       });
     }
     _positionSubscription?.close();
-    _positionSubscription = ref.listenManual(positionProvider, (prev, cur) {
-      if (!cur.hasValue) {
-        return;
-      }
-      if (_isNavigationLoading) {
-        setState(() {
-          _isNavigationLoading = false;
-        });
-      }
-      onPosition(cur.requireValue);
-    });
+    // _positionSubscription = ref.listenManual(positionProvider, (prev, cur) {
+    //   if (!cur.hasValue) {
+    //     return;
+    //   }
+    //   if (_isNavigationLoading) {
+    //     setState(() {
+    //       _isNavigationLoading = false;
+    //     });
+    //   }
+    //   onPosition(cur.requireValue);
+    // });
   }
 
   void _move(AppPosition position) {

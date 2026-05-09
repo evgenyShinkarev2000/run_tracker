@@ -13,4 +13,4 @@ final positionServiceProvider = Provider<PositionService>((
 
 final locationPermissionProvider = StreamProvider((ref) {
   return ref.watch(positionServiceProvider).permissionStream;
-});
+}, isAutoDispose: true);
