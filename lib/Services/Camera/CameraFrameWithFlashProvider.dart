@@ -30,6 +30,14 @@ class CameraFrameWithFlashProvider implements IDisposable {
   void dispose() {
     _isDisposed = true;
     _streamController.close();
+    try {
+      _cameraController.value?.setFlashMode(.off);
+    } catch (ex, s) {
+      _logger.logWarning(
+        "Exception in setFlashMode(.off) when dispose",
+        appException: AppException.caught(ex, s),
+      );
+    }
     _cameraController.value?.dispose();
     _cameraController.dispose();
   }
@@ -241,6 +249,14 @@ class CameraFrameWithFlashProvider implements IDisposable {
         );
       }
       return;
+    }
+    try {
+      await controller.setFlashMode(.off);
+    } catch (ex, s) {
+      _logger.logWarning(
+        "Exception when setFlashMode(.off)",
+        appException: AppException.caught(ex, s),
+      );
     }
     await controller.dispose();
   }
