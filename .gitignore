@@ -45,4 +45,4 @@ app.*.map.json
 /android/app/release
 /.vscode
 
-/GlobalToDo.md
+web_deploy/web

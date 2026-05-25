@@ -1,0 +1,8 @@
+services:
+  map:
+    image: nginx
+    volumes:
+      - ./web:/usr/share/nginx/run_tracker/
+      - ./nginx.example.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "5003:80"
