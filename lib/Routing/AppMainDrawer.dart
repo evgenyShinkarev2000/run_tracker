@@ -11,7 +11,7 @@ class AppMainDrawer extends StatelessWidget {
     return Drawer(
       child: ListView(
         children: [
-          DrawerItem(path: "/", title: context.appLocalization.menuMain),
+          // DrawerItem(path: "/", title: context.appLocalization.menuMain),
           DrawerItem(
             path: AppRoutes.Map,
             title: context.appLocalization.menuMap,
