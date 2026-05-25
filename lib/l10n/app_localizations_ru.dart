@@ -168,7 +168,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get pulseMeasureCameraInstructionInitial =>
-      'плотно прижмите палец к камере и вспышки';
+      'плотно прижмите палец к камере и вспышке';
 
   @override
   String get pulseMeasureTabTimer => 'таймер';

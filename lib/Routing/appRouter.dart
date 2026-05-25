@@ -5,7 +5,10 @@ import 'package:run_tracker/Routing/AppRoutes.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 final List<RouteBase> appRoutes = [
-  GoRoute(path: '/', builder: (context, state) => MyHomePage()),
+  GoRoute(
+    path: '/',
+    redirect: (context, state) => AppRoutes.History,
+  ),
   GoRoute(path: AppRoutes.Map, builder: (context, state) => MapPage()),
   GoRoute(
     path: AppRoutes.Settings,

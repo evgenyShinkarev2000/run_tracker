@@ -147,6 +147,7 @@ class TrackService {
         activeDistance: Value(summary.activeDistance),
         activeDuration: Value(summary.activeDuration),
         activePositioningDuration: Value(summary.activePositioningDuration),
+        averagePulse: Value(summary.averagePulseBPM),
       ),
     );
   }

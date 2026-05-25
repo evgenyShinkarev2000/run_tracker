@@ -2,9 +2,11 @@ import 'package:cancellation_token/cancellation_token.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:run_tracker/Core/export.dart';
 import 'package:run_tracker/Data/export.dart';
 import 'package:run_tracker/Pages/TrackHistory/HistoryListItem.dart';
 import 'package:run_tracker/Providers/Track/export.dart';
+import 'package:run_tracker/Providers/export.dart';
 import 'package:run_tracker/Routing/export.dart';
 import 'package:run_tracker/Services/Track/export.dart';
 import 'package:run_tracker/localization/export.dart';
@@ -35,7 +37,7 @@ class _TrackHistoryListState extends ConsumerState<TrackHistoryList> {
   void dispose() {
     ct.cancel();
     _controller.dispose();
-    
+
     super.dispose();
   }
 
@@ -82,14 +84,20 @@ class _TrackHistoryListState extends ConsumerState<TrackHistoryList> {
   Future<List<TrackRecordWithSummaryAndPoints>> _fetchSummary(
     int pageKey,
   ) async {
-    var service = ref.read(trackServiceProvider);
+    final service = ref.read(trackServiceProvider);
+    final messageService = ref.read(messageServiceProvider);
 
-    return await service.getTrackRecordWithSummaryAndPointsOrGenerate(
-      TrackRecordQueryModel(
-        pagination: PaginationModel.indexedFromOnePage(pageSize, pageKey),
-        trackCreatedAtSort: SortDirection.Descending,
-      ),
-      ct,
-    );
+    try {
+      return await service.getTrackRecordWithSummaryAndPointsOrGenerate(
+        TrackRecordQueryModel(
+          pagination: PaginationModel.indexedFromOnePage(pageSize, pageKey),
+          trackCreatedAtSort: SortDirection.Descending,
+        ),
+        ct,
+      );
+    } catch (ex, s) {
+      messageService.showAndLogError(AppException.caught(ex, s));
+      rethrow;
+    }
   }
 }

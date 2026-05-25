@@ -60,7 +60,7 @@ class Dashboard extends StatelessWidget {
                 final asyncSpeed = ref.watch(dashboardSpeedProvider);
                 final speed = asyncSpeed.value ?? Speed.zero;
                 final pace = speed.toPace().tryConvertToDuration();
-                final paceString = pace == null ? "00:00" : pace.mmss;
+                final paceString = pace == null || pace.hours > 0 ? "00:00" : pace.mmss;
 
                 return Expanded(
                   child: Container(

@@ -12,6 +12,7 @@ import 'package:run_tracker/Data/AppSettings.dart';
 import 'package:run_tracker/Providers/AppRouterProvider.dart';
 import 'package:run_tracker/Providers/Settings/export.dart';
 import 'package:run_tracker/Providers/export.dart';
+import 'package:run_tracker/Theme/export.dart';
 import 'package:run_tracker/l10n/app_localizations.dart';
 import 'package:run_tracker/localization/export.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -67,6 +68,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var appLocale = ref.watch(localeProvider);
+    // TODO быстрая инициализация хранилища, прогрев бд
     if (appLocale.isLoading) {
       return AppInitLoader();
     }
@@ -83,10 +85,7 @@ class MyApp extends ConsumerWidget {
       ],
       locale: appLocale.value?.locale,
       supportedLocales: AppLocales.supportedLocales,
-      theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-        fontFamily: 'Roboto',
-      ),
+      theme: appTheme,
       routerConfig: appRouter,
       builder: FToastBuilder(),
     );

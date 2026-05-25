@@ -21,6 +21,7 @@ class _PulseDialogState extends State<PulseDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      insetPadding: EdgeInsets.zero,
       content: SizedBox(
         height: 500,
         width: 1000,
